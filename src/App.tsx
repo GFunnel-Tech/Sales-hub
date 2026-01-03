@@ -2,17 +2,99 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import PartnerHome from "./pages/PartnerHome";
-import CommissionStructure from "./pages/CommissionStructure";
-import PartnerRanks from "./pages/PartnerRanks";
-import IncomeCalculator from "./pages/IncomeCalculator";
-import LearningResources from "./pages/LearningResources";
-import Leaderboard from "./pages/Leaderboard";
-import PrizesIncentives from "./pages/PrizesIncentives";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { AuthProvider, useAuth } from "@/hooks/useAuth";
+
+// Pages
+import Auth from "./pages/Auth";
+import Dashboard from "./pages/Dashboard";
+import SalesProcess from "./pages/SalesProcess";
+import LogSale from "./pages/LogSale";
+import MySales from "./pages/MySales";
+import Scripts from "./pages/Scripts";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
+
+function ProtectedRoute({ children }: { children: React.ReactNode }) {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-muted-foreground">Loading...</p>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <Navigate to="/auth" replace />;
+  }
+
+  return <>{children}</>;
+}
+
+function AppRoutes() {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-muted-foreground">Loading...</p>
+      </div>
+    );
+  }
+
+  return (
+    <Routes>
+      <Route 
+        path="/auth" 
+        element={user ? <Navigate to="/" replace /> : <Auth />} 
+      />
+      <Route
+        path="/"
+        element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/sales-process"
+        element={
+          <ProtectedRoute>
+            <SalesProcess />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/log-sale"
+        element={
+          <ProtectedRoute>
+            <LogSale />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/my-sales"
+        element={
+          <ProtectedRoute>
+            <MySales />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/scripts"
+        element={
+          <ProtectedRoute>
+            <Scripts />
+          </ProtectedRoute>
+        }
+      />
+      <Route path="*" element={<NotFound />} />
+    </Routes>
+  );
+}
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -20,16 +102,9 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<PartnerHome />} />
-          <Route path="/commissions" element={<CommissionStructure />} />
-          <Route path="/ranks" element={<PartnerRanks />} />
-          <Route path="/calculator" element={<IncomeCalculator />} />
-          <Route path="/learning" element={<LearningResources />} />
-          <Route path="/leaderboard" element={<Leaderboard />} />
-          <Route path="/incentives" element={<PrizesIncentives />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <AuthProvider>
+          <AppRoutes />
+        </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

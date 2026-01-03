@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useAuth } from "@/hooks/useAuth";
+import { useMember } from "@/hooks/useMember";
 import { supabase } from "@/integrations/supabase/client";
 import { 
   Search, 
@@ -57,26 +57,26 @@ const dispositionColors: Record<string, string> = {
 };
 
 export default function MySales() {
-  const { user } = useAuth();
+  const { member } = useMember();
   const [sales, setSales] = useState<Sale[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [dispositionFilter, setDispositionFilter] = useState<string>("all");
 
   useEffect(() => {
-    if (user) {
+    if (member) {
       fetchSales();
     }
-  }, [user]);
+  }, [member]);
 
   const fetchSales = async () => {
-    if (!user) return;
+    if (!member) return;
 
     try {
       const { data, error } = await supabase
         .from("sales")
         .select("*")
-        .eq("user_id", user.id)
+        .eq("profile_id", member.id)
         .order("created_at", { ascending: false });
 
       if (error) throw error;

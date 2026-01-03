@@ -4,9 +4,12 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/hooks/useAuth";
+import { MemberProvider, useMember } from "@/hooks/useMember";
 
 // Pages
-import Auth from "./pages/Auth";
+import MemberEntry from "./pages/MemberEntry";
+import AdminLogin from "./pages/AdminLogin";
+import AdminPanel from "./pages/AdminPanel";
 import Dashboard from "./pages/Dashboard";
 import SalesProcess from "./pages/SalesProcess";
 import LogSale from "./pages/LogSale";
@@ -16,8 +19,28 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
-function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { user, loading } = useAuth();
+// Protected route for member access (no auth required, just member ID)
+function MemberRoute({ children }: { children: React.ReactNode }) {
+  const { member, loading } = useMember();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-muted-foreground">Loading...</p>
+      </div>
+    );
+  }
+
+  if (!member) {
+    return <Navigate to="/" replace />;
+  }
+
+  return <>{children}</>;
+}
+
+// Protected route for admin access (requires auth + admin role)
+function AdminRoute({ children }: { children: React.ReactNode }) {
+  const { user, isAdmin, loading } = useAuth();
 
   if (loading) {
     return (
@@ -28,69 +51,80 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   }
 
   if (!user) {
-    return <Navigate to="/auth" replace />;
+    return <Navigate to="/admin-login" replace />;
+  }
+
+  if (!isAdmin) {
+    return <Navigate to="/" replace />;
   }
 
   return <>{children}</>;
 }
 
 function AppRoutes() {
-  const { user, loading } = useAuth();
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-muted-foreground">Loading...</p>
-      </div>
-    );
-  }
+  const { member } = useMember();
 
   return (
     <Routes>
+      {/* Public routes */}
       <Route 
-        path="/auth" 
-        element={user ? <Navigate to="/" replace /> : <Auth />} 
+        path="/" 
+        element={member ? <Navigate to="/dashboard" replace /> : <MemberEntry />} 
       />
+      <Route path="/admin-login" element={<AdminLogin />} />
+
+      {/* Member routes (require member ID) */}
       <Route
-        path="/"
+        path="/dashboard"
         element={
-          <ProtectedRoute>
+          <MemberRoute>
             <Dashboard />
-          </ProtectedRoute>
+          </MemberRoute>
         }
       />
       <Route
         path="/sales-process"
         element={
-          <ProtectedRoute>
+          <MemberRoute>
             <SalesProcess />
-          </ProtectedRoute>
+          </MemberRoute>
         }
       />
       <Route
         path="/log-sale"
         element={
-          <ProtectedRoute>
+          <MemberRoute>
             <LogSale />
-          </ProtectedRoute>
+          </MemberRoute>
         }
       />
       <Route
         path="/my-sales"
         element={
-          <ProtectedRoute>
+          <MemberRoute>
             <MySales />
-          </ProtectedRoute>
+          </MemberRoute>
         }
       />
       <Route
         path="/scripts"
         element={
-          <ProtectedRoute>
+          <MemberRoute>
             <Scripts />
-          </ProtectedRoute>
+          </MemberRoute>
         }
       />
+
+      {/* Admin routes (require auth + admin role) */}
+      <Route
+        path="/admin"
+        element={
+          <AdminRoute>
+            <AdminPanel />
+          </AdminRoute>
+        }
+      />
+
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
@@ -103,7 +137,9 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <AuthProvider>
-          <AppRoutes />
+          <MemberProvider>
+            <AppRoutes />
+          </MemberProvider>
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>

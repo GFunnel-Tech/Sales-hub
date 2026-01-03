@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { SalesNavigation } from "@/components/SalesNavigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/hooks/useAuth";
+import { useMember } from "@/hooks/useMember";
 import { supabase } from "@/integrations/supabase/client";
 import { 
   FileText, 
@@ -34,7 +34,7 @@ interface FollowUp {
 }
 
 export default function Dashboard() {
-  const { user } = useAuth();
+  const { member } = useMember();
   const [stats, setStats] = useState<DashboardStats>({
     todayCalls: 0,
     weekSales: 0,
@@ -45,13 +45,13 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (user) {
+    if (member) {
       fetchDashboardData();
     }
-  }, [user]);
+  }, [member]);
 
   const fetchDashboardData = async () => {
-    if (!user) return;
+    if (!member) return;
 
     try {
       const today = new Date();
@@ -64,14 +64,14 @@ export default function Dashboard() {
       const { count: todayCount } = await supabase
         .from("sales")
         .select("*", { count: "exact", head: true })
-        .eq("user_id", user.id)
+        .eq("profile_id", member.id)
         .gte("created_at", today.toISOString());
 
       // Get week's sales (disposition = sold)
       const { count: weekSalesCount } = await supabase
         .from("sales")
         .select("*", { count: "exact", head: true })
-        .eq("user_id", user.id)
+        .eq("profile_id", member.id)
         .eq("disposition", "sold")
         .gte("created_at", weekAgo.toISOString());
 
@@ -79,7 +79,7 @@ export default function Dashboard() {
       const { data: followupData, count: followupCount } = await supabase
         .from("sales")
         .select("id, customer_first_name, customer_last_name, follow_up_date, follow_up_notes, product_service", { count: "exact" })
-        .eq("user_id", user.id)
+        .eq("profile_id", member.id)
         .not("follow_up_date", "is", null)
         .gte("follow_up_date", new Date().toISOString())
         .order("follow_up_date", { ascending: true })
@@ -89,7 +89,7 @@ export default function Dashboard() {
       const { count: totalCalls } = await supabase
         .from("sales")
         .select("*", { count: "exact", head: true })
-        .eq("user_id", user.id)
+        .eq("profile_id", member.id)
         .gte("created_at", weekAgo.toISOString());
 
       const conversionRate = totalCalls && weekSalesCount 
@@ -154,7 +154,7 @@ export default function Dashboard() {
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-foreground mb-1">Sales Dashboard</h1>
           <p className="text-muted-foreground">
-            Welcome back! Ready to close some deals?
+            Welcome back{member?.full_name ? `, ${member.full_name}` : ""}! Ready to close some deals?
           </p>
         </div>
 

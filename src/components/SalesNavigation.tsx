@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, ExternalLink, Home, FileText, PlusCircle, List, BookOpen, LogOut, User, Video } from "lucide-react";
+import { Menu, ExternalLink, Home, FileText, PlusCircle, List, BookOpen, LogOut, User, Video, RefreshCw } from "lucide-react";
 import { Button } from "./ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { useAuth } from "@/hooks/useAuth";
+import { useMember } from "@/hooks/useMember";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 const navItems = [
-  { name: "Dashboard", href: "/", icon: Home },
+  { name: "Dashboard", href: "/dashboard", icon: Home },
   { name: "Sales Process", href: "/sales-process", icon: FileText },
   { name: "Log Sale", href: "/log-sale", icon: PlusCircle },
   { name: "My Sales", href: "/my-sales", icon: List },
@@ -24,13 +24,13 @@ export const SalesNavigation = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, signOut } = useAuth();
+  const { member, clearMember } = useMember();
 
   const isActive = (href: string) => location.pathname === href;
 
-  const handleSignOut = async () => {
-    await signOut();
-    navigate("/auth");
+  const handleSwitchMember = () => {
+    clearMember();
+    navigate("/");
   };
 
   return (
@@ -38,7 +38,7 @@ export const SalesNavigation = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link to="/" className="font-bold text-lg text-foreground">
+          <Link to="/dashboard" className="font-bold text-lg text-foreground">
             Sales Hub
           </Link>
 
@@ -75,21 +75,31 @@ export const SalesNavigation = () => {
               </a>
             </Button>
             
-            {user && (
+            {member && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="rounded-full">
-                    <User className="w-5 h-5" />
+                  <Button variant="ghost" className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                      <User className="w-4 h-4 text-primary" />
+                    </div>
+                    <div className="text-left hidden sm:block">
+                      <p className="text-sm font-medium">{member.full_name || member.member_id}</p>
+                      <p className="text-xs text-muted-foreground">{member.member_id}</p>
+                    </div>
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <div className="px-2 py-1.5">
-                    <p className="text-sm font-medium">{user.email}</p>
+                    <p className="text-sm font-medium">{member.full_name || "Team Member"}</p>
+                    <p className="text-xs text-muted-foreground">ID: {member.member_id}</p>
+                    {member.email && (
+                      <p className="text-xs text-muted-foreground">{member.email}</p>
+                    )}
                   </div>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleSignOut}>
-                    <LogOut className="w-4 h-4 mr-2" />
-                    Sign Out
+                  <DropdownMenuItem onClick={handleSwitchMember}>
+                    <RefreshCw className="w-4 h-4 mr-2" />
+                    Switch Member
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -105,7 +115,19 @@ export const SalesNavigation = () => {
                 </Button>
               </SheetTrigger>
               <SheetContent side="right" className="w-[300px]">
-                <div className="flex flex-col gap-2 mt-8">
+                {member && (
+                  <div className="flex items-center gap-3 mt-4 p-3 bg-muted rounded-lg">
+                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                      <User className="w-5 h-5 text-primary" />
+                    </div>
+                    <div>
+                      <p className="font-medium">{member.full_name || member.member_id}</p>
+                      <p className="text-xs text-muted-foreground">ID: {member.member_id}</p>
+                    </div>
+                  </div>
+                )}
+                
+                <div className="flex flex-col gap-2 mt-6">
                   {navItems.map((item) => (
                     <Link
                       key={item.href}
@@ -136,17 +158,17 @@ export const SalesNavigation = () => {
                       </a>
                     </Button>
                     
-                    {user && (
+                    {member && (
                       <Button 
                         variant="ghost" 
                         className="w-full justify-start"
                         onClick={() => {
-                          handleSignOut();
+                          handleSwitchMember();
                           setMobileMenuOpen(false);
                         }}
                       >
-                        <LogOut className="w-4 h-4 mr-2" />
-                        Sign Out
+                        <RefreshCw className="w-4 h-4 mr-2" />
+                        Switch Member
                       </Button>
                     )}
                   </div>

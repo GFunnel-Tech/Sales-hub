@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useAuth } from "@/hooks/useAuth";
+import { useMember } from "@/hooks/useMember";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, User, Phone, MapPin, DollarSign, FileText, Calendar } from "lucide-react";
@@ -44,7 +44,7 @@ const callTypes = [
 ];
 
 export default function LogSale() {
-  const { user } = useAuth();
+  const { member } = useMember();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
@@ -78,7 +78,7 @@ export default function LogSale() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!user) {
+    if (!member) {
       toast({
         title: "Error",
         description: "You must be logged in to log a sale.",
@@ -100,7 +100,8 @@ export default function LogSale() {
 
     try {
       const saleData = {
-        user_id: user.id,
+        profile_id: member.id,
+        user_id: member.id, // Keep for backwards compatibility
         customer_first_name: formData.customer_first_name,
         customer_last_name: formData.customer_last_name || null,
         customer_email: formData.customer_email || null,
@@ -422,7 +423,7 @@ export default function LogSale() {
 
               {/* Submit */}
               <div className="flex justify-end gap-4">
-                <Button type="button" variant="outline" onClick={() => navigate("/")}>
+                <Button type="button" variant="outline" onClick={() => navigate("/dashboard")}>
                   Cancel
                 </Button>
                 <Button type="submit" disabled={loading}>

@@ -15,6 +15,8 @@ import SalesProcess from "./pages/SalesProcess";
 import LogSale from "./pages/LogSale";
 import MySales from "./pages/MySales";
 import Scripts from "./pages/Scripts";
+import ObjectionPlaybook from "./pages/ObjectionPlaybook";
+import SalesTraining from "./pages/SalesTraining";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -73,6 +75,8 @@ function AppRoutes() {
       <Route path="/my-sales" element={<MySales />} />
       <Route path="/scripts" element={<Scripts />} />
       <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/objection-playbook" element={<ObjectionPlaybook />} />
+      <Route path="/sales-training" element={<SalesTraining />} />
       
       {/* Admin routes */}
       <Route path="/admin-login" element={<AdminLogin />} />

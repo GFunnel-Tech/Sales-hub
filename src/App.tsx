@@ -7,6 +7,7 @@ import { AuthProvider, useAuth } from "@/hooks/useAuth";
 import { MemberProvider, useMember } from "@/hooks/useMember";
 
 // Pages
+import PartnerHome from "./pages/PartnerHome";
 import MemberEntry from "./pages/MemberEntry";
 import AdminLogin from "./pages/AdminLogin";
 import AdminPanel from "./pages/AdminPanel";
@@ -15,6 +16,12 @@ import SalesProcess from "./pages/SalesProcess";
 import LogSale from "./pages/LogSale";
 import MySales from "./pages/MySales";
 import Scripts from "./pages/Scripts";
+import CommissionStructure from "./pages/CommissionStructure";
+import PartnerRanks from "./pages/PartnerRanks";
+import IncomeCalculator from "./pages/IncomeCalculator";
+import LearningResources from "./pages/LearningResources";
+import Leaderboard from "./pages/Leaderboard";
+import PrizesIncentives from "./pages/PrizesIncentives";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -32,7 +39,7 @@ function MemberRoute({ children }: { children: React.ReactNode }) {
   }
 
   if (!member) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/member-entry" replace />;
   }
 
   return <>{children}</>;
@@ -62,15 +69,19 @@ function AdminRoute({ children }: { children: React.ReactNode }) {
 }
 
 function AppRoutes() {
-  const { member } = useMember();
-
   return (
     <Routes>
-      {/* Public routes */}
-      <Route 
-        path="/" 
-        element={member ? <Navigate to="/dashboard" replace /> : <MemberEntry />} 
-      />
+      {/* Public Partner Hub - main landing page */}
+      <Route path="/" element={<PartnerHome />} />
+      <Route path="/commissions" element={<CommissionStructure />} />
+      <Route path="/ranks" element={<PartnerRanks />} />
+      <Route path="/calculator" element={<IncomeCalculator />} />
+      <Route path="/learning" element={<LearningResources />} />
+      <Route path="/leaderboard" element={<Leaderboard />} />
+      <Route path="/incentives" element={<PrizesIncentives />} />
+      
+      {/* Member entry for sales hub */}
+      <Route path="/member-entry" element={<MemberEntry />} />
       <Route path="/admin-login" element={<AdminLogin />} />
 
       {/* Member routes (require member ID) */}

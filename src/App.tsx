@@ -7,8 +7,7 @@ import { AuthProvider, useAuth } from "@/hooks/useAuth";
 import { MemberProvider, useMember } from "@/hooks/useMember";
 
 // Pages
-import PartnerHome from "./pages/PartnerHome";
-import MemberEntry from "./pages/MemberEntry";
+import SalesHub from "./pages/SalesHub";
 import AdminLogin from "./pages/AdminLogin";
 import AdminPanel from "./pages/AdminPanel";
 import Dashboard from "./pages/Dashboard";
@@ -16,12 +15,6 @@ import SalesProcess from "./pages/SalesProcess";
 import LogSale from "./pages/LogSale";
 import MySales from "./pages/MySales";
 import Scripts from "./pages/Scripts";
-import CommissionStructure from "./pages/CommissionStructure";
-import PartnerRanks from "./pages/PartnerRanks";
-import IncomeCalculator from "./pages/IncomeCalculator";
-import LearningResources from "./pages/LearningResources";
-import Leaderboard from "./pages/Leaderboard";
-import PrizesIncentives from "./pages/PrizesIncentives";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -71,62 +64,18 @@ function AdminRoute({ children }: { children: React.ReactNode }) {
 function AppRoutes() {
   return (
     <Routes>
-      {/* Public Partner Hub - main landing page */}
-      <Route path="/" element={<PartnerHome />} />
-      <Route path="/commissions" element={<CommissionStructure />} />
-      <Route path="/ranks" element={<PartnerRanks />} />
-      <Route path="/calculator" element={<IncomeCalculator />} />
-      <Route path="/learning" element={<LearningResources />} />
-      <Route path="/leaderboard" element={<Leaderboard />} />
-      <Route path="/incentives" element={<PrizesIncentives />} />
+      {/* Sales Hub - main landing page */}
+      <Route path="/" element={<SalesHub />} />
       
-      {/* Member entry for sales hub */}
-      <Route path="/member-entry" element={<MemberEntry />} />
+      {/* Sales tools - open access for now */}
+      <Route path="/sales-process" element={<SalesProcess />} />
+      <Route path="/log-sale" element={<LogSale />} />
+      <Route path="/my-sales" element={<MySales />} />
+      <Route path="/scripts" element={<Scripts />} />
+      <Route path="/dashboard" element={<Dashboard />} />
+      
+      {/* Admin routes */}
       <Route path="/admin-login" element={<AdminLogin />} />
-
-      {/* Member routes (require member ID) */}
-      <Route
-        path="/dashboard"
-        element={
-          <MemberRoute>
-            <Dashboard />
-          </MemberRoute>
-        }
-      />
-      <Route
-        path="/sales-process"
-        element={
-          <MemberRoute>
-            <SalesProcess />
-          </MemberRoute>
-        }
-      />
-      <Route
-        path="/log-sale"
-        element={
-          <MemberRoute>
-            <LogSale />
-          </MemberRoute>
-        }
-      />
-      <Route
-        path="/my-sales"
-        element={
-          <MemberRoute>
-            <MySales />
-          </MemberRoute>
-        }
-      />
-      <Route
-        path="/scripts"
-        element={
-          <MemberRoute>
-            <Scripts />
-          </MemberRoute>
-        }
-      />
-
-      {/* Admin routes (require auth + admin role) */}
       <Route
         path="/admin"
         element={

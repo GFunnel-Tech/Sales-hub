@@ -21,6 +21,8 @@ export type Database = {
           email: string | null
           full_name: string | null
           id: string
+          is_active: boolean
+          member_id: string | null
           phone: string | null
           updated_at: string
           user_id: string
@@ -31,6 +33,8 @@ export type Database = {
           email?: string | null
           full_name?: string | null
           id?: string
+          is_active?: boolean
+          member_id?: string | null
           phone?: string | null
           updated_at?: string
           user_id: string
@@ -41,6 +45,8 @@ export type Database = {
           email?: string | null
           full_name?: string | null
           id?: string
+          is_active?: boolean
+          member_id?: string | null
           phone?: string | null
           updated_at?: string
           user_id?: string
@@ -70,6 +76,7 @@ export type Database = {
           notes: string | null
           objections_handled: string | null
           product_service: string
+          profile_id: string | null
           sale_amount: number | null
           script_used: string | null
           updated_at: string
@@ -97,6 +104,7 @@ export type Database = {
           notes?: string | null
           objections_handled?: string | null
           product_service: string
+          profile_id?: string | null
           sale_amount?: number | null
           script_used?: string | null
           updated_at?: string
@@ -124,12 +132,20 @@ export type Database = {
           notes?: string | null
           objections_handled?: string | null
           product_service?: string
+          profile_id?: string | null
           sale_amount?: number | null
           script_used?: string | null
           updated_at?: string
           user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "sales_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "sales_script_used_fkey"
             columns: ["script_used"]

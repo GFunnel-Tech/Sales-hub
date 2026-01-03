@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { useAuth } from "@/hooks/useAuth";
+import { useMember } from "@/hooks/useMember";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { 
@@ -29,7 +29,7 @@ interface Script {
 }
 
 export default function Scripts() {
-  const { user } = useAuth();
+  const { member } = useMember();
   const { toast } = useToast();
   const [scripts, setScripts] = useState<Script[]>([]);
   const [loading, setLoading] = useState(true);
@@ -75,7 +75,7 @@ export default function Scripts() {
   const handleRequestSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!user) {
+    if (!member) {
       toast({
         title: "Error",
         description: "You must be logged in to request a script.",
@@ -99,7 +99,7 @@ export default function Scripts() {
       const { error } = await supabase
         .from("script_requests")
         .insert({
-          user_id: user.id,
+          user_id: member.id,
           product_name: requestForm.product_name,
           product_description: requestForm.product_description || null,
           target_audience: requestForm.target_audience || null,

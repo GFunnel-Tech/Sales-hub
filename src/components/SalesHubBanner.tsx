@@ -1,47 +1,47 @@
 import { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Target, BookOpen, Trophy, Lightbulb } from "lucide-react";
+import { ArrowRight, Target, Lightbulb, MessageCircle, Heart } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const bannerSlides = [
   {
     id: 1,
-    title: "Master the Sales Process",
-    description: "Follow our proven 7-step methodology: from Handshake to Handoff.",
-    cta: "Learn the Process",
-    href: "/sales-process",
-    icon: Target,
+    title: "Process Beats Pitch",
+    description: "Master the ACE framework: Acquisition → Creation → Expansion. Build a repeatable system that scales.",
+    cta: "Start Training",
+    href: "/sales-training",
+    icon: Lightbulb,
     gradient: "from-violet-600 via-purple-500 to-fuchsia-500",
     accentGradient: "from-pink-400 via-orange-300 to-yellow-400",
   },
   {
     id: 2,
-    title: "Scripts That Convert",
-    description: "Access battle-tested scripts for phone, webinar, and live meetings.",
-    cta: "View Scripts",
-    href: "/scripts",
-    icon: BookOpen,
+    title: "Master the 7-Step Process",
+    description: "From Handshake to Handoff — follow the proven methodology that achieves 70-90% conversion rates.",
+    cta: "Start Process",
+    href: "/sales-process",
+    icon: Target,
     gradient: "from-blue-600 via-cyan-500 to-teal-400",
     accentGradient: "from-emerald-400 via-teal-300 to-cyan-400",
   },
   {
     id: 3,
-    title: "Track Your Wins",
-    description: "Log every call, follow-up, and closed deal to see your progress.",
-    cta: "Start Logging",
-    href: "/log-sale",
-    icon: Trophy,
+    title: "Handle Any Objection",
+    description: "Learn the Isolate → Accept → Create → Expand loop to turn 'no' into 'yes'.",
+    cta: "View Playbook",
+    href: "/objection-playbook",
+    icon: MessageCircle,
     gradient: "from-orange-500 via-amber-500 to-yellow-400",
     accentGradient: "from-rose-400 via-pink-400 to-purple-400",
   },
   {
     id: 4,
-    title: "Pro Tips & Techniques",
-    description: "Handle objections, close stronger, and maximize every opportunity.",
-    cta: "Explore Tips",
+    title: "Dream → Pain → Obstacle",
+    description: "Surface burning desires with the DPO questioning framework. Pain determines price.",
+    cta: "Learn More",
     href: "/sales-process",
-    icon: Lightbulb,
+    icon: Heart,
     gradient: "from-rose-500 via-pink-500 to-purple-500",
     accentGradient: "from-violet-400 via-indigo-400 to-blue-400",
   },

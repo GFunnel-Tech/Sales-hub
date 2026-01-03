@@ -10,17 +10,27 @@ import {
   FileText,
   BarChart3,
   Target,
-  ExternalLink
+  ExternalLink,
+  MessageCircle,
+  BookOpen
 } from "lucide-react";
 
 const hubItems = [
   { 
     title: "Sales Process", 
-    description: "Follow the 7-step sales methodology from handshake to handoff",
+    description: "Follow the 7-step ACE methodology from handshake to handoff",
     href: "/sales-process",
     icon: Target,
     iconBg: "bg-primary/10",
     iconColor: "text-primary"
+  },
+  { 
+    title: "Objection Playbook", 
+    description: "Master the Isolate → Accept → Create → Expand loop",
+    href: "/objection-playbook",
+    icon: MessageCircle,
+    iconBg: "bg-amber-500/10",
+    iconColor: "text-amber-600"
   },
   { 
     title: "Log a Sale", 
@@ -45,6 +55,14 @@ const hubItems = [
     icon: FileText,
     iconBg: "bg-purple-500/10",
     iconColor: "text-purple-600"
+  },
+  { 
+    title: "Sales Training", 
+    description: "Learn the ACE framework and key principles",
+    href: "/sales-training",
+    icon: BookOpen,
+    iconBg: "bg-indigo-500/10",
+    iconColor: "text-indigo-600"
   },
   { 
     title: "Dashboard", 

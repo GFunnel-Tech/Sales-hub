@@ -13,11 +13,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 const navItems = [
-  { name: "Dashboard", href: "/dashboard", icon: Home },
-  { name: "Sales Process", href: "/sales-process", icon: FileText },
+  { name: "Hub", href: "/", icon: Home },
+  { name: "Process", href: "/sales-process", icon: FileText },
   { name: "Log Sale", href: "/log-sale", icon: PlusCircle },
   { name: "My Sales", href: "/my-sales", icon: List },
   { name: "Scripts", href: "/scripts", icon: BookOpen },
+  { name: "Objections", href: "/objection-playbook", icon: FileText },
+  { name: "Training", href: "/sales-training", icon: BookOpen },
 ];
 
 export const SalesNavigation = () => {

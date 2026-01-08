@@ -7,6 +7,8 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { BlueprintLayout } from "@/components/blueprint/BlueprintLayout";
 import { useBlueprintSession } from "@/hooks/useBlueprintSession";
+import { useMember } from "@/hooks/useMember";
+import { useToast } from "@/hooks/use-toast";
 import { INDUSTRY_OPTIONS } from "@/lib/blueprintConfig";
 import { ArrowRight, Shield, Users, Zap, Clock } from "lucide-react";
 
@@ -20,6 +22,8 @@ const trustBadges = [
 export default function BlueprintHandshake() {
   const navigate = useNavigate();
   const { startSession, isLoading, hasActiveSession, session, resetSession } = useBlueprintSession();
+  const { member } = useMember();
+  const { toast } = useToast();
   
   const [formData, setFormData] = useState({
     prospectName: session.prospectName || "",
@@ -43,10 +47,14 @@ export default function BlueprintHandshake() {
     if (!validate()) return;
 
     try {
-      await startSession(formData);
+      await startSession(formData, member?.id);
       navigate("/blueprint/dream-state");
     } catch (error) {
-      // Error is handled in the hook
+      toast({
+        title: "Error",
+        description: "Failed to start session. Please try again.",
+        variant: "destructive",
+      });
     }
   };
 

@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { BlueprintLayout } from "@/components/blueprint/BlueprintLayout";
 import { useBlueprintSession } from "@/hooks/useBlueprintSession";
+import { useToast } from "@/hooks/use-toast";
 import { DISPOSITION_OPTIONS } from "@/lib/blueprintConfig";
 import { CheckCircle2, Calendar, FileText, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -15,6 +16,7 @@ import { cn } from "@/lib/utils";
 export default function BlueprintCompletion() {
   const navigate = useNavigate();
   const { session, updateSession, completeSession, hasActiveSession, setCurrentPage, isLoading } = useBlueprintSession();
+  const { toast } = useToast();
   
   const [formData, setFormData] = useState({
     recordingUrl: session.recordingUrl || "",
@@ -52,9 +54,17 @@ export default function BlueprintCompletion() {
     
     try {
       await completeSession();
+      toast({
+        title: "Session Completed",
+        description: "Blueprint session has been saved successfully.",
+      });
       navigate("/blueprint/success");
     } catch (error) {
-      // Error handled in hook
+      toast({
+        title: "Error",
+        description: "Failed to complete session. Please try again.",
+        variant: "destructive",
+      });
     }
   };
 

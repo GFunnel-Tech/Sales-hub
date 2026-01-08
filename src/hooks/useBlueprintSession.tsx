@@ -1,7 +1,5 @@
-import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from "react";
+import { createContext, useContext, useState, useEffect, useCallback, useRef, ReactNode } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { useMember } from "@/hooks/useMember";
-import { useToast } from "@/hooks/use-toast";
 
 export interface BlueprintSessionData {
   id?: string;
@@ -88,7 +86,7 @@ interface BlueprintContextType {
   lastSaved: Date | null;
   
   // Actions
-  startSession: (prospectData: Partial<BlueprintSessionData>) => Promise<void>;
+  startSession: (prospectData: Partial<BlueprintSessionData>, profileId?: string) => Promise<void>;
   updateSession: (data: Partial<BlueprintSessionData>) => void;
   saveSession: () => Promise<void>;
   setCurrentPage: (page: number) => void;
@@ -99,13 +97,11 @@ interface BlueprintContextType {
 
 const BlueprintContext = createContext<BlueprintContextType | null>(null);
 
-export function BlueprintProvider({ children }: { children: React.ReactNode }) {
+export function BlueprintProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<BlueprintSessionData>(initialSessionData);
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
-  const { member } = useMember();
-  const { toast } = useToast();
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   
   const hasActiveSession = !!session.sessionId;
@@ -130,23 +126,67 @@ export function BlueprintProvider({ children }: { children: React.ReactNode }) {
     }
   }, [session]);
 
+  const saveSessionToDb = useCallback(async (sessionData: BlueprintSessionData) => {
+    if (!sessionData.sessionId) return;
+    
+    setIsSaving(true);
+    try {
+      const { error } = await supabase
+        .from("blueprint_sessions")
+        .update({
+          prospect_name: sessionData.prospectName,
+          prospect_email: sessionData.prospectEmail,
+          prospect_company: sessionData.prospectCompany,
+          prospect_industry: sessionData.prospectIndustry,
+          dream_state_responses: sessionData.dreamStateResponses,
+          pain_point_responses: sessionData.painPointResponses,
+          bridge_understanding: sessionData.bridgeUnderstanding,
+          qualification_answers: sessionData.qualificationAnswers,
+          qualification_score: sessionData.qualificationScore,
+          is_qualified: sessionData.isQualified,
+          canvas_image_url: sessionData.canvasImageUrl,
+          canvas_json: sessionData.canvasJson as null,
+          canvas_notes: sessionData.canvasNotes,
+          generated_scope: sessionData.generatedScope,
+          scope_url: sessionData.scopeUrl,
+          prototype_url: sessionData.prototypeUrl,
+          selected_plan: sessionData.selectedPlan,
+          custom_request: sessionData.customRequest,
+          recording_url: sessionData.recordingUrl,
+          agent_notes: sessionData.agentNotes,
+          disposition: sessionData.disposition,
+          follow_up_date: sessionData.followUpDate || null,
+          current_page: sessionData.currentPage,
+          status: sessionData.status,
+        })
+        .eq("session_id", sessionData.sessionId);
+
+      if (error) throw error;
+      setLastSaved(new Date());
+    } catch (error) {
+      console.error("Failed to save session:", error);
+    } finally {
+      setIsSaving(false);
+    }
+  }, []);
+
   // Auto-save with debounce
-  const triggerAutoSave = useCallback(() => {
+  const triggerAutoSave = useCallback((sessionData: BlueprintSessionData) => {
     if (saveTimeoutRef.current) {
       clearTimeout(saveTimeoutRef.current);
     }
     saveTimeoutRef.current = setTimeout(() => {
-      if (session.sessionId) {
-        saveSession();
+      if (sessionData.sessionId) {
+        saveSessionToDb(sessionData);
       }
     }, 3000);
-  }, [session.sessionId]);
+  }, [saveSessionToDb]);
 
   const generateSessionId = () => {
     return `BP-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
   };
 
-  const startSession = async (prospectData: Partial<BlueprintSessionData>) => {
+  const startSession = async (prospectData: Partial<BlueprintSessionData>, profileId?: string) => {
     setIsLoading(true);
     try {
       const sessionId = generateSessionId();
@@ -154,14 +194,14 @@ export function BlueprintProvider({ children }: { children: React.ReactNode }) {
         ...initialSessionData,
         ...prospectData,
         sessionId,
-        agentProfileId: member?.id,
+        agentProfileId: profileId,
         currentPage: 2,
       };
 
       // Save to database
       const { error } = await supabase.from("blueprint_sessions").insert({
         session_id: sessionId,
-        agent_profile_id: member?.id,
+        agent_profile_id: profileId || null,
         prospect_name: newSession.prospectName,
         prospect_email: newSession.prospectEmail,
         prospect_company: newSession.prospectCompany,
@@ -176,70 +216,31 @@ export function BlueprintProvider({ children }: { children: React.ReactNode }) {
       setLastSaved(new Date());
     } catch (error) {
       console.error("Failed to start session:", error);
-      toast({
-        title: "Error",
-        description: "Failed to start session. Please try again.",
-        variant: "destructive",
-      });
       throw error;
     } finally {
       setIsLoading(false);
     }
   };
 
-  const updateSession = (data: Partial<BlueprintSessionData>) => {
-    setSession((prev) => ({ ...prev, ...data }));
-    triggerAutoSave();
-  };
+  const updateSession = useCallback((data: Partial<BlueprintSessionData>) => {
+    setSession((prev) => {
+      const updated = { ...prev, ...data };
+      triggerAutoSave(updated);
+      return updated;
+    });
+  }, [triggerAutoSave]);
 
-  const saveSession = async () => {
-    if (!session.sessionId) return;
-    
-    setIsSaving(true);
-    try {
-      const { error } = await supabase
-        .from("blueprint_sessions")
-        .update({
-          prospect_name: session.prospectName,
-          prospect_email: session.prospectEmail,
-          prospect_company: session.prospectCompany,
-          prospect_industry: session.prospectIndustry,
-          dream_state_responses: session.dreamStateResponses,
-          pain_point_responses: session.painPointResponses,
-          bridge_understanding: session.bridgeUnderstanding,
-          qualification_answers: session.qualificationAnswers,
-          qualification_score: session.qualificationScore,
-          is_qualified: session.isQualified,
-          canvas_image_url: session.canvasImageUrl,
-          canvas_json: session.canvasJson as null,
-          canvas_notes: session.canvasNotes,
-          generated_scope: session.generatedScope,
-          scope_url: session.scopeUrl,
-          prototype_url: session.prototypeUrl,
-          selected_plan: session.selectedPlan,
-          custom_request: session.customRequest,
-          recording_url: session.recordingUrl,
-          agent_notes: session.agentNotes,
-          disposition: session.disposition,
-          follow_up_date: session.followUpDate || null,
-          current_page: session.currentPage,
-          status: session.status,
-        })
-        .eq("session_id", session.sessionId);
+  const saveSession = useCallback(async () => {
+    await saveSessionToDb(session);
+  }, [session, saveSessionToDb]);
 
-      if (error) throw error;
-      setLastSaved(new Date());
-    } catch (error) {
-      console.error("Failed to save session:", error);
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
-  const setCurrentPage = (page: number) => {
-    setSession((prev) => ({ ...prev, currentPage: page }));
-    triggerAutoSave();
-  };
+  const setCurrentPage = useCallback((page: number) => {
+    setSession((prev) => {
+      const updated = { ...prev, currentPage: page };
+      triggerAutoSave(updated);
+      return updated;
+    });
+  }, [triggerAutoSave]);
 
   const completeSession = async () => {
     setIsLoading(true);
@@ -259,28 +260,19 @@ export function BlueprintProvider({ children }: { children: React.ReactNode }) {
       if (error) throw error;
 
       setSession((prev) => ({ ...prev, status: "completed" }));
-      toast({
-        title: "Session Completed",
-        description: "Blueprint session has been saved successfully.",
-      });
     } catch (error) {
       console.error("Failed to complete session:", error);
-      toast({
-        title: "Error",
-        description: "Failed to complete session. Please try again.",
-        variant: "destructive",
-      });
       throw error;
     } finally {
       setIsLoading(false);
     }
   };
 
-  const resetSession = () => {
+  const resetSession = useCallback(() => {
     sessionStorage.removeItem("blueprintSession");
     setSession(initialSessionData);
     setLastSaved(null);
-  };
+  }, []);
 
   return (
     <BlueprintContext.Provider

@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/hooks/useAuth";
 import { MemberProvider, useMember } from "@/hooks/useMember";
+import { BlueprintProvider } from "@/hooks/useBlueprintSession";
 
 // Pages
 import SalesHub from "./pages/SalesHub";
@@ -18,6 +19,18 @@ import Scripts from "./pages/Scripts";
 import ObjectionPlaybook from "./pages/ObjectionPlaybook";
 import SalesTraining from "./pages/SalesTraining";
 import NotFound from "./pages/NotFound";
+
+// Blueprint Pages
+import BlueprintHandshake from "./pages/blueprint/BlueprintHandshake";
+import BlueprintDreamState from "./pages/blueprint/BlueprintDreamState";
+import BlueprintPainPoints from "./pages/blueprint/BlueprintPainPoints";
+import BlueprintBridge from "./pages/blueprint/BlueprintBridge";
+import BlueprintQualification from "./pages/blueprint/BlueprintQualification";
+import BlueprintDiscovery from "./pages/blueprint/BlueprintDiscovery";
+import BlueprintPresentation from "./pages/blueprint/BlueprintPresentation";
+import BlueprintPricing from "./pages/blueprint/BlueprintPricing";
+import BlueprintCompletion from "./pages/blueprint/BlueprintCompletion";
+import BlueprintSuccess from "./pages/blueprint/BlueprintSuccess";
 
 const queryClient = new QueryClient();
 
@@ -78,6 +91,18 @@ function AppRoutes() {
       <Route path="/objection-playbook" element={<ObjectionPlaybook />} />
       <Route path="/sales-training" element={<SalesTraining />} />
       
+      {/* Blueprint Session Routes */}
+      <Route path="/blueprint" element={<BlueprintHandshake />} />
+      <Route path="/blueprint/dream-state" element={<BlueprintDreamState />} />
+      <Route path="/blueprint/pain-points" element={<BlueprintPainPoints />} />
+      <Route path="/blueprint/bridge" element={<BlueprintBridge />} />
+      <Route path="/blueprint/qualification" element={<BlueprintQualification />} />
+      <Route path="/blueprint/discovery" element={<BlueprintDiscovery />} />
+      <Route path="/blueprint/presentation" element={<BlueprintPresentation />} />
+      <Route path="/blueprint/pricing" element={<BlueprintPricing />} />
+      <Route path="/blueprint/completion" element={<BlueprintCompletion />} />
+      <Route path="/blueprint/success" element={<BlueprintSuccess />} />
+      
       {/* Admin routes */}
       <Route path="/admin-login" element={<AdminLogin />} />
       <Route
@@ -102,7 +127,9 @@ const App = () => (
       <BrowserRouter>
         <AuthProvider>
           <MemberProvider>
-            <AppRoutes />
+            <BlueprintProvider>
+              <AppRoutes />
+            </BlueprintProvider>
           </MemberProvider>
         </AuthProvider>
       </BrowserRouter>

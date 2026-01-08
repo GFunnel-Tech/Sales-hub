@@ -14,6 +14,113 @@ export type Database = {
   }
   public: {
     Tables: {
+      blueprint_sessions: {
+        Row: {
+          agent_notes: string | null
+          agent_profile_id: string | null
+          bridge_understanding: string | null
+          canvas_image_url: string | null
+          canvas_json: Json | null
+          canvas_notes: string | null
+          completed_at: string | null
+          created_at: string | null
+          current_page: number | null
+          custom_request: string | null
+          disposition: string | null
+          dream_state_responses: Json | null
+          follow_up_date: string | null
+          generated_scope: string | null
+          id: string
+          is_qualified: boolean | null
+          pain_point_responses: Json | null
+          prospect_company: string | null
+          prospect_email: string | null
+          prospect_industry: string | null
+          prospect_name: string
+          prototype_url: string | null
+          qualification_answers: Json | null
+          qualification_score: number | null
+          recording_url: string | null
+          scope_url: string | null
+          selected_plan: string | null
+          session_id: string
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          agent_notes?: string | null
+          agent_profile_id?: string | null
+          bridge_understanding?: string | null
+          canvas_image_url?: string | null
+          canvas_json?: Json | null
+          canvas_notes?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          current_page?: number | null
+          custom_request?: string | null
+          disposition?: string | null
+          dream_state_responses?: Json | null
+          follow_up_date?: string | null
+          generated_scope?: string | null
+          id?: string
+          is_qualified?: boolean | null
+          pain_point_responses?: Json | null
+          prospect_company?: string | null
+          prospect_email?: string | null
+          prospect_industry?: string | null
+          prospect_name: string
+          prototype_url?: string | null
+          qualification_answers?: Json | null
+          qualification_score?: number | null
+          recording_url?: string | null
+          scope_url?: string | null
+          selected_plan?: string | null
+          session_id: string
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          agent_notes?: string | null
+          agent_profile_id?: string | null
+          bridge_understanding?: string | null
+          canvas_image_url?: string | null
+          canvas_json?: Json | null
+          canvas_notes?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          current_page?: number | null
+          custom_request?: string | null
+          disposition?: string | null
+          dream_state_responses?: Json | null
+          follow_up_date?: string | null
+          generated_scope?: string | null
+          id?: string
+          is_qualified?: boolean | null
+          pain_point_responses?: Json | null
+          prospect_company?: string | null
+          prospect_email?: string | null
+          prospect_industry?: string | null
+          prospect_name?: string
+          prototype_url?: string | null
+          qualification_answers?: Json | null
+          qualification_score?: number | null
+          recording_url?: string | null
+          scope_url?: string | null
+          selected_plan?: string | null
+          session_id?: string
+          status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blueprint_sessions_agent_profile_id_fkey"
+            columns: ["agent_profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null

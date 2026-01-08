@@ -1,8 +1,13 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { SalesNavigation } from "@/components/SalesNavigation";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { supabase } from "@/integrations/supabase/client";
 import { 
   ChevronLeft, 
@@ -12,8 +17,13 @@ import {
   Video,
   ExternalLink,
   Lightbulb,
-  MessageSquare
+  Save,
+  Loader2
 } from "lucide-react";
+
+interface StepFormData {
+  [key: string]: string | boolean;
+}
 
 interface ScriptStage {
   stage: string;
@@ -29,24 +39,78 @@ interface Script {
   content: ScriptStage[];
 }
 
-const stageOrder = [
-  "handshake_authority",
-  "dream_pain_bridge",
-  "discovery",
-  "presentation",
-  "ask_objections",
-  "ask_order",
-  "handoff"
-];
+// Form configuration for each stage type
+const stageFormConfig: Record<string, { fields: { id: string; label: string; type: "text" | "textarea" | "yesno"; placeholder?: string }[] }> = {
+  handshake_authority: {
+    fields: [
+      { id: "prospect_name", label: "Prospect Name", type: "text", placeholder: "Enter prospect's full name" },
+      { id: "company_name", label: "Company Name", type: "text", placeholder: "Enter company name" },
+      { id: "initial_rapport", label: "Initial Rapport Notes", type: "textarea", placeholder: "How did the introduction go? Any personal notes..." },
+      { id: "expectations_set", label: "Did you set expectations for the call?", type: "yesno" },
+    ]
+  },
+  dream_pain_bridge: {
+    fields: [
+      { id: "dream_state", label: "What's their dream/ideal outcome?", type: "textarea", placeholder: "What would their ideal business look like in 12 months?" },
+      { id: "main_pain", label: "What's their biggest pain point?", type: "textarea", placeholder: "What's the biggest bottleneck or frustration they're facing?" },
+      { id: "cost_of_pain", label: "What has this problem cost them?", type: "textarea", placeholder: "Time, money, opportunities lost..." },
+      { id: "tried_before", label: "What have they tried before?", type: "textarea", placeholder: "Previous solutions that didn't work..." },
+    ]
+  },
+  discovery: {
+    fields: [
+      { id: "current_process", label: "How do they currently handle this?", type: "textarea", placeholder: "Current tools, processes, workflows..." },
+      { id: "team_size", label: "Team size / decision makers", type: "text", placeholder: "How many people involved?" },
+      { id: "timeline", label: "What's their timeline to solve this?", type: "text", placeholder: "When do they need a solution?" },
+      { id: "budget_range", label: "Budget expectations", type: "text", placeholder: "Any budget mentioned?" },
+    ]
+  },
+  presentation: {
+    fields: [
+      { id: "solution_presented", label: "Which solution/package did you present?", type: "text", placeholder: "Software / Services / Support" },
+      { id: "key_features_highlighted", label: "Key features that resonated", type: "textarea", placeholder: "Which features got them excited?" },
+      { id: "understanding_confirmed", label: "Did they confirm understanding?", type: "yesno" },
+      { id: "presentation_notes", label: "Presentation notes", type: "textarea", placeholder: "Any reactions, questions, or concerns during presentation..." },
+    ]
+  },
+  ask_objections: {
+    fields: [
+      { id: "main_objection", label: "Main objection raised", type: "textarea", placeholder: "What was their primary concern?" },
+      { id: "objection_type", label: "Objection category", type: "text", placeholder: "Price / Timing / Authority / Trust / Need" },
+      { id: "how_handled", label: "How did you handle it?", type: "textarea", placeholder: "What approach did you use? (Isolate → Accept → Create → Expand)" },
+      { id: "objection_resolved", label: "Was the objection resolved?", type: "yesno" },
+    ]
+  },
+  ask_order: {
+    fields: [
+      { id: "close_attempted", label: "Did you ask for the order?", type: "yesno" },
+      { id: "response", label: "What was their response?", type: "textarea", placeholder: "Yes / No / Need more time..." },
+      { id: "commitment_made", label: "What commitment did they make?", type: "textarea", placeholder: "Payment, follow-up call, trial, etc." },
+      { id: "next_steps", label: "Agreed next steps", type: "textarea", placeholder: "What happens next?" },
+    ]
+  },
+  handoff: {
+    fields: [
+      { id: "handoff_completed", label: "Was the handoff completed?", type: "yesno" },
+      { id: "fulfillment_contact", label: "Fulfillment contact assigned", type: "text", placeholder: "Who will handle onboarding?" },
+      { id: "customer_email", label: "Customer email collected", type: "text", placeholder: "Email address" },
+      { id: "payment_collected", label: "Payment collected?", type: "yesno" },
+      { id: "handoff_notes", label: "Handoff notes for fulfillment", type: "textarea", placeholder: "Important context for the fulfillment team..." },
+    ]
+  },
+};
 
 export default function SalesProcess() {
   const [currentStep, setCurrentStep] = useState(0);
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
   const [script, setScript] = useState<Script | null>(null);
   const [loading, setLoading] = useState(true);
+  const [formData, setFormData] = useState<Record<number, StepFormData>>({});
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     fetchDefaultScript();
+    loadSavedFormData();
   }, []);
 
   const fetchDefaultScript = async () => {
@@ -78,12 +142,43 @@ export default function SalesProcess() {
     }
   };
 
+  const loadSavedFormData = () => {
+    const saved = sessionStorage.getItem("salesProcessFormData");
+    if (saved) {
+      try {
+        setFormData(JSON.parse(saved));
+      } catch (e) {
+        console.error("Failed to load saved form data:", e);
+      }
+    }
+  };
+
+  const saveFormData = () => {
+    setIsSaving(true);
+    sessionStorage.setItem("salesProcessFormData", JSON.stringify(formData));
+    setTimeout(() => setIsSaving(false), 500);
+  };
+
   const stages = script?.content || [];
   const currentStage = stages[currentStep];
   const totalSteps = stages.length;
 
+  const currentFormConfig = currentStage ? stageFormConfig[currentStage.stage] : null;
+  const currentStepData = formData[currentStep] || {};
+
+  const updateField = (fieldId: string, value: string | boolean) => {
+    setFormData(prev => ({
+      ...prev,
+      [currentStep]: {
+        ...prev[currentStep],
+        [fieldId]: value
+      }
+    }));
+  };
+
   const goToNext = () => {
     if (currentStep < totalSteps - 1) {
+      saveFormData();
       if (!completedSteps.includes(currentStep)) {
         setCompletedSteps([...completedSteps, currentStep]);
       }
@@ -93,15 +188,18 @@ export default function SalesProcess() {
 
   const goToPrevious = () => {
     if (currentStep > 0) {
+      saveFormData();
       setCurrentStep(currentStep - 1);
     }
   };
 
   const goToStep = (index: number) => {
+    saveFormData();
     setCurrentStep(index);
   };
 
   const markComplete = () => {
+    saveFormData();
     if (!completedSteps.includes(currentStep)) {
       setCompletedSteps([...completedSteps, currentStep]);
     }
@@ -110,14 +208,19 @@ export default function SalesProcess() {
   const resetProcess = () => {
     setCurrentStep(0);
     setCompletedSteps([]);
+    setFormData({});
+    sessionStorage.removeItem("salesProcessFormData");
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#f3f4f6]">
+      <div className="min-h-screen bg-muted/30">
         <SalesNavigation />
         <main className="container mx-auto px-6 md:px-12 lg:px-16 py-8">
-          <p className="text-muted-foreground">Loading sales process...</p>
+          <div className="flex items-center gap-2 text-muted-foreground">
+            <Loader2 className="w-4 h-4 animate-spin" />
+            Loading sales process...
+          </div>
         </main>
       </div>
     );
@@ -125,14 +228,14 @@ export default function SalesProcess() {
 
   if (!script || stages.length === 0) {
     return (
-      <div className="min-h-screen bg-[#f3f4f6]">
+      <div className="min-h-screen bg-muted/30">
         <SalesNavigation />
         <main className="container mx-auto px-6 md:px-12 lg:px-16 py-8">
           <Card>
             <CardContent className="p-8 text-center">
               <p className="text-muted-foreground mb-4">No sales script available yet.</p>
               <Button asChild>
-                <a href="/scripts">Browse Scripts</a>
+                <Link to="/scripts">Browse Scripts</Link>
               </Button>
             </CardContent>
           </Card>
@@ -142,17 +245,29 @@ export default function SalesProcess() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f3f4f6]">
+    <div className="min-h-screen bg-muted/30">
       <SalesNavigation />
       
       <main className="container mx-auto px-6 md:px-12 lg:px-16 py-8">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-foreground mb-1">Sales Process Guide</h1>
-            <p className="text-muted-foreground">{script.title}</p>
+            <h1 className="text-2xl font-bold text-foreground mb-1">Sales Process</h1>
+            <p className="text-muted-foreground">{script.title} - Fill in as you guide the call</p>
           </div>
           <div className="flex items-center gap-3">
+            <Button 
+              variant="outline" 
+              onClick={saveFormData}
+              disabled={isSaving}
+            >
+              {isSaving ? (
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              ) : (
+                <Save className="w-4 h-4 mr-2" />
+              )}
+              Save Progress
+            </Button>
             <Button variant="outline" asChild>
               <a 
                 href="https://meet.google.com/" 
@@ -161,7 +276,7 @@ export default function SalesProcess() {
                 className="flex items-center gap-2"
               >
                 <Video className="w-4 h-4" />
-                Open Google Meet
+                Google Meet
                 <ExternalLink className="w-3 h-3" />
               </a>
             </Button>
@@ -214,30 +329,77 @@ export default function SalesProcess() {
                 </div>
                 <CardTitle className="text-2xl">{currentStage.title}</CardTitle>
                 <CardDescription>
-                  Follow these prompts to guide your conversation
+                  Fill in the details as you guide the conversation
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  <div>
-                    <h3 className="font-semibold mb-3 flex items-center gap-2">
-                      <MessageSquare className="w-5 h-5 text-primary" />
-                      Talking Points
-                    </h3>
-                    <ul className="space-y-3">
-                      {currentStage.prompts.map((prompt, index) => (
-                        <li 
-                          key={index} 
-                          className="flex items-start gap-3 p-3 rounded-lg bg-muted/50"
+                {/* Form Fields */}
+                <div className="space-y-6">
+                  {currentFormConfig?.fields.map((field) => (
+                    <div key={field.id} className="space-y-2">
+                      <Label htmlFor={field.id} className="text-base font-medium">
+                        {field.label}
+                      </Label>
+                      
+                      {field.type === "text" && (
+                        <Input
+                          id={field.id}
+                          placeholder={field.placeholder}
+                          value={(currentStepData[field.id] as string) || ""}
+                          onChange={(e) => updateField(field.id, e.target.value)}
+                        />
+                      )}
+                      
+                      {field.type === "textarea" && (
+                        <Textarea
+                          id={field.id}
+                          placeholder={field.placeholder}
+                          value={(currentStepData[field.id] as string) || ""}
+                          onChange={(e) => updateField(field.id, e.target.value)}
+                          className="min-h-[100px] resize-none"
+                        />
+                      )}
+                      
+                      {field.type === "yesno" && (
+                        <RadioGroup
+                          value={currentStepData[field.id] === true ? "yes" : currentStepData[field.id] === false ? "no" : ""}
+                          onValueChange={(value) => updateField(field.id, value === "yes")}
+                          className="flex gap-4"
                         >
-                          <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary/10 text-primary text-sm font-medium flex items-center justify-center">
-                            {index + 1}
-                          </span>
-                          <span className="text-foreground">{prompt}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="yes" id={`${field.id}-yes`} />
+                            <Label htmlFor={`${field.id}-yes`} className="font-normal cursor-pointer">Yes</Label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="no" id={`${field.id}-no`} />
+                            <Label htmlFor={`${field.id}-no`} className="font-normal cursor-pointer">No</Label>
+                          </div>
+                        </RadioGroup>
+                      )}
+                    </div>
+                  ))}
+
+                  {!currentFormConfig && (
+                    <div className="space-y-4">
+                      <p className="text-muted-foreground">Talking points for this stage:</p>
+                      <ul className="space-y-2">
+                        {currentStage.prompts.map((prompt, index) => (
+                          <li key={index} className="flex items-start gap-3 p-3 rounded-lg bg-muted/50">
+                            <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary/10 text-primary text-sm font-medium flex items-center justify-center">
+                              {index + 1}
+                            </span>
+                            <span>{prompt}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      <Textarea
+                        placeholder="Add your notes for this stage..."
+                        value={(currentStepData["notes"] as string) || ""}
+                        onChange={(e) => updateField("notes", e.target.value)}
+                        className="min-h-[100px]"
+                      />
+                    </div>
+                  )}
                 </div>
 
                 {/* Navigation Buttons */}
@@ -266,7 +428,7 @@ export default function SalesProcess() {
                       </Button>
                     ) : (
                       <Button asChild>
-                        <a href="/log-sale">Log This Sale</a>
+                        <Link to="/log-sale">Log This Sale</Link>
                       </Button>
                     )}
                   </div>
@@ -289,6 +451,25 @@ export default function SalesProcess() {
               </CardContent>
             </Card>
 
+            {/* Talking Points Reference */}
+            {currentFormConfig && currentStage.prompts.length > 0 && (
+              <Card className="mt-4">
+                <CardHeader>
+                  <CardTitle className="text-lg">Talking Points</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ul className="space-y-2 text-sm text-muted-foreground">
+                    {currentStage.prompts.map((prompt, index) => (
+                      <li key={index} className="flex items-start gap-2">
+                        <span className="text-primary font-medium">{index + 1}.</span>
+                        <span>{prompt}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </CardContent>
+              </Card>
+            )}
+
             <Card className="mt-4">
               <CardHeader>
                 <CardTitle className="text-lg">Quick Actions</CardTitle>
@@ -305,14 +486,14 @@ export default function SalesProcess() {
                   </a>
                 </Button>
                 <Button variant="outline" className="w-full justify-start" asChild>
-                  <a href="/log-sale">
+                  <Link to="/log-sale">
                     Log Sale / Activity
-                  </a>
+                  </Link>
                 </Button>
                 <Button variant="outline" className="w-full justify-start" asChild>
-                  <a href="/scripts">
-                    View All Scripts
-                  </a>
+                  <Link to="/blueprint">
+                    Start Blueprint Session
+                  </Link>
                 </Button>
               </CardContent>
             </Card>

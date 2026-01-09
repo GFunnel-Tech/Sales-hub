@@ -1,12 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, memo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { SalesNavigation } from "@/components/SalesNavigation";
@@ -14,7 +9,8 @@ import { ScriptDisplay } from "@/components/sales/ScriptDisplay";
 import { ObjectionTracker, type Objection } from "@/components/sales/ObjectionTracker";
 import { EnhancedHintsTips } from "@/components/sales/EnhancedHintsTips";
 import { PhaseDisposition, type DispositionData } from "@/components/sales/PhaseDisposition";
-import { SALES_SCRIPT_CONTENT, PHASE_ORDER, getPhaseByIndex } from "@/lib/salesScriptContent";
+import { LeadLookup } from "@/components/sales/LeadLookup";
+import { PHASE_ORDER, getPhaseByIndex } from "@/lib/salesScriptContent";
 import { 
   ArrowLeft, 
   ArrowRight, 
@@ -69,14 +65,15 @@ export default function SalesProcess() {
     }
   }, []);
 
+  // Increased debounce for better performance
   useEffect(() => {
     const timeout = setTimeout(() => {
       sessionStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-    }, 500);
+    }, 1500);
     return () => clearTimeout(timeout);
   }, [state]);
 
-  const handleFieldChange = (fieldId: string, value: string | boolean) => {
+  const handleFieldChange = useCallback((fieldId: string, value: string | boolean) => {
     const phaseId = PHASE_ORDER[state.currentPhase];
     setState((prev) => ({
       ...prev,
@@ -87,19 +84,39 @@ export default function SalesProcess() {
       ...(fieldId === "prospectName" && typeof value === "string" ? { prospectName: value } : {}),
       ...(fieldId === "companyName" && typeof value === "string" ? { companyName: value } : {}),
     }));
-  };
+  }, [state.currentPhase]);
 
-  const handleDispositionChange = (disposition: DispositionData) => {
+  const handleDispositionChange = useCallback((disposition: DispositionData) => {
     const phaseId = PHASE_ORDER[state.currentPhase];
     setState((prev) => ({
       ...prev,
       phaseDispositions: { ...prev.phaseDispositions, [phaseId]: disposition },
     }));
-  };
+  }, [state.currentPhase]);
 
-  const handleObjectionsChange = (objections: Objection[]) => {
+  const handleObjectionsChange = useCallback((objections: Objection[]) => {
     setState((prev) => ({ ...prev, objections }));
-  };
+  }, []);
+
+  const handleSelectLead = useCallback((lead: { prospectName: string; companyName?: string; email?: string }) => {
+    setState((prev) => ({
+      ...prev,
+      prospectName: lead.prospectName,
+      companyName: lead.companyName || '',
+      formData: {
+        ...prev.formData,
+        handshake_authority: {
+          ...prev.formData.handshake_authority,
+          prospectName: lead.prospectName,
+          companyName: lead.companyName || '',
+        },
+      },
+    }));
+  }, []);
+
+  const handleClearLead = useCallback(() => {
+    setState(initialState);
+  }, []);
 
   const getCurrentDisposition = (): DispositionData => {
     const phaseId = PHASE_ORDER[state.currentPhase];
@@ -150,44 +167,9 @@ export default function SalesProcess() {
 
   if (!currentPhaseConfig) return <div>Error: Phase not found</div>;
 
-  const renderField = (field: typeof currentPhaseConfig.fields[0]) => {
-    const value = getCurrentFieldValue(field.id);
-    switch (field.type) {
-      case "text":
-        return (
-          <div key={field.id} className="space-y-1.5">
-            <Label htmlFor={field.id}>{field.label}{field.required && <span className="text-destructive ml-1">*</span>}</Label>
-            <Input id={field.id} placeholder={field.placeholder} value={typeof value === "string" ? value : ""} onChange={(e) => handleFieldChange(field.id, e.target.value)} />
-          </div>
-        );
-      case "textarea":
-        return (
-          <div key={field.id} className="space-y-1.5">
-            <Label htmlFor={field.id}>{field.label}</Label>
-            <Textarea id={field.id} placeholder={field.placeholder} value={typeof value === "string" ? value : ""} onChange={(e) => handleFieldChange(field.id, e.target.value)} className="min-h-[80px]" />
-          </div>
-        );
-      case "yesno":
-        return (
-          <div key={field.id} className="flex items-center justify-between py-2">
-            <Label htmlFor={field.id}>{field.label}</Label>
-            <Switch id={field.id} checked={Boolean(value)} onCheckedChange={(checked) => handleFieldChange(field.id, checked)} />
-          </div>
-        );
-      case "select":
-        return (
-          <div key={field.id} className="space-y-1.5">
-            <Label htmlFor={field.id}>{field.label}</Label>
-            <Select value={typeof value === "string" ? value : ""} onValueChange={(val) => handleFieldChange(field.id, val)}>
-              <SelectTrigger><SelectValue placeholder="Select..." /></SelectTrigger>
-              <SelectContent>{field.options?.map((opt) => <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>)}</SelectContent>
-            </Select>
-          </div>
-        );
-      default:
-        return null;
-    }
-  };
+  // Get all field values for current phase
+  const currentPhaseId = PHASE_ORDER[state.currentPhase];
+  const currentFieldValues = state.formData[currentPhaseId] || {};
 
   return (
     <div className="min-h-screen bg-background">
@@ -218,6 +200,12 @@ export default function SalesProcess() {
           </div>
         </div>
 
+        {/* Lead Lookup */}
+        <LeadLookup 
+          onSelectLead={handleSelectLead} 
+          onClear={handleClearLead} 
+        />
+
         <div className="grid lg:grid-cols-[1fr,380px] gap-6">
           <div className="space-y-6">
             <Card>
@@ -232,13 +220,15 @@ export default function SalesProcess() {
             </Card>
 
             <Card>
-              <CardHeader className="pb-2"><CardTitle className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Script</CardTitle></CardHeader>
-              <CardContent><ScriptDisplay blocks={currentPhaseConfig.scriptBlocks} prospectName={state.prospectName || "[NAME]"} /></CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="pb-2"><CardTitle className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Capture Notes</CardTitle></CardHeader>
-              <CardContent className="space-y-4">{currentPhaseConfig.fields.map(renderField)}</CardContent>
+              <CardHeader className="pb-2"><CardTitle className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Script & Capture</CardTitle></CardHeader>
+              <CardContent>
+                <ScriptDisplay 
+                  blocks={currentPhaseConfig.scriptBlocks} 
+                  prospectName={state.prospectName || "[NAME]"} 
+                  fieldValues={currentFieldValues}
+                  onFieldChange={handleFieldChange}
+                />
+              </CardContent>
             </Card>
 
             <PhaseDisposition value={getCurrentDisposition()} onChange={handleDispositionChange} />

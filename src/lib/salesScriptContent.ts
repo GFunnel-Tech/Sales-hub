@@ -2,10 +2,17 @@
 // Script-first teleprompter content for each phase of the sales process
 
 export interface ScriptBlock {
-  type: 'speech' | 'instruction' | 'question' | 'action';
+  type: 'speech' | 'instruction' | 'question' | 'action' | 'capture';
   content: string;
   highlight?: boolean;
   label?: string; // For action buttons
+  // Capture block fields
+  fieldId?: string;
+  fieldType?: 'text' | 'textarea' | 'yesno' | 'select';
+  placeholder?: string;
+  required?: boolean;
+  inline?: boolean; // Render as inline input within text
+  options?: { value: string; label: string }[];
 }
 
 export interface PhaseHints {
@@ -41,6 +48,25 @@ export const SALES_SCRIPT_CONTENT: Record<string, PhaseScript> = {
     subtitle: 'Build rapport and set the frame for the call',
     scriptBlocks: [
       {
+        type: 'capture',
+        content: '',
+        fieldId: 'prospectName',
+        fieldType: 'text',
+        label: 'Prospect Name',
+        placeholder: 'Enter name before starting',
+        required: true,
+        inline: false,
+      },
+      {
+        type: 'capture',
+        content: '',
+        fieldId: 'companyName',
+        fieldType: 'text',
+        label: 'Company',
+        placeholder: 'Company name',
+        inline: false,
+      },
+      {
         type: 'speech',
         content: "Hey [NAME]! Great to finally connect. Before we dive in, I want to let you know - this isn't going to be a typical sales call where I pitch you for an hour.",
         highlight: true,
@@ -59,12 +85,29 @@ export const SALES_SCRIPT_CONTENT: Record<string, PhaseScript> = {
         highlight: true,
       },
       {
+        type: 'capture',
+        content: '',
+        fieldId: 'agreedToFrame',
+        fieldType: 'yesno',
+        label: 'Agreed to call frame?',
+        inline: false,
+      },
+      {
         type: 'instruction',
         content: "Wait for 'yes' - this is your first micro-commitment.",
       },
       {
         type: 'speech',
         content: "Perfect. Quick housekeeping - I'm going to take notes as we go, and I might share my screen at some point to show you what we're building. Is that okay?",
+      },
+      {
+        type: 'capture',
+        content: '',
+        fieldId: 'rapportNotes',
+        fieldType: 'textarea',
+        label: '📝 Initial Rapport Notes',
+        placeholder: 'How did they respond? Any initial observations about their energy, tone...',
+        inline: false,
       },
     ],
     hints: {
@@ -89,12 +132,7 @@ export const SALES_SCRIPT_CONTENT: Record<string, PhaseScript> = {
       commonMistake: "Skipping the frame-setting and jumping straight into discovery. This leaves you positioned as 'just another salesperson' instead of a trusted advisor.",
       powerMove: "Let's actually build this together right now...",
     },
-    fields: [
-      { id: 'prospectName', label: 'Prospect Name', type: 'text', placeholder: 'Full name', required: true },
-      { id: 'companyName', label: 'Company Name', type: 'text', placeholder: 'Company name' },
-      { id: 'rapportNotes', label: 'Initial Rapport Notes', type: 'textarea', placeholder: 'How did they respond? Any initial observations...' },
-      { id: 'agreedToFrame', label: 'Agreed to call frame?', type: 'yesno' },
-    ],
+    fields: [], // Fields are now embedded in scriptBlocks as capture blocks
   },
 
   dream_pain_bridge: {
@@ -110,6 +148,15 @@ export const SALES_SCRIPT_CONTENT: Record<string, PhaseScript> = {
       {
         type: 'instruction',
         content: "Let them paint the picture. Don't interrupt. Take detailed notes using their exact words.",
+      },
+      {
+        type: 'capture',
+        content: '',
+        fieldId: 'dreamState',
+        fieldType: 'textarea',
+        label: '📝 Their Dream State',
+        placeholder: "What does their perfect business look like? Use their exact words...",
+        inline: false,
       },
       {
         type: 'speech',
@@ -137,6 +184,15 @@ export const SALES_SCRIPT_CONTENT: Record<string, PhaseScript> = {
         highlight: true,
       },
       {
+        type: 'capture',
+        content: '',
+        fieldId: 'painPoints',
+        fieldType: 'textarea',
+        label: '📝 Pain Points',
+        placeholder: "What's stopping them? What frustrations did they share?",
+        inline: false,
+      },
+      {
         type: 'instruction',
         content: "This is where the real pain comes out. Let them vent. Take notes on specific frustrations.",
       },
@@ -145,9 +201,27 @@ export const SALES_SCRIPT_CONTENT: Record<string, PhaseScript> = {
         content: "I hear you. And how long has this been going on?",
       },
       {
+        type: 'capture',
+        content: '',
+        fieldId: 'painDuration',
+        fieldType: 'text',
+        label: 'How long has this been going on?',
+        placeholder: "e.g., 6 months, 2 years",
+        inline: false,
+      },
+      {
         type: 'question',
         content: "What has that cost you - in time, money, or stress?",
         highlight: true,
+      },
+      {
+        type: 'capture',
+        content: '',
+        fieldId: 'painCost',
+        fieldType: 'textarea',
+        label: '📝 What has it cost them?',
+        placeholder: "Time, money, stress, opportunities...",
+        inline: false,
       },
     ],
     hints: {
@@ -172,12 +246,7 @@ export const SALES_SCRIPT_CONTENT: Record<string, PhaseScript> = {
       commonMistake: "Assuming you know their pain without asking. Every business owner's perfect world and pain points are unique - let them tell you.",
       powerMove: "So what you're really saying is... [reframe their pain at a deeper level]",
     },
-    fields: [
-      { id: 'dreamState', label: 'Their Dream State', type: 'textarea', placeholder: 'What does their perfect business look like? Use their exact words...' },
-      { id: 'painPoints', label: 'Pain Points', type: 'textarea', placeholder: 'What\'s stopping them? What frustrations did they share?' },
-      { id: 'painDuration', label: 'How long has this been going on?', type: 'text', placeholder: 'e.g., 6 months, 2 years' },
-      { id: 'painCost', label: 'What has it cost them?', type: 'textarea', placeholder: 'Time, money, stress, opportunities...' },
-    ],
+    fields: [], // Fields are now embedded in scriptBlocks as capture blocks
   },
 
   discovery: {
@@ -208,12 +277,30 @@ export const SALES_SCRIPT_CONTENT: Record<string, PhaseScript> = {
         content: "Let's start with Acquisition. Walk me through how someone becomes a customer today. What's that journey look like?",
       },
       {
+        type: 'capture',
+        content: '',
+        fieldId: 'acquisitionProcess',
+        fieldType: 'textarea',
+        label: '📝 Acquisition Process',
+        placeholder: "How do they get customers?",
+        inline: false,
+      },
+      {
         type: 'instruction',
         content: "Map out their current acquisition process. Look for gaps and inefficiencies.",
       },
       {
         type: 'question',
         content: "And once someone becomes a customer, what happens next? How do you deliver what you promised?",
+      },
+      {
+        type: 'capture',
+        content: '',
+        fieldId: 'creationProcess',
+        fieldType: 'textarea',
+        label: '📝 Creation/Fulfillment Process',
+        placeholder: "How do they deliver?",
+        inline: false,
       },
       {
         type: 'instruction',
@@ -224,9 +311,41 @@ export const SALES_SCRIPT_CONTENT: Record<string, PhaseScript> = {
         content: "Finally, how do you grow? Do you have repeat customers? Referrals? Upsells?",
       },
       {
+        type: 'capture',
+        content: '',
+        fieldId: 'expansionProcess',
+        fieldType: 'textarea',
+        label: '📝 Expansion Strategy',
+        placeholder: "How do they grow/scale?",
+        inline: false,
+      },
+      {
         type: 'speech',
         content: "Based on what you told me, sounds like your biggest issue is [their pain], which is really a [Creation/Acquisition/Expansion] problem. That right?",
         highlight: true,
+      },
+      {
+        type: 'capture',
+        content: '',
+        fieldId: 'primaryPainArea',
+        fieldType: 'select',
+        label: 'Primary Pain Area',
+        placeholder: "Select primary area",
+        inline: false,
+        options: [
+          { value: 'acquisition', label: 'Acquisition (getting customers)' },
+          { value: 'creation', label: 'Creation (fulfillment/delivery)' },
+          { value: 'expansion', label: 'Expansion (scaling/growth)' },
+        ],
+      },
+      {
+        type: 'capture',
+        content: '',
+        fieldId: 'numberOnePriority',
+        fieldType: 'textarea',
+        label: '📝 #1 Priority Identified',
+        placeholder: "What's the single biggest bottleneck to solve?",
+        inline: false,
       },
     ],
     hints: {
@@ -251,17 +370,7 @@ export const SALES_SCRIPT_CONTENT: Record<string, PhaseScript> = {
       commonMistake: "Trying to solve all three areas at once. Focus on the ONE area that will have the biggest impact first.",
       powerMove: "Based on everything you've told me, here's what I see as your #1 priority...",
     },
-    fields: [
-      { id: 'acquisitionProcess', label: 'Acquisition Process', type: 'textarea', placeholder: 'How do they get customers?' },
-      { id: 'creationProcess', label: 'Creation/Fulfillment Process', type: 'textarea', placeholder: 'How do they deliver?' },
-      { id: 'expansionProcess', label: 'Expansion Strategy', type: 'textarea', placeholder: 'How do they grow/scale?' },
-      { id: 'primaryPainArea', label: 'Primary Pain Area', type: 'select', options: [
-        { value: 'acquisition', label: 'Acquisition (getting customers)' },
-        { value: 'creation', label: 'Creation (fulfillment/delivery)' },
-        { value: 'expansion', label: 'Expansion (scaling/growth)' },
-      ]},
-      { id: 'numberOnePriority', label: '#1 Priority Identified', type: 'textarea', placeholder: 'What\'s the single biggest bottleneck to solve?' },
-    ],
+    fields: [],
   },
 
   presentation: {
@@ -288,6 +397,14 @@ export const SALES_SCRIPT_CONTENT: Record<string, PhaseScript> = {
         label: "Open Claude",
       },
       {
+        type: 'capture',
+        content: '',
+        fieldId: 'scopeGenerated',
+        fieldType: 'yesno',
+        label: 'Scope Generated?',
+        inline: false,
+      },
+      {
         type: 'speech',
         content: "This alone would cost you $2k-3k from a consultant, and we just did it in real-time.",
         highlight: true,
@@ -310,6 +427,14 @@ export const SALES_SCRIPT_CONTENT: Record<string, PhaseScript> = {
         label: "Open Lovable",
       },
       {
+        type: 'capture',
+        content: '',
+        fieldId: 'prototypeBuilt',
+        fieldType: 'yesno',
+        label: 'Prototype Built?',
+        inline: false,
+      },
+      {
         type: 'instruction',
         content: "This usually takes 3-5 minutes. Talk them through what's happening.",
       },
@@ -321,6 +446,24 @@ export const SALES_SCRIPT_CONTENT: Record<string, PhaseScript> = {
         type: 'speech',
         content: "Most companies would charge you $15,000-50,000 for this, and it would take 3-6 months. We just did it in 5 minutes.",
         highlight: true,
+      },
+      {
+        type: 'capture',
+        content: '',
+        fieldId: 'prospectReaction',
+        fieldType: 'textarea',
+        label: '📝 Prospect Reaction',
+        placeholder: "What did they say? How did they react?",
+        inline: false,
+      },
+      {
+        type: 'capture',
+        content: '',
+        fieldId: 'featuresHighlighted',
+        fieldType: 'textarea',
+        label: '📝 Key Features Highlighted',
+        placeholder: "Which features resonated most?",
+        inline: false,
       },
     ],
     hints: {
@@ -345,12 +488,7 @@ export const SALES_SCRIPT_CONTENT: Record<string, PhaseScript> = {
       commonMistake: "Showing features without connecting them to the prospect's specific pain points. Every feature you point out should tie back to something they said earlier.",
       powerMove: "This [feature] is exactly what you said you needed for [their specific pain]...",
     },
-    fields: [
-      { id: 'scopeGenerated', label: 'Scope Generated?', type: 'yesno' },
-      { id: 'prototypeBuilt', label: 'Prototype Built?', type: 'yesno' },
-      { id: 'prospectReaction', label: 'Prospect Reaction', type: 'textarea', placeholder: 'What did they say? How did they react?' },
-      { id: 'featuresHighlighted', label: 'Key Features Highlighted', type: 'textarea', placeholder: 'Which features resonated most?' },
-    ],
+    fields: [],
   },
 
   ask_objections: {

@@ -9,7 +9,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { supabase } from "@/integrations/supabase/client";
+import { memberApi } from "@/lib/memberApi";
 import { cn } from "@/lib/utils";
 
 interface LeadData {
@@ -44,21 +44,12 @@ export const LeadLookup = memo(function LeadLookup({
   useEffect(() => {
     const loadRecentLeads = async () => {
       try {
-        // Fetch from sales table
-        const { data: salesData } = await supabase
-          .from('sales')
-          .select('id, customer_first_name, customer_last_name, customer_email, customer_phone, created_at, disposition')
-          .order('created_at', { ascending: false })
-          .limit(5);
+        const [salesRes, blueprintRes] = await Promise.all([
+          memberApi.searchSalesLeads("").catch(() => ({ leads: [] })),
+          memberApi.searchBlueprintLeads("").catch(() => ({ leads: [] })),
+        ]);
 
-        // Fetch from blueprint_sessions table
-        const { data: blueprintData } = await supabase
-          .from('blueprint_sessions')
-          .select('id, prospect_name, prospect_company, prospect_email, created_at, status')
-          .order('created_at', { ascending: false })
-          .limit(5);
-
-        const salesLeads: LeadData[] = (salesData || []).map(s => ({
+        const salesLeads: LeadData[] = (salesRes.leads || []).slice(0, 5).map((s: any) => ({
           id: s.id,
           prospectName: `${s.customer_first_name || ''} ${s.customer_last_name || ''}`.trim(),
           email: s.customer_email || undefined,
@@ -68,7 +59,7 @@ export const LeadLookup = memo(function LeadLookup({
           status: s.disposition,
         }));
 
-        const blueprintLeads: LeadData[] = (blueprintData || []).map(b => ({
+        const blueprintLeads: LeadData[] = (blueprintRes.leads || []).slice(0, 5).map((b: any) => ({
           id: b.id,
           prospectName: b.prospect_name,
           companyName: b.prospect_company || undefined,
@@ -78,7 +69,6 @@ export const LeadLookup = memo(function LeadLookup({
           status: b.status || undefined,
         }));
 
-        // Combine and dedupe by name
         const allLeads = [...salesLeads, ...blueprintLeads];
         const seen = new Set<string>();
         const unique = allLeads.filter(l => {
@@ -107,23 +97,12 @@ export const LeadLookup = memo(function LeadLookup({
     const timer = setTimeout(async () => {
       setIsLoading(true);
       try {
-        const query = searchQuery.toLowerCase();
-        
-        // Search sales table
-        const { data: salesData } = await supabase
-          .from('sales')
-          .select('id, customer_first_name, customer_last_name, customer_email, customer_phone, created_at, disposition')
-          .or(`customer_first_name.ilike.%${query}%,customer_last_name.ilike.%${query}%,customer_email.ilike.%${query}%,customer_phone.ilike.%${query}%`)
-          .limit(10);
+        const [salesRes, blueprintRes] = await Promise.all([
+          memberApi.searchSalesLeads(searchQuery).catch(() => ({ leads: [] })),
+          memberApi.searchBlueprintLeads(searchQuery).catch(() => ({ leads: [] })),
+        ]);
 
-        // Search blueprint_sessions table
-        const { data: blueprintData } = await supabase
-          .from('blueprint_sessions')
-          .select('id, prospect_name, prospect_company, prospect_email, created_at, status')
-          .or(`prospect_name.ilike.%${query}%,prospect_email.ilike.%${query}%,prospect_company.ilike.%${query}%`)
-          .limit(10);
-
-        const salesLeads: LeadData[] = (salesData || []).map(s => ({
+        const salesLeads: LeadData[] = (salesRes.leads || []).map((s: any) => ({
           id: s.id,
           prospectName: `${s.customer_first_name || ''} ${s.customer_last_name || ''}`.trim(),
           email: s.customer_email || undefined,
@@ -133,7 +112,7 @@ export const LeadLookup = memo(function LeadLookup({
           status: s.disposition,
         }));
 
-        const blueprintLeads: LeadData[] = (blueprintData || []).map(b => ({
+        const blueprintLeads: LeadData[] = (blueprintRes.leads || []).map((b: any) => ({
           id: b.id,
           prospectName: b.prospect_name,
           companyName: b.prospect_company || undefined,

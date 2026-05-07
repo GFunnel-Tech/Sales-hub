@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useMember } from "@/hooks/useMember";
-import { supabase } from "@/integrations/supabase/client";
+import { memberApi } from "@/lib/memberApi";
 import { 
   Search, 
   PlusCircle, 
@@ -71,16 +71,9 @@ export default function MySales() {
 
   const fetchSales = async () => {
     if (!member) return;
-
     try {
-      const { data, error } = await supabase
-        .from("sales")
-        .select("*")
-        .eq("profile_id", member.id)
-        .order("created_at", { ascending: false });
-
-      if (error) throw error;
-      setSales(data || []);
+      const { sales } = await memberApi.listSales();
+      setSales(sales || []);
     } catch (error) {
       console.error("Error fetching sales:", error);
     } finally {

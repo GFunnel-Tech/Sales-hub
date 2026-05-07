@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, useCallback, useRef, ReactNode } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { memberApi } from "@/lib/memberApi";
 
 export interface BlueprintSessionData {
   id?: string;
@@ -128,40 +128,34 @@ export function BlueprintProvider({ children }: { children: ReactNode }) {
 
   const saveSessionToDb = useCallback(async (sessionData: BlueprintSessionData) => {
     if (!sessionData.sessionId) return;
-    
     setIsSaving(true);
     try {
-      const { error } = await supabase
-        .from("blueprint_sessions")
-        .update({
-          prospect_name: sessionData.prospectName,
-          prospect_email: sessionData.prospectEmail,
-          prospect_company: sessionData.prospectCompany,
-          prospect_industry: sessionData.prospectIndustry,
-          dream_state_responses: sessionData.dreamStateResponses,
-          pain_point_responses: sessionData.painPointResponses,
-          bridge_understanding: sessionData.bridgeUnderstanding,
-          qualification_answers: sessionData.qualificationAnswers,
-          qualification_score: sessionData.qualificationScore,
-          is_qualified: sessionData.isQualified,
-          canvas_image_url: sessionData.canvasImageUrl,
-          canvas_json: sessionData.canvasJson as null,
-          canvas_notes: sessionData.canvasNotes,
-          generated_scope: sessionData.generatedScope,
-          scope_url: sessionData.scopeUrl,
-          prototype_url: sessionData.prototypeUrl,
-          selected_plan: sessionData.selectedPlan,
-          custom_request: sessionData.customRequest,
-          recording_url: sessionData.recordingUrl,
-          agent_notes: sessionData.agentNotes,
-          disposition: sessionData.disposition,
-          follow_up_date: sessionData.followUpDate || null,
-          current_page: sessionData.currentPage,
-          status: sessionData.status,
-        })
-        .eq("session_id", sessionData.sessionId);
-
-      if (error) throw error;
+      await memberApi.updateBlueprintSession(sessionData.sessionId, {
+        prospect_name: sessionData.prospectName,
+        prospect_email: sessionData.prospectEmail,
+        prospect_company: sessionData.prospectCompany,
+        prospect_industry: sessionData.prospectIndustry,
+        dream_state_responses: sessionData.dreamStateResponses,
+        pain_point_responses: sessionData.painPointResponses,
+        bridge_understanding: sessionData.bridgeUnderstanding,
+        qualification_answers: sessionData.qualificationAnswers,
+        qualification_score: sessionData.qualificationScore,
+        is_qualified: sessionData.isQualified,
+        canvas_image_url: sessionData.canvasImageUrl,
+        canvas_json: sessionData.canvasJson,
+        canvas_notes: sessionData.canvasNotes,
+        generated_scope: sessionData.generatedScope,
+        scope_url: sessionData.scopeUrl,
+        prototype_url: sessionData.prototypeUrl,
+        selected_plan: sessionData.selectedPlan,
+        custom_request: sessionData.customRequest,
+        recording_url: sessionData.recordingUrl,
+        agent_notes: sessionData.agentNotes,
+        disposition: sessionData.disposition,
+        follow_up_date: sessionData.followUpDate || null,
+        current_page: sessionData.currentPage,
+        status: sessionData.status,
+      });
       setLastSaved(new Date());
     } catch (error) {
       console.error("Failed to save session:", error);
@@ -198,19 +192,15 @@ export function BlueprintProvider({ children }: { children: ReactNode }) {
         currentPage: 2,
       };
 
-      // Save to database
-      const { error } = await supabase.from("blueprint_sessions").insert({
+      // Save to database via secure edge function (member ID validated server-side)
+      await memberApi.createBlueprintSession({
         session_id: sessionId,
-        agent_profile_id: profileId || null,
         prospect_name: newSession.prospectName,
         prospect_email: newSession.prospectEmail,
         prospect_company: newSession.prospectCompany,
         prospect_industry: newSession.prospectIndustry,
         current_page: 2,
-        status: "in_progress",
       });
-
-      if (error) throw error;
 
       setSession(newSession);
       setLastSaved(new Date());
@@ -245,20 +235,12 @@ export function BlueprintProvider({ children }: { children: ReactNode }) {
   const completeSession = async () => {
     setIsLoading(true);
     try {
-      const { error } = await supabase
-        .from("blueprint_sessions")
-        .update({
-          status: "completed",
-          completed_at: new Date().toISOString(),
-          disposition: session.disposition,
-          agent_notes: session.agentNotes,
-          recording_url: session.recordingUrl,
-          follow_up_date: session.followUpDate || null,
-        })
-        .eq("session_id", session.sessionId);
-
-      if (error) throw error;
-
+      await memberApi.completeBlueprintSession(session.sessionId, {
+        disposition: session.disposition,
+        agent_notes: session.agentNotes,
+        recording_url: session.recordingUrl,
+        follow_up_date: session.followUpDate || null,
+      });
       setSession((prev) => ({ ...prev, status: "completed" }));
     } catch (error) {
       console.error("Failed to complete session:", error);

@@ -4,7 +4,7 @@ import { SalesNavigation } from "@/components/SalesNavigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useMember } from "@/hooks/useMember";
-import { supabase } from "@/integrations/supabase/client";
+import { memberApi } from "@/lib/memberApi";
 import { 
   FileText, 
   PlusCircle, 
@@ -52,58 +52,10 @@ export default function Dashboard() {
 
   const fetchDashboardData = async () => {
     if (!member) return;
-
     try {
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      
-      const weekAgo = new Date();
-      weekAgo.setDate(weekAgo.getDate() - 7);
-
-      // Get today's calls
-      const { count: todayCount } = await supabase
-        .from("sales")
-        .select("*", { count: "exact", head: true })
-        .eq("profile_id", member.id)
-        .gte("created_at", today.toISOString());
-
-      // Get week's sales (disposition = sold)
-      const { count: weekSalesCount } = await supabase
-        .from("sales")
-        .select("*", { count: "exact", head: true })
-        .eq("profile_id", member.id)
-        .eq("disposition", "sold")
-        .gte("created_at", weekAgo.toISOString());
-
-      // Get pending followups
-      const { data: followupData, count: followupCount } = await supabase
-        .from("sales")
-        .select("id, customer_first_name, customer_last_name, follow_up_date, follow_up_notes, product_service", { count: "exact" })
-        .eq("profile_id", member.id)
-        .not("follow_up_date", "is", null)
-        .gte("follow_up_date", new Date().toISOString())
-        .order("follow_up_date", { ascending: true })
-        .limit(5);
-
-      // Calculate conversion rate
-      const { count: totalCalls } = await supabase
-        .from("sales")
-        .select("*", { count: "exact", head: true })
-        .eq("profile_id", member.id)
-        .gte("created_at", weekAgo.toISOString());
-
-      const conversionRate = totalCalls && weekSalesCount 
-        ? Math.round((weekSalesCount / totalCalls) * 100) 
-        : 0;
-
-      setStats({
-        todayCalls: todayCount || 0,
-        weekSales: weekSalesCount || 0,
-        pendingFollowups: followupCount || 0,
-        conversionRate
-      });
-
-      setFollowups(followupData || []);
+      const { stats, followups } = await memberApi.getStats();
+      setStats(stats);
+      setFollowups(followups || []);
     } catch (error) {
       console.error("Error fetching dashboard data:", error);
     } finally {

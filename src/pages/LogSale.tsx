@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useMember } from "@/hooks/useMember";
-import { supabase } from "@/integrations/supabase/client";
+import { memberApi } from "@/lib/memberApi";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, User, Phone, MapPin, DollarSign, FileText, Calendar } from "lucide-react";
 
@@ -100,8 +100,6 @@ export default function LogSale() {
 
     try {
       const saleData = {
-        profile_id: member.id,
-        user_id: member.id, // Keep for backwards compatibility
         customer_first_name: formData.customer_first_name,
         customer_last_name: formData.customer_last_name || null,
         customer_email: formData.customer_email || null,
@@ -119,14 +117,10 @@ export default function LogSale() {
         notes: formData.notes || null,
         objections_handled: formData.objections_handled || null,
         follow_up_date: formData.follow_up_date ? new Date(formData.follow_up_date).toISOString() : null,
-        follow_up_notes: formData.follow_up_notes || null
+        follow_up_notes: formData.follow_up_notes || null,
       };
 
-      const { error } = await supabase
-        .from("sales")
-        .insert(saleData);
-
-      if (error) throw error;
+      await memberApi.createSale(saleData);
 
       toast({
         title: "Sale logged!",

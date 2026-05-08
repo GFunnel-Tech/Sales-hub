@@ -1,1 +1,10 @@
 project_id = "upunppktlbgeuqloofuw"
+
+[functions.setup-generate]
+verify_jwt = false
+
+[functions.member-sales]
+verify_jwt = false
+
+[functions.member-blueprint]
+verify_jwt = false

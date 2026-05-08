@@ -1,9 +1,10 @@
 import { ReactNode } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ArrowLeft, ArrowRight, Save, CheckCircle2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useBlueprintSession } from "@/hooks/useBlueprintSession";
 import { BlueprintProgressBar } from "./BlueprintProgressBar";
+import { ScriptPhasePanel } from "./ScriptPhasePanel";
 import { BLUEPRINT_PAGES } from "@/lib/blueprintConfig";
 
 interface BlueprintLayoutProps {

@@ -1,16 +1,10 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, ExternalLink, Home, FileText, PlusCircle, List, BookOpen, LogOut, User, Video, RefreshCw } from "lucide-react";
+import { Menu, ExternalLink, Home, FileText, PlusCircle, List, BookOpen, Video, RefreshCw, User } from "lucide-react";
 import { Button } from "./ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useMember } from "@/hooks/useMember";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { AvatarMenu } from "./AvatarMenu";
 
 const navItems = [
   { name: "Hub", href: "/", icon: Home },
@@ -77,35 +71,7 @@ export const SalesNavigation = () => {
               </a>
             </Button>
             
-            {member && (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                      <User className="w-4 h-4 text-primary" />
-                    </div>
-                    <div className="text-left hidden sm:block">
-                      <p className="text-sm font-medium">{member.full_name || member.member_id}</p>
-                      <p className="text-xs text-muted-foreground">{member.member_id}</p>
-                    </div>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <div className="px-2 py-1.5">
-                    <p className="text-sm font-medium">{member.full_name || "Team Member"}</p>
-                    <p className="text-xs text-muted-foreground">ID: {member.member_id}</p>
-                    {member.email && (
-                      <p className="text-xs text-muted-foreground">{member.email}</p>
-                    )}
-                  </div>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleSwitchMember}>
-                    <RefreshCw className="w-4 h-4 mr-2" />
-                    Switch Member
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            )}
+            {member && <AvatarMenu />}
           </div>
 
           {/* Mobile Menu */}

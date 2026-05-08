@@ -1,9 +1,10 @@
 import { ReactNode } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ArrowLeft, ArrowRight, Save, CheckCircle2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useBlueprintSession } from "@/hooks/useBlueprintSession";
 import { BlueprintProgressBar } from "./BlueprintProgressBar";
+import { ScriptPhasePanel } from "./ScriptPhasePanel";
 import { BLUEPRINT_PAGES } from "@/lib/blueprintConfig";
 
 interface BlueprintLayoutProps {
@@ -24,6 +25,7 @@ export function BlueprintLayout({
   backPath,
 }: BlueprintLayoutProps) {
   const navigate = useNavigate();
+  const location = useLocation();
   const { isSaving, lastSaved, saveSession } = useBlueprintSession();
 
   const handleBack = () => {
@@ -88,6 +90,9 @@ export function BlueprintLayout({
             <h1 className="text-3xl font-bold text-foreground mb-2">{title}</h1>
             {subtitle && <p className="text-muted-foreground text-lg">{subtitle}</p>}
           </div>
+
+          {/* Admin-defined script content for this stage (per-stage override) */}
+          <ScriptPhasePanel blueprintPath={location.pathname} />
 
           {/* Page Content */}
           {children}

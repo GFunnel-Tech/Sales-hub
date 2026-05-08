@@ -121,6 +121,143 @@ export type Database = {
           },
         ]
       }
+      dispositions: {
+        Row: {
+          created_at: string
+          description: string | null
+          division_id: string | null
+          follow_up_days: number | null
+          id: string
+          is_active: boolean
+          label: string
+          org_id: string
+          outcome_type: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          division_id?: string | null
+          follow_up_days?: number | null
+          id?: string
+          is_active?: boolean
+          label: string
+          org_id: string
+          outcome_type?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          division_id?: string | null
+          follow_up_days?: number | null
+          id?: string
+          is_active?: boolean
+          label?: string
+          org_id?: string
+          outcome_type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dispositions_division_id_fkey"
+            columns: ["division_id"]
+            isOneToOne: false
+            referencedRelation: "divisions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dispositions_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      divisions: {
+        Row: {
+          category: string
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          org_id: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          org_id: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          org_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "divisions_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      organizations: {
+        Row: {
+          auth_mode: string
+          brand_primary_color: string | null
+          brand_secondary_color: string | null
+          created_at: string
+          id: string
+          industry: string | null
+          logo_url: string | null
+          name: string
+          setup_completed_at: string | null
+          slug: string | null
+          updated_at: string
+          website: string | null
+        }
+        Insert: {
+          auth_mode?: string
+          brand_primary_color?: string | null
+          brand_secondary_color?: string | null
+          created_at?: string
+          id?: string
+          industry?: string | null
+          logo_url?: string | null
+          name: string
+          setup_completed_at?: string | null
+          slug?: string | null
+          updated_at?: string
+          website?: string | null
+        }
+        Update: {
+          auth_mode?: string
+          brand_primary_color?: string | null
+          brand_secondary_color?: string | null
+          created_at?: string
+          id?: string
+          industry?: string | null
+          logo_url?: string | null
+          name?: string
+          setup_completed_at?: string | null
+          slug?: string | null
+          updated_at?: string
+          website?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -311,8 +448,10 @@ export type Database = {
           created_at: string
           created_by: string | null
           description: string | null
+          division_id: string | null
           id: string
           is_active: boolean
+          org_id: string | null
           title: string
           updated_at: string
         }
@@ -322,8 +461,10 @@ export type Database = {
           created_at?: string
           created_by?: string | null
           description?: string | null
+          division_id?: string | null
           id?: string
           is_active?: boolean
+          org_id?: string | null
           title: string
           updated_at?: string
         }
@@ -333,12 +474,124 @@ export type Database = {
           created_at?: string
           created_by?: string | null
           description?: string | null
+          division_id?: string | null
           id?: string
           is_active?: boolean
+          org_id?: string | null
           title?: string
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "scripts_division_id_fkey"
+            columns: ["division_id"]
+            isOneToOne: false
+            referencedRelation: "divisions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "scripts_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      setup_invites: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          expires_at: string | null
+          id: string
+          label: string | null
+          org_id: string | null
+          token: string
+          used_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          expires_at?: string | null
+          id?: string
+          label?: string | null
+          org_id?: string | null
+          token: string
+          used_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          expires_at?: string | null
+          id?: string
+          label?: string | null
+          org_id?: string | null
+          token?: string
+          used_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "setup_invites_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      trainings: {
+        Row: {
+          attachments: Json | null
+          content: string | null
+          created_at: string
+          division_id: string | null
+          id: string
+          is_active: boolean
+          org_id: string
+          title: string
+          updated_at: string
+          video_url: string | null
+        }
+        Insert: {
+          attachments?: Json | null
+          content?: string | null
+          created_at?: string
+          division_id?: string | null
+          id?: string
+          is_active?: boolean
+          org_id: string
+          title: string
+          updated_at?: string
+          video_url?: string | null
+        }
+        Update: {
+          attachments?: Json | null
+          content?: string | null
+          created_at?: string
+          division_id?: string | null
+          id?: string
+          is_active?: boolean
+          org_id?: string
+          title?: string
+          updated_at?: string
+          video_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "trainings_division_id_fkey"
+            columns: ["division_id"]
+            isOneToOne: false
+            referencedRelation: "divisions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "trainings_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_roles: {
         Row: {

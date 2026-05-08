@@ -21,6 +21,7 @@ import SalesTraining from "./pages/SalesTraining";
 import SetupWizard from "./pages/SetupWizard";
 import SetupInvites from "./pages/SetupInvites";
 import BannerManager from "./pages/BannerManager";
+import ScriptEditor from "./pages/ScriptEditor";
 import NotFound from "./pages/NotFound";
 
 // Blueprint Pages

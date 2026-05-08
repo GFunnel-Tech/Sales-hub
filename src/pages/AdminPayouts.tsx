@@ -61,8 +61,13 @@ export default function AdminPayouts() {
 
   useEffect(() => { load(); }, []);
 
-  const updateStatus = async (id: string, status: string, admin_notes?: string) => {
-    const patch: Record<string, unknown> = {
+  const updateStatus = async (id: string, status: "approved" | "rejected" | "paid", admin_notes?: string) => {
+    const patch: {
+      status: typeof status;
+      reviewed_at: string;
+      admin_notes?: string;
+      paid_at?: string;
+    } = {
       status,
       reviewed_at: new Date().toISOString(),
     };

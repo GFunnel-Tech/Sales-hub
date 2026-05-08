@@ -178,6 +178,42 @@ export type Database = {
           },
         ]
       }
+      commission_rules: {
+        Row: {
+          created_at: string
+          flat_bonus: number
+          id: string
+          is_active: boolean
+          notes: string | null
+          org_id: string | null
+          rate_percent: number
+          role: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          flat_bonus?: number
+          id?: string
+          is_active?: boolean
+          notes?: string | null
+          org_id?: string | null
+          rate_percent?: number
+          role: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          flat_bonus?: number
+          id?: string
+          is_active?: boolean
+          notes?: string | null
+          org_id?: string | null
+          rate_percent?: number
+          role?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       dispositions: {
         Row: {
           created_at: string
@@ -312,6 +348,54 @@ export type Database = {
           slug?: string | null
           updated_at?: string
           website?: string | null
+        }
+        Relationships: []
+      }
+      payout_requests: {
+        Row: {
+          admin_notes: string | null
+          amount: number
+          created_at: string
+          id: string
+          notes: string | null
+          paid_at: string | null
+          payment_details: string | null
+          payment_method: string | null
+          profile_id: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          amount: number
+          created_at?: string
+          id?: string
+          notes?: string | null
+          paid_at?: string | null
+          payment_details?: string | null
+          payment_method?: string | null
+          profile_id: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          admin_notes?: string | null
+          amount?: number
+          created_at?: string
+          id?: string
+          notes?: string | null
+          paid_at?: string | null
+          payment_details?: string | null
+          payment_method?: string | null
+          profile_id?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          updated_at?: string
         }
         Relationships: []
       }

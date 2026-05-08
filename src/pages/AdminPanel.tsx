@@ -328,10 +328,16 @@ export default function AdminPanel() {
               <p className="text-sm text-muted-foreground">Manage your sales team</p>
             </div>
           </div>
-          <Button variant="outline" size="sm" onClick={handleSignOut}>
-            <LogOut className="h-4 w-4 mr-2" />
-            Sign Out
-          </Button>
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm" onClick={() => navigate("/admin/setup-invites")}>
+              <Plus className="h-4 w-4 mr-2" />
+              Setup Invites
+            </Button>
+            <Button variant="outline" size="sm" onClick={handleSignOut}>
+              <LogOut className="h-4 w-4 mr-2" />
+              Sign Out
+            </Button>
+          </div>
         </div>
       </header>
 

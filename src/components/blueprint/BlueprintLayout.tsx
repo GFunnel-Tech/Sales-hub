@@ -1,9 +1,10 @@
 import { ReactNode } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowLeft, Save, CheckCircle2, Loader2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, Save, CheckCircle2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useBlueprintSession } from "@/hooks/useBlueprintSession";
 import { BlueprintProgressBar } from "./BlueprintProgressBar";
+import { BLUEPRINT_PAGES } from "@/lib/blueprintConfig";
 
 interface BlueprintLayoutProps {
   children: ReactNode;
@@ -90,6 +91,37 @@ export function BlueprintLayout({
 
           {/* Page Content */}
           {children}
+
+          {/* Phase Navigation */}
+          <div className="mt-8 flex items-center justify-between border-t pt-4">
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={currentPage <= 1}
+              onClick={() => {
+                const prev = BLUEPRINT_PAGES.find((p) => p.id === currentPage - 1);
+                if (prev) navigate(prev.path);
+              }}
+            >
+              <ArrowLeft className="h-4 w-4 mr-1" />
+              Previous phase
+            </Button>
+            <span className="text-xs text-muted-foreground">
+              Phase {currentPage} of {BLUEPRINT_PAGES.length}
+            </span>
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={currentPage >= BLUEPRINT_PAGES.length}
+              onClick={() => {
+                const next = BLUEPRINT_PAGES.find((p) => p.id === currentPage + 1);
+                if (next) navigate(next.path);
+              }}
+            >
+              Next phase
+              <ArrowRight className="h-4 w-4 ml-1" />
+            </Button>
+          </div>
         </div>
       </main>
     </div>

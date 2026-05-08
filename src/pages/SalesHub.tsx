@@ -10,7 +10,6 @@ import {
   FileText,
   BarChart3,
   Target,
-  ExternalLink,
   MessageCircle,
   BookOpen
 } from "lucide-react";

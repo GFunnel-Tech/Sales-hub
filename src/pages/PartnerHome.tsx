@@ -10,8 +10,7 @@ import {
   Calculator,
   BookOpen,
   Crown,
-  Gift,
-  ExternalLink
+  Gift
 } from "lucide-react";
 
 const dashboardItems = [

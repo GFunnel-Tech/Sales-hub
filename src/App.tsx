@@ -20,6 +20,7 @@ import ObjectionPlaybook from "./pages/ObjectionPlaybook";
 import SalesTraining from "./pages/SalesTraining";
 import SetupWizard from "./pages/SetupWizard";
 import SetupInvites from "./pages/SetupInvites";
+import BannerManager from "./pages/BannerManager";
 import NotFound from "./pages/NotFound";
 
 // Blueprint Pages
@@ -121,6 +122,14 @@ function AppRoutes() {
         element={
           <AdminRoute>
             <SetupInvites />
+          </AdminRoute>
+        }
+      />
+      <Route
+        path="/admin/banners"
+        element={
+          <AdminRoute>
+            <BannerManager />
           </AdminRoute>
         }
       />

@@ -329,6 +329,10 @@ export default function AdminPanel() {
             </div>
           </div>
           <div className="flex gap-2">
+            <Button variant="outline" size="sm" onClick={() => navigate("/admin/banners")}>
+              <Pencil className="h-4 w-4 mr-2" />
+              Banners
+            </Button>
             <Button variant="outline" size="sm" onClick={() => navigate("/admin/setup-invites")}>
               <Plus className="h-4 w-4 mr-2" />
               Setup Invites

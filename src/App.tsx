@@ -22,6 +22,8 @@ import SetupWizard from "./pages/SetupWizard";
 import SetupInvites from "./pages/SetupInvites";
 import BannerManager from "./pages/BannerManager";
 import ScriptEditor from "./pages/ScriptEditor";
+import Payouts from "./pages/Payouts";
+import AdminPayouts from "./pages/AdminPayouts";
 import NotFound from "./pages/NotFound";
 
 // Blueprint Pages
@@ -94,6 +96,15 @@ function AppRoutes() {
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/objection-playbook" element={<ObjectionPlaybook />} />
       <Route path="/sales-training" element={<SalesTraining />} />
+      <Route path="/payouts" element={<Payouts />} />
+      <Route
+        path="/admin/payouts"
+        element={
+          <AdminRoute>
+            <AdminPayouts />
+          </AdminRoute>
+        }
+      />
       
       {/* Blueprint Session Routes */}
       <Route path="/blueprint" element={<BlueprintHandshake />} />

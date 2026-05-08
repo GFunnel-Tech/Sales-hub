@@ -9,6 +9,7 @@ export interface Member {
   phone: string | null;
   avatar_url: string | null;
   is_active: boolean;
+  audience: string | null;
 }
 
 interface MemberContextType {
@@ -40,7 +41,7 @@ export function MemberProvider({ children }: { children: ReactNode }) {
     try {
       const { data, error } = await supabase
         .from("profiles")
-        .select("id, member_id, full_name, email, phone, avatar_url, is_active")
+        .select("id, member_id, full_name, email, phone, avatar_url, is_active, audience")
         .eq("member_id", memberId.toUpperCase().trim())
         .eq("is_active", true)
         .maybeSingle();

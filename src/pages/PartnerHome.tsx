@@ -10,8 +10,7 @@ import {
   Calculator,
   BookOpen,
   Crown,
-  Gift,
-  ExternalLink
+  Gift
 } from "lucide-react";
 
 const dashboardItems = [
@@ -122,15 +121,9 @@ export default function PartnerHome() {
                 </p>
               </div>
               <Button className="btn-payout text-white shrink-0" asChild>
-                <a 
-                  href="https://payouts.gfunnel.com/login" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2"
-                >
-                  Access Payouts
-                  <ExternalLink className="w-4 h-4" />
-                </a>
+                <Link to="/payouts" className="flex items-center gap-2">
+                  View Commissions & Payouts
+                </Link>
               </Button>
             </div>
           </CardContent>

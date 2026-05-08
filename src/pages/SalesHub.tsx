@@ -10,7 +10,6 @@ import {
   FileText,
   BarChart3,
   Target,
-  ExternalLink,
   MessageCircle,
   BookOpen
 } from "lucide-react";
@@ -131,15 +130,9 @@ export default function SalesHub() {
                 </p>
               </div>
               <Button className="bg-white text-primary hover:bg-white/90 shrink-0" asChild>
-                <a 
-                  href="https://payouts.gfunnel.com/login" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2"
-                >
-                  Access Payouts
-                  <ExternalLink className="w-4 h-4" />
-                </a>
+                <Link to="/payouts" className="flex items-center gap-2">
+                  View Commissions & Payouts
+                </Link>
               </Button>
             </div>
           </CardContent>

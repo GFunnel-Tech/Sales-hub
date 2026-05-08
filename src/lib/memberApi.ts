@@ -35,6 +35,12 @@ export const memberApi = {
   searchSalesLeads: (q: string) =>
     call("member-sales", `?action=search-leads&q=${encodeURIComponent(q)}`),
 
+  // Commissions & Payouts
+  getCommissions: () => call("member-sales", "?action=commissions"),
+  listPayouts: () => call("member-sales", "?action=payouts"),
+  requestPayout: (body: Record<string, unknown>) =>
+    call("member-sales", "?action=request-payout", { method: "POST", body: JSON.stringify(body) }),
+
   // Blueprint
   createBlueprintSession: (body: Record<string, unknown>) =>
     call("member-blueprint", "?action=create", { method: "POST", body: JSON.stringify(body) }),

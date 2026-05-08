@@ -14,6 +14,63 @@ export type Database = {
   }
   public: {
     Tables: {
+      banner_slides: {
+        Row: {
+          accent_gradient: string
+          audience: string
+          created_at: string
+          cta_href: string
+          cta_label: string
+          description: string
+          division_id: string | null
+          gradient: string
+          icon: string
+          id: string
+          is_active: boolean
+          org_id: string | null
+          placement: string
+          sort_order: number
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          accent_gradient?: string
+          audience?: string
+          created_at?: string
+          cta_href?: string
+          cta_label?: string
+          description: string
+          division_id?: string | null
+          gradient?: string
+          icon?: string
+          id?: string
+          is_active?: boolean
+          org_id?: string | null
+          placement?: string
+          sort_order?: number
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          accent_gradient?: string
+          audience?: string
+          created_at?: string
+          cta_href?: string
+          cta_label?: string
+          description?: string
+          division_id?: string | null
+          gradient?: string
+          icon?: string
+          id?: string
+          is_active?: boolean
+          org_id?: string | null
+          placement?: string
+          sort_order?: number
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       blueprint_sessions: {
         Row: {
           agent_notes: string | null

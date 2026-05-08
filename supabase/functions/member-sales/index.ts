@@ -16,11 +16,22 @@ async function resolveMember(memberId: string | null) {
   if (!memberId) return null;
   const { data } = await supabase
     .from("profiles")
-    .select("id, member_id, is_active")
+    .select("id, member_id, full_name, audience, is_active")
     .eq("member_id", memberId.toUpperCase().trim())
     .eq("is_active", true)
     .maybeSingle();
   return data;
+}
+
+async function getCommissionRate(role: string | null) {
+  const lookup = role || "salesperson";
+  const { data } = await supabase
+    .from("commission_rules")
+    .select("rate_percent, flat_bonus")
+    .eq("role", lookup)
+    .eq("is_active", true)
+    .maybeSingle();
+  return data ?? { rate_percent: 10, flat_bonus: 0 };
 }
 
 function json(body: unknown, status = 200) {

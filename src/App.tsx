@@ -125,6 +125,14 @@ function AppRoutes() {
           </AdminRoute>
         }
       />
+      <Route
+        path="/admin/banners"
+        element={
+          <AdminRoute>
+            <BannerManager />
+          </AdminRoute>
+        }
+      />
 
       <Route path="*" element={<NotFound />} />
     </Routes>

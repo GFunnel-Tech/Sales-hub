@@ -91,6 +91,9 @@ export function BlueprintLayout({
             {subtitle && <p className="text-muted-foreground text-lg">{subtitle}</p>}
           </div>
 
+          {/* Admin-defined script content for this stage (per-stage override) */}
+          <ScriptPhasePanel blueprintPath={location.pathname} />
+
           {/* Page Content */}
           {children}
 

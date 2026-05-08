@@ -25,6 +25,7 @@ export function BlueprintLayout({
   backPath,
 }: BlueprintLayoutProps) {
   const navigate = useNavigate();
+  const location = useLocation();
   const { isSaving, lastSaved, saveSession } = useBlueprintSession();
 
   const handleBack = () => {

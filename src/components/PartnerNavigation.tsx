@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, ExternalLink, DollarSign, Trophy, Calculator, BookOpen, Crown, Gift } from "lucide-react";
+import { Menu, DollarSign, Trophy, Calculator, BookOpen, Crown, Gift } from "lucide-react";
 import { Button } from "./ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { AvatarMenu } from "./AvatarMenu";
 
 const navItems = [
   { name: "Commissions", href: "/commissions", icon: DollarSign },
@@ -44,19 +45,9 @@ export const PartnerNavigation = () => {
             ))}
           </div>
 
-          {/* Payout Button */}
+          {/* Avatar Menu */}
           <div className="hidden md:flex items-center gap-3">
-            <Button className="btn-payout text-white" asChild>
-              <a 
-                href="https://payouts.gfunnel.com/login" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="flex items-center gap-2"
-              >
-                Access Payouts
-                <ExternalLink className="w-4 h-4" />
-              </a>
-            </Button>
+            <AvatarMenu />
           </div>
 
           {/* Mobile Menu */}
@@ -95,18 +86,9 @@ export const PartnerNavigation = () => {
                       {item.name}
                     </Link>
                   ))}
-                  <div className="mt-4 pt-4 border-t border-border">
-                    <Button className="btn-payout text-white w-full" asChild>
-                      <a 
-                        href="https://payouts.gfunnel.com/login" 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="flex items-center justify-center gap-2"
-                      >
-                        Access Payouts
-                        <ExternalLink className="w-4 h-4" />
-                      </a>
-                    </Button>
+                  <div className="mt-4 pt-4 border-t border-border flex items-center gap-3 px-2">
+                    <AvatarMenu />
+                    <span className="text-sm text-muted-foreground">Account & payouts</span>
                   </div>
                 </div>
               </SheetContent>

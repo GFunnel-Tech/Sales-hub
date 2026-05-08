@@ -134,6 +134,22 @@ function AppRoutes() {
           </AdminRoute>
         }
       />
+      <Route
+        path="/admin/scripts"
+        element={
+          <AdminRoute>
+            <ScriptEditor />
+          </AdminRoute>
+        }
+      />
+      <Route
+        path="/admin/scripts/:id"
+        element={
+          <AdminRoute>
+            <ScriptEditor />
+          </AdminRoute>
+        }
+      />
 
       <Route path="*" element={<NotFound />} />
     </Routes>

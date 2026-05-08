@@ -18,6 +18,8 @@ import MySales from "./pages/MySales";
 import Scripts from "./pages/Scripts";
 import ObjectionPlaybook from "./pages/ObjectionPlaybook";
 import SalesTraining from "./pages/SalesTraining";
+import SetupWizard from "./pages/SetupWizard";
+import SetupInvites from "./pages/SetupInvites";
 import NotFound from "./pages/NotFound";
 
 // Blueprint Pages
@@ -105,11 +107,20 @@ function AppRoutes() {
       
       {/* Admin routes */}
       <Route path="/admin-login" element={<AdminLogin />} />
+      <Route path="/setup/:token" element={<SetupWizard />} />
       <Route
         path="/admin"
         element={
           <AdminRoute>
             <AdminPanel />
+          </AdminRoute>
+        }
+      />
+      <Route
+        path="/admin/setup-invites"
+        element={
+          <AdminRoute>
+            <SetupInvites />
           </AdminRoute>
         }
       />

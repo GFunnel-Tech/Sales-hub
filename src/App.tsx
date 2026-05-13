@@ -24,6 +24,8 @@ import BannerManager from "./pages/BannerManager";
 import ScriptEditor from "./pages/ScriptEditor";
 import Payouts from "./pages/Payouts";
 import AdminPayouts from "./pages/AdminPayouts";
+import CompetitorLookupPage from "./pages/CompetitorLookupPage";
+import CallAnalyzerPage from "./pages/CallAnalyzerPage";
 import NotFound from "./pages/NotFound";
 
 // Blueprint Pages

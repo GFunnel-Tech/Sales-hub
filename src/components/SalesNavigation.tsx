@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, ExternalLink, Home, FileText, PlusCircle, List, BookOpen, Video, RefreshCw, User } from "lucide-react";
+import { Menu, ExternalLink, Home, FileText, PlusCircle, List, BookOpen, Video, RefreshCw, User, Shield, Mic2 } from "lucide-react";
 import { Button } from "./ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useMember } from "@/hooks/useMember";

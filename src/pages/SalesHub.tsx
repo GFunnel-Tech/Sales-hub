@@ -11,7 +11,9 @@ import {
   BarChart3,
   Target,
   MessageCircle,
-  BookOpen
+  BookOpen,
+  Shield,
+  Mic2
 } from "lucide-react";
 
 const hubItems = [

@@ -99,6 +99,8 @@ function AppRoutes() {
       <Route path="/objection-playbook" element={<ObjectionPlaybook />} />
       <Route path="/sales-training" element={<SalesTraining />} />
       <Route path="/payouts" element={<Payouts />} />
+      <Route path="/competitor-lookup" element={<CompetitorLookupPage />} />
+      <Route path="/call-analyzer" element={<CallAnalyzerPage />} />
       <Route
         path="/admin/payouts"
         element={

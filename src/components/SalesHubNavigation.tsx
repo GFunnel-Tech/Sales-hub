@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, Target, PhoneCall, ClipboardList, FileText, BarChart3 } from "lucide-react";
+import { Menu, Target, PhoneCall, ClipboardList, FileText, BarChart3, Shield, Mic2 } from "lucide-react";
 import { Button } from "./ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { AvatarMenu } from "./AvatarMenu";
@@ -11,6 +11,8 @@ const navItems = [
   { name: "My Sales", href: "/my-sales", icon: ClipboardList },
   { name: "Scripts", href: "/scripts", icon: FileText },
   { name: "Dashboard", href: "/dashboard", icon: BarChart3 },
+  { name: "Competitors", href: "/competitor-lookup", icon: Shield },
+  { name: "Call Analysis", href: "/call-analyzer", icon: Mic2 },
 ];
 
 export const SalesHubNavigation = () => {

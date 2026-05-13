@@ -11,7 +11,9 @@ import {
   BarChart3,
   Target,
   MessageCircle,
-  BookOpen
+  BookOpen,
+  Shield,
+  Mic2
 } from "lucide-react";
 
 const hubItems = [
@@ -70,6 +72,22 @@ const hubItems = [
     icon: BarChart3,
     iconBg: "bg-orange-500/10",
     iconColor: "text-orange-600"
+  },
+  { 
+    title: "Competitor Lookup", 
+    description: "Research competitors quickly during calls",
+    href: "/competitor-lookup",
+    icon: Shield,
+    iconBg: "bg-red-500/10",
+    iconColor: "text-red-600"
+  },
+  { 
+    title: "Call Analyzer", 
+    description: "Record and analyze your sales calls",
+    href: "/call-analyzer",
+    icon: Mic2,
+    iconBg: "bg-teal-500/10",
+    iconColor: "text-teal-600"
   },
 ];
 

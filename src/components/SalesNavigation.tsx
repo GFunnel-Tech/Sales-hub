@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, ExternalLink, Home, FileText, PlusCircle, List, BookOpen, Video, RefreshCw, User } from "lucide-react";
+import { Menu, ExternalLink, Home, FileText, PlusCircle, List, BookOpen, Video, RefreshCw, User, Shield, Mic2 } from "lucide-react";
 import { Button } from "./ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useMember } from "@/hooks/useMember";
@@ -14,6 +14,8 @@ const navItems = [
   { name: "Scripts", href: "/scripts", icon: BookOpen },
   { name: "Objections", href: "/objection-playbook", icon: FileText },
   { name: "Training", href: "/sales-training", icon: BookOpen },
+  { name: "Competitors", href: "/competitor-lookup", icon: Shield },
+  { name: "Call Analysis", href: "/call-analyzer", icon: Mic2 },
 ];
 
 export const SalesNavigation = () => {

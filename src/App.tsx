@@ -24,6 +24,8 @@ import BannerManager from "./pages/BannerManager";
 import ScriptEditor from "./pages/ScriptEditor";
 import Payouts from "./pages/Payouts";
 import AdminPayouts from "./pages/AdminPayouts";
+import CompetitorLookupPage from "./pages/CompetitorLookupPage";
+import CallAnalyzerPage from "./pages/CallAnalyzerPage";
 import NotFound from "./pages/NotFound";
 
 // Blueprint Pages
@@ -97,6 +99,8 @@ function AppRoutes() {
       <Route path="/objection-playbook" element={<ObjectionPlaybook />} />
       <Route path="/sales-training" element={<SalesTraining />} />
       <Route path="/payouts" element={<Payouts />} />
+      <Route path="/competitor-lookup" element={<CompetitorLookupPage />} />
+      <Route path="/call-analyzer" element={<CallAnalyzerPage />} />
       <Route
         path="/admin/payouts"
         element={

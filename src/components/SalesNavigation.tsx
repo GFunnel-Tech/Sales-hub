@@ -14,6 +14,8 @@ const navItems = [
   { name: "Scripts", href: "/scripts", icon: BookOpen },
   { name: "Objections", href: "/objection-playbook", icon: FileText },
   { name: "Training", href: "/sales-training", icon: BookOpen },
+  { name: "Competitors", href: "/competitor-lookup", icon: Shield },
+  { name: "Call Analysis", href: "/call-analyzer", icon: Mic2 },
 ];
 
 export const SalesNavigation = () => {

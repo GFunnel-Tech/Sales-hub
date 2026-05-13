@@ -11,6 +11,8 @@ const navItems = [
   { name: "My Sales", href: "/my-sales", icon: ClipboardList },
   { name: "Scripts", href: "/scripts", icon: FileText },
   { name: "Dashboard", href: "/dashboard", icon: BarChart3 },
+  { name: "Competitors", href: "/competitor-lookup", icon: Shield },
+  { name: "Call Analysis", href: "/call-analyzer", icon: Mic2 },
 ];
 
 export const SalesHubNavigation = () => {

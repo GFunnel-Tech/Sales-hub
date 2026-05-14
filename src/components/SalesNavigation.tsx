@@ -4,7 +4,7 @@ import { Menu, ExternalLink, Home, FileText, PlusCircle, List, BookOpen, Video, 
 import { Button } from "./ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useMember } from "@/hooks/useMember";
-import { AvatarMenu } from "./AvatarMenu";
+import { WorkspaceSwitcher } from "./WorkspaceSwitcher";
 
 const navItems = [
   { name: "Hub", href: "/", icon: Home },

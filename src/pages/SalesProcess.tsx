@@ -188,14 +188,42 @@ export default function SalesProcess() {
           </div>
           <div className="space-y-2">
             <div className="flex items-center justify-between text-sm">
-              <span className="font-medium">Phase {state.currentPhase + 1} of {totalPhases}</span>
+              <span className="font-medium">Sales Pipeline — Phase {state.currentPhase + 1} of {totalPhases}</span>
               <span className="text-muted-foreground">{state.completedPhases.length} completed</span>
             </div>
-            <Progress value={progress} className="h-2" />
-            <div className="flex gap-1 mt-2">
-              {PHASE_ORDER.map((phaseId, idx) => (
-                <button key={phaseId} onClick={() => setState((prev) => ({ ...prev, currentPhase: idx }))} className={`flex-1 h-1.5 rounded-full transition-colors ${idx === state.currentPhase ? "bg-primary" : state.completedPhases.includes(idx) ? "bg-green-500" : "bg-muted"}`} />
-              ))}
+            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2">
+              {PHASE_ORDER.map((phaseId, idx) => {
+                const phase = getPhaseByIndex(idx);
+                const isCurrent = idx === state.currentPhase;
+                const isCompleted = state.completedPhases.includes(idx);
+                return (
+                  <button
+                    key={phaseId}
+                    onClick={() => setState((prev) => ({ ...prev, currentPhase: idx }))}
+                    className={`text-left rounded-lg border p-3 transition-all hover:shadow-md focus:outline-none focus:ring-2 focus:ring-primary/40 ${
+                      isCurrent
+                        ? "border-primary bg-primary/5 shadow-sm"
+                        : isCompleted
+                        ? "border-green-500/40 bg-green-500/5 hover:border-green-500/60"
+                        : "border-border bg-card hover:border-primary/40"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className={`text-[10px] font-semibold uppercase tracking-wider ${isCurrent ? "text-primary" : isCompleted ? "text-green-600" : "text-muted-foreground"}`}>
+                        Step {idx + 1}
+                      </span>
+                      {isCompleted ? (
+                        <CheckCircle2 className="h-3.5 w-3.5 text-green-600" />
+                      ) : isCurrent ? (
+                        <div className="h-2 w-2 rounded-full bg-primary animate-pulse" />
+                      ) : null}
+                    </div>
+                    <div className={`text-xs font-medium leading-tight ${isCurrent ? "text-foreground" : isCompleted ? "text-foreground" : "text-muted-foreground"}`}>
+                      {phase.title}
+                    </div>
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>

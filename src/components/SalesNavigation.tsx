@@ -35,10 +35,8 @@ export const SalesNavigation = () => {
     <nav className="sticky top-0 z-50 bg-card/95 backdrop-blur-sm border-b border-border">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <Link to="/dashboard" className="font-bold text-lg text-foreground">
-            Sales Hub
-          </Link>
+          {/* Workspace + User Switcher */}
+          <WorkspaceSwitcher workspaceLabel="Sales Hub" />
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-1">

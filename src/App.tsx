@@ -166,6 +166,14 @@ function AppRoutes() {
           </AdminRoute>
         }
       />
+      <Route
+        path="/admin/sales-phases"
+        element={
+          <AdminRoute>
+            <SalesPhasesAdmin />
+          </AdminRoute>
+        }
+      />
 
       <Route path="*" element={<NotFound />} />
     </Routes>

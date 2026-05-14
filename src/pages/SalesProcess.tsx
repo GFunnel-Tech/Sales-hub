@@ -11,7 +11,7 @@ import { ObjectionTracker, type Objection } from "@/components/sales/ObjectionTr
 import { EnhancedHintsTips } from "@/components/sales/EnhancedHintsTips";
 import { PhaseDisposition, type DispositionData } from "@/components/sales/PhaseDisposition";
 import { LeadLookup } from "@/components/sales/LeadLookup";
-import { PHASE_ORDER, getPhaseByIndex } from "@/lib/salesScriptContent";
+import { useSalesPhases } from "@/hooks/useSalesPhases";
 import { 
   ArrowLeft, 
   ArrowRight, 
@@ -48,11 +48,14 @@ const initialState: SalesProcessState = {
 export default function SalesProcess() {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { phases } = useSalesPhases();
   const [state, setState] = useState<SalesProcessState>(initialState);
   const [isSaving, setIsSaving] = useState(false);
 
+  const PHASE_ORDER = phases.map((p) => p.id);
+  const getPhaseByIndex = (i: number) => phases[i] ?? null;
   const currentPhaseConfig = getPhaseByIndex(state.currentPhase);
-  const totalPhases = PHASE_ORDER.length;
+  const totalPhases = PHASE_ORDER.length || 1;
   const progress = ((state.currentPhase + 1) / totalPhases) * 100;
 
   useEffect(() => {
@@ -166,7 +169,14 @@ export default function SalesProcess() {
     toast({ title: "Session Reset", description: "Starting fresh." });
   };
 
-  if (!currentPhaseConfig) return <div>Error: Phase not found</div>;
+  if (!currentPhaseConfig) {
+    return (
+      <div className="min-h-screen bg-background">
+        <SalesNavigation />
+        <div className="container py-12 text-center text-muted-foreground">Loading sales phases…</div>
+      </div>
+    );
+  }
 
   // Get all field values for current phase
   const currentPhaseId = PHASE_ORDER[state.currentPhase];

@@ -192,37 +192,51 @@ export default function SalesProcess() {
               <span className="font-medium">Sales Pipeline — Phase {state.currentPhase + 1} of {totalPhases}</span>
               <span className="text-muted-foreground">{state.completedPhases.length} completed</span>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               {PHASE_ORDER.map((phaseId, idx) => {
                 const phase = getPhaseByIndex(idx);
                 const isCurrent = idx === state.currentPhase;
                 const isCompleted = state.completedPhases.includes(idx);
                 return (
-                  <button
-                    key={phaseId}
-                    onClick={() => setState((prev) => ({ ...prev, currentPhase: idx }))}
-                    className={`text-left rounded-lg border p-3 transition-all hover:shadow-md focus:outline-none focus:ring-2 focus:ring-primary/40 ${
-                      isCurrent
-                        ? "border-primary bg-primary/5 shadow-sm"
-                        : isCompleted
-                        ? "border-green-500/40 bg-green-500/5 hover:border-green-500/60"
-                        : "border-border bg-card hover:border-primary/40"
-                    }`}
-                  >
-                    <div className="flex items-center justify-between mb-1.5">
-                      <span className={`text-[10px] font-semibold uppercase tracking-wider ${isCurrent ? "text-primary" : isCompleted ? "text-green-600" : "text-muted-foreground"}`}>
-                        Step {idx + 1}
-                      </span>
-                      {isCompleted ? (
-                        <CheckCircle2 className="h-3.5 w-3.5 text-green-600" />
-                      ) : isCurrent ? (
-                        <div className="h-2 w-2 rounded-full bg-primary animate-pulse" />
-                      ) : null}
-                    </div>
-                    <div className={`text-xs font-medium leading-tight ${isCurrent ? "text-foreground" : isCompleted ? "text-foreground" : "text-muted-foreground"}`}>
-                      {phase.title}
-                    </div>
-                  </button>
+                  <HoverCard key={phaseId} openDelay={120} closeDelay={80}>
+                    <HoverCardTrigger asChild>
+                      <button
+                        onClick={() => setState((prev) => ({ ...prev, currentPhase: idx }))}
+                        className={`group relative flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-medium transition-all hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/40 ${
+                          isCurrent
+                            ? "border-primary bg-primary text-primary-foreground"
+                            : isCompleted
+                            ? "border-green-500/40 bg-green-500/10 text-green-700 hover:border-green-500/60"
+                            : "border-border bg-card text-muted-foreground hover:border-primary/40 hover:text-foreground"
+                        }`}
+                        aria-label={`Step ${idx + 1}: ${phase.title}`}
+                      >
+                        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-background/20 text-[10px] font-bold">
+                          {isCompleted ? <CheckCircle2 className="h-3.5 w-3.5" /> : idx + 1}
+                        </span>
+                        <span>Step {idx + 1}</span>
+                        {isCurrent && <span className="h-1.5 w-1.5 rounded-full bg-primary-foreground animate-pulse" />}
+                      </button>
+                    </HoverCardTrigger>
+                    <HoverCardContent className="w-72" side="bottom" align="start">
+                      <div className="space-y-1.5">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                            Step {idx + 1} of {totalPhases}
+                          </span>
+                          {isCompleted && (
+                            <Badge variant="outline" className="text-[10px] h-4 px-1.5 border-green-500/40 text-green-600">
+                              Completed
+                            </Badge>
+                          )}
+                        </div>
+                        <h4 className="text-sm font-semibold">{phase.title}</h4>
+                        {phase.subtitle && (
+                          <p className="text-xs text-muted-foreground leading-relaxed">{phase.subtitle}</p>
+                        )}
+                      </div>
+                    </HoverCardContent>
+                  </HoverCard>
                 );
               })}
             </div>

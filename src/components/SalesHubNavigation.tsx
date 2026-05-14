@@ -25,10 +25,8 @@ export const SalesHubNavigation = () => {
     <nav className="sticky top-0 z-50 bg-card/95 backdrop-blur-sm border-b border-border">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          {/* Logo/Home */}
-          <Link to="/" className="font-bold text-lg text-foreground">
-            Sales Hub
-          </Link>
+          {/* Workspace + User Switcher */}
+          <WorkspaceSwitcher workspaceLabel="Sales Hub" />
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-1">
@@ -48,10 +46,8 @@ export const SalesHubNavigation = () => {
             ))}
           </div>
 
-          {/* Avatar Menu */}
-          <div className="hidden md:flex items-center gap-3">
-            <AvatarMenu />
-          </div>
+          {/* Spacer for layout balance */}
+          <div className="hidden md:block w-8" />
 
           {/* Mobile Menu */}
           <div className="lg:hidden">

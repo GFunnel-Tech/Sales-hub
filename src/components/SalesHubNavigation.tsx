@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Menu, Target, PhoneCall, ClipboardList, FileText, BarChart3, Shield, Mic2 } from "lucide-react";
 import { Button } from "./ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { AvatarMenu } from "./AvatarMenu";
+import { WorkspaceSwitcher } from "./WorkspaceSwitcher";
 
 const navItems = [
   { name: "Process", href: "/sales-process", icon: Target },
@@ -25,10 +25,8 @@ export const SalesHubNavigation = () => {
     <nav className="sticky top-0 z-50 bg-card/95 backdrop-blur-sm border-b border-border">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          {/* Logo/Home */}
-          <Link to="/" className="font-bold text-lg text-foreground">
-            Sales Hub
-          </Link>
+          {/* Workspace + User Switcher */}
+          <WorkspaceSwitcher workspaceLabel="Sales Hub" />
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-1">
@@ -48,10 +46,8 @@ export const SalesHubNavigation = () => {
             ))}
           </div>
 
-          {/* Avatar Menu */}
-          <div className="hidden md:flex items-center gap-3">
-            <AvatarMenu />
-          </div>
+          {/* Spacer for layout balance */}
+          <div className="hidden md:block w-8" />
 
           {/* Mobile Menu */}
           <div className="lg:hidden">
@@ -89,9 +85,8 @@ export const SalesHubNavigation = () => {
                       {item.name}
                     </Link>
                   ))}
-                  <div className="mt-4 pt-4 border-t border-border flex items-center gap-3 px-2">
-                    <AvatarMenu />
-                    <span className="text-sm text-muted-foreground">Account & payouts</span>
+                  <div className="mt-4 pt-4 border-t border-border px-2">
+                    <WorkspaceSwitcher workspaceLabel="Sales Hub" />
                   </div>
                 </div>
               </SheetContent>

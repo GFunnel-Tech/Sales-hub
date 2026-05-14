@@ -169,7 +169,14 @@ export default function SalesProcess() {
     toast({ title: "Session Reset", description: "Starting fresh." });
   };
 
-  if (!currentPhaseConfig) return <div>Error: Phase not found</div>;
+  if (!currentPhaseConfig) {
+    return (
+      <div className="min-h-screen bg-background">
+        <SalesNavigation />
+        <div className="container py-12 text-center text-muted-foreground">Loading sales phases…</div>
+      </div>
+    );
+  }
 
   // Get all field values for current phase
   const currentPhaseId = PHASE_ORDER[state.currentPhase];

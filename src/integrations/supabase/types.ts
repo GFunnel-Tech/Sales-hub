@@ -543,6 +543,54 @@ export type Database = {
           },
         ]
       }
+      sales_phases: {
+        Row: {
+          created_at: string
+          fields: Json
+          hints: Json
+          id: string
+          is_active: boolean
+          objections: Json
+          org_id: string | null
+          phase_key: string
+          script_blocks: Json
+          sort_order: number
+          subtitle: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          fields?: Json
+          hints?: Json
+          id?: string
+          is_active?: boolean
+          objections?: Json
+          org_id?: string | null
+          phase_key: string
+          script_blocks?: Json
+          sort_order?: number
+          subtitle?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          fields?: Json
+          hints?: Json
+          id?: string
+          is_active?: boolean
+          objections?: Json
+          org_id?: string | null
+          phase_key?: string
+          script_blocks?: Json
+          sort_order?: number
+          subtitle?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       script_requests: {
         Row: {
           admin_notes: string | null

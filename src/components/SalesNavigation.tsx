@@ -71,7 +71,6 @@ export const SalesNavigation = () => {
               </a>
             </Button>
             
-            {member && <AvatarMenu />}
           </div>
 
           {/* Mobile Menu */}

@@ -48,11 +48,14 @@ const initialState: SalesProcessState = {
 export default function SalesProcess() {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { phases } = useSalesPhases();
   const [state, setState] = useState<SalesProcessState>(initialState);
   const [isSaving, setIsSaving] = useState(false);
 
+  const PHASE_ORDER = phases.map((p) => p.id);
+  const getPhaseByIndex = (i: number) => phases[i] ?? null;
   const currentPhaseConfig = getPhaseByIndex(state.currentPhase);
-  const totalPhases = PHASE_ORDER.length;
+  const totalPhases = PHASE_ORDER.length || 1;
   const progress = ((state.currentPhase + 1) / totalPhases) * 100;
 
   useEffect(() => {

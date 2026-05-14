@@ -85,9 +85,8 @@ export const SalesHubNavigation = () => {
                       {item.name}
                     </Link>
                   ))}
-                  <div className="mt-4 pt-4 border-t border-border flex items-center gap-3 px-2">
-                    <AvatarMenu />
-                    <span className="text-sm text-muted-foreground">Account & payouts</span>
+                  <div className="mt-4 pt-4 border-t border-border px-2">
+                    <WorkspaceSwitcher workspaceLabel="Sales Hub" />
                   </div>
                 </div>
               </SheetContent>

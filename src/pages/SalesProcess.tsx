@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { SalesNavigation } from "@/components/SalesNavigation";
 import { ScriptDisplay } from "@/components/sales/ScriptDisplay";
 import { ObjectionTracker, type Objection } from "@/components/sales/ObjectionTracker";

@@ -11,7 +11,7 @@ import { ObjectionTracker, type Objection } from "@/components/sales/ObjectionTr
 import { EnhancedHintsTips } from "@/components/sales/EnhancedHintsTips";
 import { PhaseDisposition, type DispositionData } from "@/components/sales/PhaseDisposition";
 import { LeadLookup } from "@/components/sales/LeadLookup";
-import { PHASE_ORDER, getPhaseByIndex } from "@/lib/salesScriptContent";
+import { useSalesPhases } from "@/hooks/useSalesPhases";
 import { 
   ArrowLeft, 
   ArrowRight, 

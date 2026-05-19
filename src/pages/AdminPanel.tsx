@@ -225,6 +225,7 @@ export default function AdminPanel() {
           full_name: formData.full_name.trim() || null,
           email: formData.email.trim() || null,
           phone: formData.phone.trim() || null,
+          manager_id: formData.manager_id === "none" ? null : formData.manager_id,
           user_id: crypto.randomUUID(), // Generate a placeholder UUID
           is_active: true,
         });

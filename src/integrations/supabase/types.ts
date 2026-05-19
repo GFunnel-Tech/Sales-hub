@@ -408,6 +408,7 @@ export type Database = {
           full_name: string | null
           id: string
           is_active: boolean
+          manager_id: string | null
           member_id: string | null
           phone: string | null
           updated_at: string
@@ -421,6 +422,7 @@ export type Database = {
           full_name?: string | null
           id?: string
           is_active?: boolean
+          manager_id?: string | null
           member_id?: string | null
           phone?: string | null
           updated_at?: string
@@ -434,12 +436,21 @@ export type Database = {
           full_name?: string | null
           id?: string
           is_active?: boolean
+          manager_id?: string | null
           member_id?: string | null
           phone?: string | null
           updated_at?: string
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "profiles_manager_id_fkey"
+            columns: ["manager_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       sales: {
         Row: {

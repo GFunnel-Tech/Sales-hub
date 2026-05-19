@@ -81,6 +81,7 @@ export default function AdminPanel() {
     full_name: "",
     email: "",
     phone: "",
+    manager_id: "none" as string,
   });
   const [saving, setSaving] = useState(false);
 

@@ -54,6 +54,7 @@ interface Member {
   phone: string | null;
   is_active: boolean;
   created_at: string;
+  manager_id: string | null;
 }
 
 interface SalesSummary {

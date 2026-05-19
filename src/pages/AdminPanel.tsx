@@ -45,6 +45,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface Member {
   id: string;
@@ -54,6 +55,7 @@ interface Member {
   phone: string | null;
   is_active: boolean;
   created_at: string;
+  manager_id: string | null;
 }
 
 interface SalesSummary {
@@ -80,6 +82,7 @@ export default function AdminPanel() {
     full_name: "",
     email: "",
     phone: "",
+    manager_id: "none" as string,
   });
   const [saving, setSaving] = useState(false);
 
@@ -158,6 +161,7 @@ export default function AdminPanel() {
         full_name: member.full_name || "",
         email: member.email || "",
         phone: member.phone || "",
+        manager_id: member.manager_id || "none",
       });
     } else {
       setEditingMember(null);
@@ -166,6 +170,7 @@ export default function AdminPanel() {
         full_name: "",
         email: "",
         phone: "",
+        manager_id: "none",
       });
     }
     setDialogOpen(true);
@@ -192,6 +197,7 @@ export default function AdminPanel() {
           full_name: formData.full_name.trim() || null,
           email: formData.email.trim() || null,
           phone: formData.phone.trim() || null,
+          manager_id: formData.manager_id === "none" ? null : formData.manager_id,
         })
         .eq("id", editingMember.id);
 
@@ -220,6 +226,7 @@ export default function AdminPanel() {
           full_name: formData.full_name.trim() || null,
           email: formData.email.trim() || null,
           phone: formData.phone.trim() || null,
+          manager_id: formData.manager_id === "none" ? null : formData.manager_id,
           user_id: crypto.randomUUID(), // Generate a placeholder UUID
           is_active: true,
         });
@@ -493,6 +500,30 @@ export default function AdminPanel() {
                             setFormData({ ...formData, phone: e.target.value })
                           }
                         />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="manager">Manager</Label>
+                        <Select
+                          value={formData.manager_id}
+                          onValueChange={(v) => setFormData({ ...formData, manager_id: v })}
+                        >
+                          <SelectTrigger id="manager">
+                            <SelectValue placeholder="No manager (top-level)" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="none">No manager (top-level)</SelectItem>
+                            {members
+                              .filter((m) => m.id !== editingMember?.id && m.is_active)
+                              .map((m) => (
+                                <SelectItem key={m.id} value={m.id}>
+                                  {m.full_name || m.member_id}
+                                </SelectItem>
+                              ))}
+                          </SelectContent>
+                        </Select>
+                        <p className="text-xs text-muted-foreground">
+                          Leave empty for managers. Assign a manager to make this person a rep.
+                        </p>
                       </div>
                     </div>
                     <DialogFooter>

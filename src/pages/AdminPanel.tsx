@@ -501,6 +501,30 @@ export default function AdminPanel() {
                           }
                         />
                       </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="manager">Manager</Label>
+                        <Select
+                          value={formData.manager_id}
+                          onValueChange={(v) => setFormData({ ...formData, manager_id: v })}
+                        >
+                          <SelectTrigger id="manager">
+                            <SelectValue placeholder="No manager (top-level)" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="none">No manager (top-level)</SelectItem>
+                            {members
+                              .filter((m) => m.id !== editingMember?.id && m.is_active)
+                              .map((m) => (
+                                <SelectItem key={m.id} value={m.id}>
+                                  {m.full_name || m.member_id}
+                                </SelectItem>
+                              ))}
+                          </SelectContent>
+                        </Select>
+                        <p className="text-xs text-muted-foreground">
+                          Leave empty for managers. Assign a manager to make this person a rep.
+                        </p>
+                      </div>
                     </div>
                     <DialogFooter>
                       <Button variant="outline" onClick={() => setDialogOpen(false)}>

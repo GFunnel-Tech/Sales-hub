@@ -160,6 +160,7 @@ export default function AdminPanel() {
         full_name: member.full_name || "",
         email: member.email || "",
         phone: member.phone || "",
+        manager_id: member.manager_id || "none",
       });
     } else {
       setEditingMember(null);
@@ -168,6 +169,7 @@ export default function AdminPanel() {
         full_name: "",
         email: "",
         phone: "",
+        manager_id: "none",
       });
     }
     setDialogOpen(true);

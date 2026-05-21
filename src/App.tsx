@@ -104,6 +104,15 @@ function AppRoutes() {
       <Route path="/payouts" element={<Payouts />} />
       <Route path="/competitor-lookup" element={<CompetitorLookupPage />} />
       <Route path="/call-analyzer" element={<CallAnalyzerPage />} />
+      <Route path="/documents" element={<Documents />} />
+      <Route
+        path="/admin/documents"
+        element={
+          <AdminRoute>
+            <DocumentsAdmin />
+          </AdminRoute>
+        }
+      />
       <Route
         path="/admin/payouts"
         element={

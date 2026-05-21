@@ -306,6 +306,98 @@ export type Database = {
           },
         ]
       }
+      document_signatures: {
+        Row: {
+          document_id: string
+          id: string
+          ip_address: string | null
+          profile_id: string
+          signature_name: string
+          signed_at: string
+          user_agent: string | null
+        }
+        Insert: {
+          document_id: string
+          id?: string
+          ip_address?: string | null
+          profile_id: string
+          signature_name: string
+          signed_at?: string
+          user_agent?: string | null
+        }
+        Update: {
+          document_id?: string
+          id?: string
+          ip_address?: string | null
+          profile_id?: string
+          signature_name?: string
+          signed_at?: string
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "document_signatures_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "documents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      documents: {
+        Row: {
+          category: string
+          created_at: string
+          created_by: string | null
+          description: string | null
+          file_name: string
+          file_path: string
+          file_size: number | null
+          id: string
+          is_active: boolean
+          mime_type: string | null
+          org_id: string | null
+          requires_signature: boolean
+          sort_order: number
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          file_name: string
+          file_path: string
+          file_size?: number | null
+          id?: string
+          is_active?: boolean
+          mime_type?: string | null
+          org_id?: string | null
+          requires_signature?: boolean
+          sort_order?: number
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          file_name?: string
+          file_path?: string
+          file_size?: number | null
+          id?: string
+          is_active?: boolean
+          mime_type?: string | null
+          org_id?: string | null
+          requires_signature?: boolean
+          sort_order?: number
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       organizations: {
         Row: {
           auth_mode: string

@@ -348,6 +348,10 @@ export default function AdminPanel() {
               <Pencil className="h-4 w-4 mr-2" />
               Banners
             </Button>
+            <Button variant="outline" size="sm" onClick={() => navigate("/admin/documents")}>
+              <Pencil className="h-4 w-4 mr-2" />
+              Documents
+            </Button>
             <Button variant="outline" size="sm" onClick={() => navigate("/admin/payouts")}>
               <Pencil className="h-4 w-4 mr-2" />
               Payouts

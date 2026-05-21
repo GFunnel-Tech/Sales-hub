@@ -27,6 +27,8 @@ import AdminPayouts from "./pages/AdminPayouts";
 import SalesPhasesAdmin from "./pages/SalesPhasesAdmin";
 import CompetitorLookupPage from "./pages/CompetitorLookupPage";
 import CallAnalyzerPage from "./pages/CallAnalyzerPage";
+import Documents from "./pages/Documents";
+import DocumentsAdmin from "./pages/DocumentsAdmin";
 import NotFound from "./pages/NotFound";
 
 // Blueprint Pages
@@ -102,6 +104,15 @@ function AppRoutes() {
       <Route path="/payouts" element={<Payouts />} />
       <Route path="/competitor-lookup" element={<CompetitorLookupPage />} />
       <Route path="/call-analyzer" element={<CallAnalyzerPage />} />
+      <Route path="/documents" element={<Documents />} />
+      <Route
+        path="/admin/documents"
+        element={
+          <AdminRoute>
+            <DocumentsAdmin />
+          </AdminRoute>
+        }
+      />
       <Route
         path="/admin/payouts"
         element={

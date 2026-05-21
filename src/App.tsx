@@ -27,6 +27,8 @@ import AdminPayouts from "./pages/AdminPayouts";
 import SalesPhasesAdmin from "./pages/SalesPhasesAdmin";
 import CompetitorLookupPage from "./pages/CompetitorLookupPage";
 import CallAnalyzerPage from "./pages/CallAnalyzerPage";
+import Documents from "./pages/Documents";
+import DocumentsAdmin from "./pages/DocumentsAdmin";
 import NotFound from "./pages/NotFound";
 
 // Blueprint Pages

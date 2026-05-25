@@ -272,17 +272,13 @@ export default function SalesProcess() {
               </CardHeader>
             </Card>
 
-            <Card>
-              <CardHeader className="pb-2"><CardTitle className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Script & Capture</CardTitle></CardHeader>
-              <CardContent>
-                <ScriptDisplay 
-                  blocks={currentPhaseConfig.scriptBlocks} 
-                  prospectName={state.prospectName || "[NAME]"} 
-                  fieldValues={currentFieldValues}
-                  onFieldChange={handleFieldChange}
-                />
-              </CardContent>
-            </Card>
+            <ScriptDisplay 
+              blocks={currentPhaseConfig.scriptBlocks} 
+              prospectName={state.prospectName || "[NAME]"} 
+              fieldValues={currentFieldValues}
+              onFieldChange={handleFieldChange}
+            />
+
 
             <PhaseDisposition value={getCurrentDisposition()} onChange={handleDispositionChange} />
 

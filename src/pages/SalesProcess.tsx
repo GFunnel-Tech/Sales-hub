@@ -300,7 +300,8 @@ export default function SalesProcess() {
               <CardHeader className="pb-2"><CardTitle className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Quick Actions</CardTitle></CardHeader>
               <CardContent className="space-y-2">
                 <Button variant="outline" className="w-full justify-start gap-2" asChild><a href="https://meet.google.com" target="_blank" rel="noopener noreferrer"><Video className="h-4 w-4" />Start Video Call</a></Button>
-                <Button variant="outline" className="w-full justify-start gap-2" onClick={() => navigate("/log-sale")}><FileText className="h-4 w-4" />Log Sale</Button>
+                <Button variant="outline" className="w-full justify-start gap-2" onClick={() => navigate("/log-sale")}><FileText className="h-4 w-4" />Log Sale / Intake</Button>
+                <Button variant="outline" className="w-full justify-start gap-2" onClick={() => navigate("/documents")}><FileText className="h-4 w-4" />Agreement & Disclosure</Button>
                 <Button variant="outline" className="w-full justify-start gap-2" onClick={() => navigate("/blueprint/handshake")}><Sparkles className="h-4 w-4" />Start Blueprint Session</Button>
               </CardContent>
             </Card>

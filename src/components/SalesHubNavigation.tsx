@@ -43,7 +43,7 @@ export const SalesHubNavigation = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-1">
-            {navItems.map((item) => (
+            {primaryNav.map((item) => (
               <Link
                 key={item.href}
                 to={item.href}
@@ -57,10 +57,39 @@ export const SalesHubNavigation = () => {
                 {item.name}
               </Link>
             ))}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className={`h-auto gap-1.5 px-3 py-2 text-sm font-medium ${
+                    moreNav.some((i) => isActive(i.href))
+                      ? "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                  }`}
+                >
+                  <MoreHorizontal className="w-4 h-4" />
+                  More
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48 bg-popover">
+                {moreNav.map((item) => (
+                  <DropdownMenuItem key={item.href} asChild>
+                    <Link
+                      to={item.href}
+                      className={`cursor-pointer ${isActive(item.href) ? "bg-muted" : ""}`}
+                    >
+                      <item.icon className="w-4 h-4 mr-2" />
+                      {item.name}
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
 
           {/* Spacer for layout balance */}
           <div className="hidden md:block w-8" />
+
 
           {/* Mobile Menu */}
           <div className="lg:hidden">

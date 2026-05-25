@@ -1,20 +1,32 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, Target, PhoneCall, ClipboardList, FileText, BarChart3, Shield, Mic2, FolderOpen } from "lucide-react";
+import { Menu, Target, PhoneCall, ClipboardList, FileText, BarChart3, Shield, Mic2, FolderOpen, MoreHorizontal } from "lucide-react";
 import { Button } from "./ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { WorkspaceSwitcher } from "./WorkspaceSwitcher";
 
-const navItems = [
+const primaryNav = [
   { name: "Process", href: "/sales-process", icon: Target },
   { name: "Log Sale", href: "/log-sale", icon: PhoneCall },
   { name: "My Sales", href: "/my-sales", icon: ClipboardList },
   { name: "Scripts", href: "/scripts", icon: FileText },
-  { name: "Documents", href: "/documents", icon: FolderOpen },
   { name: "Dashboard", href: "/dashboard", icon: BarChart3 },
+];
+
+const moreNav = [
+  { name: "Documents", href: "/documents", icon: FolderOpen },
   { name: "Competitors", href: "/competitor-lookup", icon: Shield },
   { name: "Call Analysis", href: "/call-analyzer", icon: Mic2 },
 ];
+
+const navItems = [...primaryNav, ...moreNav];
+
 
 export const SalesHubNavigation = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);

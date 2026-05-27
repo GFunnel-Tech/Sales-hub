@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/hooks/useAuth";
 import { MemberProvider } from "@/hooks/useMember";
 import { BlueprintProvider } from "@/hooks/useBlueprintSession";
+import { useGFunnel } from "@/hooks/useGFunnel";
 
 // Pages
 import SalesHub from "./pages/SalesHub";
@@ -99,6 +100,16 @@ function AdminRoute({ children }: { children: React.ReactNode }) {
 }
 
 function AppRoutes() {
+  const { isEmbedded, isReady } = useGFunnel("saleshub");
+
+  if (isEmbedded && !isReady) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-muted-foreground">Connecting to GFunnel...</p>
+      </div>
+    );
+  }
+
   return (
     <Routes>
       {/* Public entry points */}

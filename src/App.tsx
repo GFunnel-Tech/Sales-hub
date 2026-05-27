@@ -10,6 +10,8 @@ import { BlueprintProvider } from "@/hooks/useBlueprintSession";
 // Pages
 import SalesHub from "./pages/SalesHub";
 import AdminLogin from "./pages/AdminLogin";
+import Login from "./pages/Login";
+import MemberEntry from "./pages/MemberEntry";
 import AdminPanel from "./pages/AdminPanel";
 import Dashboard from "./pages/Dashboard";
 import SalesProcess from "./pages/SalesProcess";

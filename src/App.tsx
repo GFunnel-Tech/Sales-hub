@@ -47,12 +47,11 @@ import BlueprintSuccess from "./pages/blueprint/BlueprintSuccess";
 
 const queryClient = new QueryClient();
 
-// Protected route for member-facing pages: requires EITHER a member ID session OR a logged-in account
+// Protected route: requires a logged-in account (email/password or Google)
 function MemberRoute({ children }: { children: React.ReactNode }) {
-  const { member, loading: memberLoading } = useMember();
-  const { user, loading: authLoading } = useAuth();
+  const { user, loading } = useAuth();
 
-  if (memberLoading || authLoading) {
+  if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <p className="text-muted-foreground">Loading...</p>
@@ -60,8 +59,8 @@ function MemberRoute({ children }: { children: React.ReactNode }) {
     );
   }
 
-  if (!member && !user) {
-    return <Navigate to="/member-entry" replace />;
+  if (!user) {
+    return <Navigate to="/login" replace />;
   }
 
   return <>{children}</>;

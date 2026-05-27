@@ -4,14 +4,14 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/hooks/useAuth";
-import { MemberProvider, useMember } from "@/hooks/useMember";
+import { MemberProvider } from "@/hooks/useMember";
 import { BlueprintProvider } from "@/hooks/useBlueprintSession";
 
 // Pages
 import SalesHub from "./pages/SalesHub";
 import AdminLogin from "./pages/AdminLogin";
 import Login from "./pages/Login";
-import MemberEntry from "./pages/MemberEntry";
+
 import AdminPanel from "./pages/AdminPanel";
 import Dashboard from "./pages/Dashboard";
 import SalesProcess from "./pages/SalesProcess";
@@ -47,12 +47,11 @@ import BlueprintSuccess from "./pages/blueprint/BlueprintSuccess";
 
 const queryClient = new QueryClient();
 
-// Protected route for member-facing pages: requires EITHER a member ID session OR a logged-in account
+// Protected route: requires a logged-in account (email/password or Google)
 function MemberRoute({ children }: { children: React.ReactNode }) {
-  const { member, loading: memberLoading } = useMember();
-  const { user, loading: authLoading } = useAuth();
+  const { user, loading } = useAuth();
 
-  if (memberLoading || authLoading) {
+  if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <p className="text-muted-foreground">Loading...</p>
@@ -60,8 +59,8 @@ function MemberRoute({ children }: { children: React.ReactNode }) {
     );
   }
 
-  if (!member && !user) {
-    return <Navigate to="/member-entry" replace />;
+  if (!user) {
+    return <Navigate to="/login" replace />;
   }
 
   return <>{children}</>;
@@ -94,7 +93,7 @@ function AppRoutes() {
   return (
     <Routes>
       {/* Public entry points */}
-      <Route path="/member-entry" element={<MemberEntry />} />
+      <Route path="/member-entry" element={<Navigate to="/login" replace />} />
       <Route path="/login" element={<Login />} />
       <Route path="/admin-login" element={<AdminLogin />} />
       <Route path="/setup/:token" element={<SetupWizard />} />

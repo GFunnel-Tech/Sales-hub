@@ -109,9 +109,16 @@ export default function MemberEntry() {
               </div>
             </div>
 
-            <div className="mt-6 pt-4 border-t border-border">
-              <Link 
-                to="/admin-login" 
+            <div className="mt-6 pt-4 border-t border-border space-y-3">
+              <Link
+                to="/login"
+                className="flex items-center justify-center gap-2 text-sm text-primary hover:underline"
+              >
+                <Shield className="h-4 w-4" />
+                Sign in with email instead
+              </Link>
+              <Link
+                to="/admin-login"
                 className="flex items-center justify-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors"
               >
                 <Shield className="h-3 w-3" />

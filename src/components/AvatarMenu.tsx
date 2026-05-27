@@ -34,7 +34,7 @@ export const AvatarMenu = ({ className }: AvatarMenuProps) => {
   const handleSignOut = async () => {
     if (user) await signOut();
     if (member) clearMember();
-    navigate("/member-entry");
+    navigate("/login");
   };
 
   return (

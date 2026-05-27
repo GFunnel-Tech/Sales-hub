@@ -11,6 +11,7 @@ import { BlueprintProvider } from "@/hooks/useBlueprintSession";
 import SalesHub from "./pages/SalesHub";
 import AdminLogin from "./pages/AdminLogin";
 import Login from "./pages/Login";
+import ResetPassword from "./pages/ResetPassword";
 
 import AdminPanel from "./pages/AdminPanel";
 import Dashboard from "./pages/Dashboard";
@@ -49,7 +50,7 @@ const queryClient = new QueryClient();
 
 // Protected route: requires a logged-in account (email/password or Google)
 function MemberRoute({ children }: { children: React.ReactNode }) {
-  const { user, loading } = useAuth();
+  const { user, loading, mustChangePassword } = useAuth();
 
   if (loading) {
     return (
@@ -63,12 +64,16 @@ function MemberRoute({ children }: { children: React.ReactNode }) {
     return <Navigate to="/login" replace />;
   }
 
+  if (mustChangePassword) {
+    return <Navigate to="/reset-password" replace />;
+  }
+
   return <>{children}</>;
 }
 
 // Protected route for admin access (requires auth + admin role)
 function AdminRoute({ children }: { children: React.ReactNode }) {
-  const { user, isAdmin, loading } = useAuth();
+  const { user, isAdmin, loading, mustChangePassword } = useAuth();
 
   if (loading) {
     return (
@@ -80,6 +85,10 @@ function AdminRoute({ children }: { children: React.ReactNode }) {
 
   if (!user) {
     return <Navigate to="/admin-login" replace />;
+  }
+
+  if (mustChangePassword) {
+    return <Navigate to="/reset-password" replace />;
   }
 
   if (!isAdmin) {
@@ -96,6 +105,7 @@ function AppRoutes() {
       <Route path="/member-entry" element={<Navigate to="/login" replace />} />
       <Route path="/login" element={<Login />} />
       <Route path="/admin-login" element={<AdminLogin />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/setup/:token" element={<SetupWizard />} />
 
       {/* Sales Hub - main landing page (gated) */}

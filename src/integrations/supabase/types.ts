@@ -502,6 +502,7 @@ export type Database = {
           is_active: boolean
           manager_id: string | null
           member_id: string | null
+          must_change_password: boolean
           phone: string | null
           updated_at: string
           user_id: string
@@ -516,6 +517,7 @@ export type Database = {
           is_active?: boolean
           manager_id?: string | null
           member_id?: string | null
+          must_change_password?: boolean
           phone?: string | null
           updated_at?: string
           user_id: string
@@ -530,6 +532,7 @@ export type Database = {
           is_active?: boolean
           manager_id?: string | null
           member_id?: string | null
+          must_change_password?: boolean
           phone?: string | null
           updated_at?: string
           user_id?: string

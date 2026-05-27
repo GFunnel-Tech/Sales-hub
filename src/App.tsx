@@ -11,6 +11,7 @@ import { BlueprintProvider } from "@/hooks/useBlueprintSession";
 import SalesHub from "./pages/SalesHub";
 import AdminLogin from "./pages/AdminLogin";
 import Login from "./pages/Login";
+import ResetPassword from "./pages/ResetPassword";
 
 import AdminPanel from "./pages/AdminPanel";
 import Dashboard from "./pages/Dashboard";

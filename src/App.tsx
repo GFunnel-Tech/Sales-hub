@@ -4,7 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/hooks/useAuth";
-import { MemberProvider, useMember } from "@/hooks/useMember";
+import { MemberProvider } from "@/hooks/useMember";
 import { BlueprintProvider } from "@/hooks/useBlueprintSession";
 
 // Pages

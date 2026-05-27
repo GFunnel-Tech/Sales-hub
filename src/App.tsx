@@ -93,7 +93,7 @@ function AppRoutes() {
   return (
     <Routes>
       {/* Public entry points */}
-      <Route path="/member-entry" element={<MemberEntry />} />
+      <Route path="/member-entry" element={<Navigate to="/login" replace />} />
       <Route path="/login" element={<Login />} />
       <Route path="/admin-login" element={<AdminLogin />} />
       <Route path="/setup/:token" element={<SetupWizard />} />

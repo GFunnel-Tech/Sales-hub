@@ -47,11 +47,12 @@ import BlueprintSuccess from "./pages/blueprint/BlueprintSuccess";
 
 const queryClient = new QueryClient();
 
-// Protected route for member access (no auth required, just member ID)
+// Protected route for member-facing pages: requires EITHER a member ID session OR a logged-in account
 function MemberRoute({ children }: { children: React.ReactNode }) {
-  const { member, loading } = useMember();
+  const { member, loading: memberLoading } = useMember();
+  const { user, loading: authLoading } = useAuth();
 
-  if (loading) {
+  if (memberLoading || authLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <p className="text-muted-foreground">Loading...</p>
@@ -59,7 +60,7 @@ function MemberRoute({ children }: { children: React.ReactNode }) {
     );
   }
 
-  if (!member) {
+  if (!member && !user) {
     return <Navigate to="/member-entry" replace />;
   }
 

@@ -73,7 +73,7 @@ function MemberRoute({ children }: { children: React.ReactNode }) {
 
 // Protected route for admin access (requires auth + admin role)
 function AdminRoute({ children }: { children: React.ReactNode }) {
-  const { user, isAdmin, loading } = useAuth();
+  const { user, isAdmin, loading, mustChangePassword } = useAuth();
 
   if (loading) {
     return (
@@ -85,6 +85,10 @@ function AdminRoute({ children }: { children: React.ReactNode }) {
 
   if (!user) {
     return <Navigate to="/admin-login" replace />;
+  }
+
+  if (mustChangePassword) {
+    return <Navigate to="/reset-password" replace />;
   }
 
   if (!isAdmin) {

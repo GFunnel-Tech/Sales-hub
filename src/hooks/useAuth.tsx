@@ -20,6 +20,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [mustChangePassword, setMustChangePassword] = useState(false);
 
   useEffect(() => {
     // Set up auth state listener FIRST

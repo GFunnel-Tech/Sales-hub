@@ -69,6 +69,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsAdmin(!!data);
   };
 
+  const checkMustChangePassword = async (userId: string) => {
+    const { data } = await supabase
+      .from("profiles")
+      .select("must_change_password")
+      .eq("user_id", userId)
+      .maybeSingle();
+    setMustChangePassword(!!data?.must_change_password);
+  };
+
   const signUp = async (email: string, password: string, fullName?: string) => {
     const redirectUrl = `${window.location.origin}/`;
     

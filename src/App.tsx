@@ -105,6 +105,7 @@ function AppRoutes() {
       <Route path="/member-entry" element={<Navigate to="/login" replace />} />
       <Route path="/login" element={<Login />} />
       <Route path="/admin-login" element={<AdminLogin />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/setup/:token" element={<SetupWizard />} />
 
       {/* Sales Hub - main landing page (gated) */}

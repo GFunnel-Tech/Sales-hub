@@ -93,21 +93,27 @@ function AdminRoute({ children }: { children: React.ReactNode }) {
 function AppRoutes() {
   return (
     <Routes>
-      {/* Sales Hub - main landing page */}
-      <Route path="/" element={<SalesHub />} />
-      
-      {/* Sales tools - open access for now */}
-      <Route path="/sales-process" element={<SalesProcess />} />
-      <Route path="/log-sale" element={<LogSale />} />
-      <Route path="/my-sales" element={<MySales />} />
-      <Route path="/scripts" element={<Scripts />} />
-      <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/objection-playbook" element={<ObjectionPlaybook />} />
-      <Route path="/sales-training" element={<SalesTraining />} />
-      <Route path="/payouts" element={<Payouts />} />
-      <Route path="/competitor-lookup" element={<CompetitorLookupPage />} />
-      <Route path="/call-analyzer" element={<CallAnalyzerPage />} />
-      <Route path="/documents" element={<Documents />} />
+      {/* Public entry points */}
+      <Route path="/member-entry" element={<MemberEntry />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/admin-login" element={<AdminLogin />} />
+      <Route path="/setup/:token" element={<SetupWizard />} />
+
+      {/* Sales Hub - main landing page (gated) */}
+      <Route path="/" element={<MemberRoute><SalesHub /></MemberRoute>} />
+
+      {/* Member-gated sales tools */}
+      <Route path="/sales-process" element={<MemberRoute><SalesProcess /></MemberRoute>} />
+      <Route path="/log-sale" element={<MemberRoute><LogSale /></MemberRoute>} />
+      <Route path="/my-sales" element={<MemberRoute><MySales /></MemberRoute>} />
+      <Route path="/scripts" element={<MemberRoute><Scripts /></MemberRoute>} />
+      <Route path="/dashboard" element={<MemberRoute><Dashboard /></MemberRoute>} />
+      <Route path="/objection-playbook" element={<MemberRoute><ObjectionPlaybook /></MemberRoute>} />
+      <Route path="/sales-training" element={<MemberRoute><SalesTraining /></MemberRoute>} />
+      <Route path="/payouts" element={<MemberRoute><Payouts /></MemberRoute>} />
+      <Route path="/competitor-lookup" element={<MemberRoute><CompetitorLookupPage /></MemberRoute>} />
+      <Route path="/call-analyzer" element={<MemberRoute><CallAnalyzerPage /></MemberRoute>} />
+      <Route path="/documents" element={<MemberRoute><Documents /></MemberRoute>} />
       <Route
         path="/admin/documents"
         element={
@@ -124,22 +130,19 @@ function AppRoutes() {
           </AdminRoute>
         }
       />
-      
-      {/* Blueprint Session Routes */}
-      <Route path="/blueprint" element={<BlueprintHandshake />} />
-      <Route path="/blueprint/dream-state" element={<BlueprintDreamState />} />
-      <Route path="/blueprint/pain-points" element={<BlueprintPainPoints />} />
-      <Route path="/blueprint/bridge" element={<BlueprintBridge />} />
-      <Route path="/blueprint/qualification" element={<BlueprintQualification />} />
-      <Route path="/blueprint/discovery" element={<BlueprintDiscovery />} />
-      <Route path="/blueprint/presentation" element={<BlueprintPresentation />} />
-      <Route path="/blueprint/pricing" element={<BlueprintPricing />} />
-      <Route path="/blueprint/completion" element={<BlueprintCompletion />} />
-      <Route path="/blueprint/success" element={<BlueprintSuccess />} />
-      
-      {/* Admin routes */}
-      <Route path="/admin-login" element={<AdminLogin />} />
-      <Route path="/setup/:token" element={<SetupWizard />} />
+
+      {/* Blueprint Session Routes (gated) */}
+      <Route path="/blueprint" element={<MemberRoute><BlueprintHandshake /></MemberRoute>} />
+      <Route path="/blueprint/dream-state" element={<MemberRoute><BlueprintDreamState /></MemberRoute>} />
+      <Route path="/blueprint/pain-points" element={<MemberRoute><BlueprintPainPoints /></MemberRoute>} />
+      <Route path="/blueprint/bridge" element={<MemberRoute><BlueprintBridge /></MemberRoute>} />
+      <Route path="/blueprint/qualification" element={<MemberRoute><BlueprintQualification /></MemberRoute>} />
+      <Route path="/blueprint/discovery" element={<MemberRoute><BlueprintDiscovery /></MemberRoute>} />
+      <Route path="/blueprint/presentation" element={<MemberRoute><BlueprintPresentation /></MemberRoute>} />
+      <Route path="/blueprint/pricing" element={<MemberRoute><BlueprintPricing /></MemberRoute>} />
+      <Route path="/blueprint/completion" element={<MemberRoute><BlueprintCompletion /></MemberRoute>} />
+      <Route path="/blueprint/success" element={<MemberRoute><BlueprintSuccess /></MemberRoute>} />
+
       <Route
         path="/admin"
         element={

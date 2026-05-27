@@ -50,7 +50,7 @@ const queryClient = new QueryClient();
 
 // Protected route: requires a logged-in account (email/password or Google)
 function MemberRoute({ children }: { children: React.ReactNode }) {
-  const { user, loading } = useAuth();
+  const { user, loading, mustChangePassword } = useAuth();
 
   if (loading) {
     return (
@@ -62,6 +62,10 @@ function MemberRoute({ children }: { children: React.ReactNode }) {
 
   if (!user) {
     return <Navigate to="/login" replace />;
+  }
+
+  if (mustChangePassword) {
+    return <Navigate to="/reset-password" replace />;
   }
 
   return <>{children}</>;

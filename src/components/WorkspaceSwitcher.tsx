@@ -267,14 +267,6 @@ export const WorkspaceSwitcher = ({ workspaceLabel = "Sales Hub" }: WorkspaceSwi
             Help & Support
           </a>
         </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem
-          onClick={handleSignOut}
-          className="cursor-pointer text-destructive focus:text-destructive"
-        >
-          <LogOut className="w-4 h-4 mr-2" />
-          Sign Out
-        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

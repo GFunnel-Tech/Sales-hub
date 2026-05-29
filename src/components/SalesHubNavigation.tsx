@@ -39,10 +39,12 @@ export const SalesHubNavigation = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Workspace + User Switcher */}
-          <WorkspaceSwitcher workspaceLabel="Sales Hub" />
+        <div className="flex items-center justify-between h-16 gap-4">
+          {/* Brand */}
+          <Link to="/" className="text-sm font-semibold text-foreground truncate">
+            Sales Hub
+          </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center gap-1">
             {primaryNav.map((item) => (
               <Link
                 key={item.href}
@@ -87,8 +89,11 @@ export const SalesHubNavigation = () => {
             </DropdownMenu>
           </div>
 
-          {/* Spacer for layout balance */}
-          <div className="hidden md:block w-8" />
+          {/* Right-side workspace/settings */}
+          <div className="hidden md:flex items-center">
+            <WorkspaceSwitcher workspaceLabel="Sales Hub" />
+          </div>
+
 
 
           {/* Mobile Menu */}

@@ -137,23 +137,11 @@ export const WorkspaceSwitcher = ({ workspaceLabel = "Sales Hub" }: WorkspaceSwi
             </div>
           </div>
         </DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuLabel className="font-normal pt-0">
-          <div className="flex flex-col gap-0.5">
-            {audienceLabel && (
-              <p className="text-xs text-muted-foreground capitalize">{audienceLabel}</p>
-
-        <DropdownMenuLabel className="font-normal">
-          <div className="flex flex-col gap-0.5">
-            <p className="text-sm font-semibold truncate">{displayName}</p>
-            {audienceLabel && (
-              <p className="text-xs text-muted-foreground capitalize">{audienceLabel}</p>
-            )}
-            {member?.member_id && (
-              <p className="text-xs text-muted-foreground font-mono">ID: {member.member_id}</p>
-            )}
-          </div>
-        </DropdownMenuLabel>
+        {member?.member_id && (
+          <DropdownMenuLabel className="font-normal pt-0">
+            <p className="text-xs text-muted-foreground font-mono">ID: {member.member_id}</p>
+          </DropdownMenuLabel>
+        )}
 
         <DropdownMenuSeparator />
         <DropdownMenuLabel className="text-[11px] uppercase tracking-wider text-muted-foreground">

@@ -89,8 +89,11 @@ export const SalesHubNavigation = () => {
             </DropdownMenu>
           </div>
 
-          {/* Spacer for layout balance */}
-          <div className="hidden md:block w-8" />
+          {/* Right-side workspace/settings */}
+          <div className="hidden md:flex items-center">
+            <WorkspaceSwitcher workspaceLabel="Sales Hub" />
+          </div>
+
 
 
           {/* Mobile Menu */}

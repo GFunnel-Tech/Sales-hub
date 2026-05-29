@@ -50,13 +50,18 @@ interface TeamProfile {
 }
 
 export const WorkspaceSwitcher = ({ workspaceLabel = "Sales Hub" }: WorkspaceSwitcherProps) => {
-  const { member, clearMember, lookupMember } = useMember();
-  const { user, isAdmin, signOut } = useAuth();
-  const navigate = useNavigate();
+  const { member, lookupMember } = useMember();
+  const { user, isAdmin } = useAuth();
+  const { context: gfunnelContext } = useGFunnel("saleshub");
   const { toast } = useToast();
   const [team, setTeam] = useState<TeamProfile[]>([]);
 
-  const displayName = member?.full_name || user?.email || "Guest";
+  const displayName =
+    gfunnelContext?.user_display_name ||
+    member?.full_name ||
+    user?.email ||
+    "Guest";
+  const avatarUrl = gfunnelContext?.user_avatar_url ?? member?.avatar_url ?? undefined;
   const audienceLabel = (member as { audience?: string } | null)?.audience;
   const initials =
     displayName
@@ -105,34 +110,39 @@ export const WorkspaceSwitcher = ({ workspaceLabel = "Sales Hub" }: WorkspaceSwi
     }
   };
 
-  const handleSignOut = async () => {
-    if (user) await signOut();
-    if (member) clearMember();
-    navigate("/member-entry");
-  };
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-12 px-2 gap-2 hover:bg-muted -ml-2">
-          <Avatar className="h-8 w-8 ring-2 ring-primary/20">
-            <AvatarImage src={member?.avatar_url ?? undefined} alt={displayName} />
-            <AvatarFallback className="bg-primary text-primary-foreground text-xs font-semibold">
-              {initials}
-            </AvatarFallback>
-          </Avatar>
-          <div className="hidden sm:flex flex-col items-start leading-tight">
-            <span className="text-sm font-semibold text-foreground truncate max-w-[140px]">
-              {workspaceLabel}
-            </span>
-            <span className="text-[11px] text-muted-foreground truncate max-w-[140px]">
-              {displayName}
-            </span>
-          </div>
-          <ChevronsUpDown className="w-4 h-4 text-muted-foreground" />
+        <Button
+          variant="ghost"
+          size="icon"
+          className="rounded-full hover:bg-muted"
+          aria-label="Workspace settings"
+        >
+          <Settings className="w-5 h-5 text-muted-foreground" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" className="w-72 bg-popover">
+      <DropdownMenuContent align="end" className="w-72 bg-popover">
+        <DropdownMenuLabel className="font-normal">
+          <div className="flex items-center gap-3">
+            <Avatar className="h-9 w-9 ring-2 ring-primary/20">
+              <AvatarImage src={avatarUrl} alt={displayName} />
+              <AvatarFallback className="bg-primary text-primary-foreground text-xs font-semibold">
+                {initials}
+              </AvatarFallback>
+            </Avatar>
+            <div className="flex flex-col gap-0.5 min-w-0">
+              <p className="text-sm font-semibold truncate">{displayName}</p>
+              <p className="text-[11px] text-muted-foreground truncate">{workspaceLabel}</p>
+            </div>
+          </div>
+        </DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuLabel className="font-normal pt-0">
+          <div className="flex flex-col gap-0.5">
+            {audienceLabel && (
+              <p className="text-xs text-muted-foreground capitalize">{audienceLabel}</p>
+
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col gap-0.5">
             <p className="text-sm font-semibold truncate">{displayName}</p>

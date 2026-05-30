@@ -498,11 +498,13 @@ export type Database = {
           created_at: string
           email: string | null
           full_name: string | null
+          gfunnel_user_profile_id: string | null
           id: string
           is_active: boolean
           manager_id: string | null
           member_id: string | null
           must_change_password: boolean
+          org_id: string | null
           phone: string | null
           updated_at: string
           user_id: string
@@ -513,11 +515,13 @@ export type Database = {
           created_at?: string
           email?: string | null
           full_name?: string | null
+          gfunnel_user_profile_id?: string | null
           id?: string
           is_active?: boolean
           manager_id?: string | null
           member_id?: string | null
           must_change_password?: boolean
+          org_id?: string | null
           phone?: string | null
           updated_at?: string
           user_id: string
@@ -528,11 +532,13 @@ export type Database = {
           created_at?: string
           email?: string | null
           full_name?: string | null
+          gfunnel_user_profile_id?: string | null
           id?: string
           is_active?: boolean
           manager_id?: string | null
           member_id?: string | null
           must_change_password?: boolean
+          org_id?: string | null
           phone?: string | null
           updated_at?: string
           user_id?: string

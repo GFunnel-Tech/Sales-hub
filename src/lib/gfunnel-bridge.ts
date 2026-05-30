@@ -20,7 +20,18 @@ let _context: GFunnelContext | null = null;
 const _listeners: Set<ContextListener> = new Set();
 
 export function initGFunnelBridge(moduleSlug: string) {
+  console.info("[GFunnel] bridge init", { moduleSlug, expectedOrigin: GFUNNEL_ORIGIN });
+
   window.addEventListener("message", (event: MessageEvent) => {
+    // Log every message we receive so we can debug origin mismatches
+    if (event.data?.type?.toString?.().startsWith?.("gfunnel:")) {
+      console.info("[GFunnel] message received", {
+        origin: event.origin,
+        type: event.data?.type,
+        accepted: event.origin === GFUNNEL_ORIGIN,
+      });
+    }
+
     // SECURITY BOUNDARY: only trust messages from the GFunnel shell origin.
     if (event.origin !== GFUNNEL_ORIGIN) return;
 
@@ -29,6 +40,10 @@ export function initGFunnelBridge(moduleSlug: string) {
 
     if (data.type === "gfunnel:init") {
       _context = data.payload as GFunnelContext;
+      console.info("[GFunnel] init payload accepted", {
+        workspace_id: _context.workspace_id,
+        user_email: _context.user_email,
+      });
       _listeners.forEach((fn) => fn(_context!));
     }
     if (data.type === "gfunnel:theme" && _context) {
@@ -43,8 +58,9 @@ export function initGFunnelBridge(moduleSlug: string) {
       { type: "module:ready", payload: { module_slug: moduleSlug } },
       GFUNNEL_ORIGIN,
     );
-  } catch {
-    /* not embedded — ignore */
+    console.info("[GFunnel] module:ready posted to parent");
+  } catch (e) {
+    console.warn("[GFunnel] could not post module:ready", e);
   }
 }
 

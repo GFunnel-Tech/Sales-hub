@@ -37,14 +37,9 @@ export const SalesHubNavigation = () => {
   return (
     <nav className="sticky top-0 z-50 bg-card/95 backdrop-blur-sm border-b border-border">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
-          {/* Workspace + User Switcher */}
-        <div className="flex items-center justify-between h-16 gap-4">
-          {/* Brand */}
-          <Link to="/" className="text-sm font-semibold text-foreground truncate">
-            Sales Hub
-          </Link>
-
+        <div className="flex items-center h-16 gap-4">
+          {/* Centered nav */}
+          <div className="hidden lg:flex flex-1 items-center justify-center gap-1">
             {primaryNav.map((item) => (
               <Link
                 key={item.href}
@@ -90,9 +85,10 @@ export const SalesHubNavigation = () => {
           </div>
 
           {/* Right-side workspace/settings */}
-          <div className="hidden md:flex items-center">
+          <div className="hidden md:flex items-center ml-auto">
             <WorkspaceSwitcher workspaceLabel="Sales Hub" />
           </div>
+
 
 
 

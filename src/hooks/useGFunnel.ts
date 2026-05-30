@@ -3,6 +3,7 @@ import {
   initGFunnelBridge,
   onContextChange,
   isInsideGFunnel,
+  getGFunnelContext,
   type GFunnelContext,
 } from "@/lib/gfunnel-bridge";
 import { supabase } from "@/integrations/supabase/client";
@@ -33,7 +34,7 @@ export function useGFunnel(moduleSlug: string) {
     if (embedded) {
       timer = window.setTimeout(() => {
         setHandshakeTimedOut((prev) => {
-          if (!_currentContext()) {
+          if (!getGFunnelContext()) {
             console.warn(
               "[GFunnel] handshake timeout — no gfunnel:init from https://www.gfunnel.com within",
               HANDSHAKE_TIMEOUT_MS,
@@ -121,10 +122,3 @@ export function useGFunnel(moduleSlug: string) {
   };
 }
 
-// Avoid importing the live context directly to keep the module tree-shakeable;
-// the bridge already exposes a getter we can read inside the timeout callback.
-function _currentContext(): GFunnelContext | null {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const { getGFunnelContext } = require("@/lib/gfunnel-bridge");
-  return getGFunnelContext();
-}

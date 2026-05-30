@@ -71,10 +71,10 @@ Deno.serve(async (req) => {
       );
     if (orgErr) console.error("org upsert", orgErr);
 
-    // 2) Find or create the auth user (by email)
+    // 2) Find or create the auth user
     let authUserId: string | null = null;
 
-    // Look up profile by gfunnel_user_profile_id first
+    // (a) Look up profile by gfunnel id first (preferred, stable across email changes)
     const { data: existingByGf } = await supabase
       .from("profiles")
       .select("user_id")
@@ -82,19 +82,14 @@ Deno.serve(async (req) => {
       .maybeSingle();
     if (existingByGf?.user_id) authUserId = existingByGf.user_id;
 
+    // (b) Fall back to profile by email (covers users provisioned outside GFunnel)
     if (!authUserId) {
-      // Try listUsers email filter
-      const { data: list } = await supabase.auth.admin.listUsers({
-        page: 1,
-        perPage: 1,
-      });
-      // listUsers doesn't filter; fall back to email search via admin API:
-      const { data: byEmail } = await supabase.auth.admin
-        // @ts-ignore — getUserByEmail is supported on admin
-        .getUserByEmail?.(body.user_email)
-        ?.catch(() => ({ data: null }));
-      if (byEmail?.user?.id) authUserId = byEmail.user.id;
-      void list;
+      const { data: existingByEmail } = await supabase
+        .from("profiles")
+        .select("user_id")
+        .eq("email", body.user_email)
+        .maybeSingle();
+      if (existingByEmail?.user_id) authUserId = existingByEmail.user_id;
     }
 
     if (!authUserId) {

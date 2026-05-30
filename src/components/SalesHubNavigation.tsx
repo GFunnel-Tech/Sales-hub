@@ -39,7 +39,7 @@ export const SalesHubNavigation = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center h-16 gap-4">
           {/* Centered nav */}
-          <div className="hidden lg:flex flex-1 items-center justify-center gap-1">
+          <div className="hidden lg:flex flex-1 items-center justify-start gap-1">
             {primaryNav.map((item) => (
               <Link
                 key={item.href}

@@ -353,7 +353,7 @@ export default function SalesProcess() {
                 <Button variant="outline" className="w-full justify-start gap-2" onClick={() => navigate("/blueprint/handshake")}><Sparkles className="h-4 w-4" />Start Blueprint Session</Button>
               </CardContent>
             </Card>
-          </div>
+          </aside>
         </div>
       </main>
     </div>

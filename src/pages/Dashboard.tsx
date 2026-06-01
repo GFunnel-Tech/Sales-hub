@@ -4,7 +4,6 @@ import { SalesHubNavigation as SalesNavigation } from "@/components/SalesHubNavi
 import { LeadsManager } from "@/components/LeadsManager";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import {
   Select,
@@ -27,13 +26,11 @@ import {
 import {
   Phone,
   PlusCircle,
-  Search,
   TrendingUp,
   Calendar,
   Clock,
   DollarSign,
   RefreshCw,
-  Download,
   FileText,
   Users,
 } from "lucide-react";
@@ -89,8 +86,6 @@ export default function Dashboard() {
   const [sales, setSales] = useState<Sale[]>([]);
   const [loading, setLoading] = useState(true);
   const [range, setRange] = useState("7");
-  const [filter, setFilter] = useState<string>("all");
-  const [search, setSearch] = useState("");
 
   useEffect(() => {
     if (member) fetchData();
@@ -154,18 +149,6 @@ export default function Dashboard() {
     return counts;
   }, [scopedSales]);
 
-  const filteredLogs = useMemo(() => {
-    return scopedSales.filter((s) => {
-      if (filter !== "all" && s.disposition !== filter) return false;
-      if (search) {
-        const q = search.toLowerCase();
-        const name = `${s.customer_first_name} ${s.customer_last_name ?? ""}`.toLowerCase();
-        if (!name.includes(q) && !s.product_service.toLowerCase().includes(q)) return false;
-      }
-      return true;
-    });
-  }, [scopedSales, filter, search]);
-
   const statCards = [
     {
       label: "Total Calls",
@@ -199,7 +182,6 @@ export default function Dashboard() {
 
   const quickActions = [
     { label: "Refresh data", icon: RefreshCw, onClick: fetchData },
-    { label: "Export logs", icon: Download, onClick: () => exportCsv(filteredLogs) },
     { label: "View all sales", icon: FileText, href: "/my-sales" },
     { label: "Log new call", icon: PlusCircle, href: "/log-sale" },
   ];
@@ -373,133 +355,12 @@ export default function Dashboard() {
           </Card>
         </div>
 
-        {/* Call Logs Table */}
-        <Card className="border-0 shadow-sm">
-          <CardHeader className="pb-3">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-              <div className="flex items-center gap-3">
-                <CardTitle className="text-base">All Calls</CardTitle>
-                <Badge variant="secondary">{filteredLogs.length}</Badge>
-                <span className="text-xs text-muted-foreground">Last {days} days</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Select value={filter} onValueChange={setFilter}>
-                  <SelectTrigger className="w-[160px] h-9 bg-white">
-                    <SelectValue placeholder="All outcomes" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All outcomes</SelectItem>
-                    <SelectItem value="sold">Sold</SelectItem>
-                    <SelectItem value="callback">Callback</SelectItem>
-                    <SelectItem value="follow_up">Follow Up</SelectItem>
-                    <SelectItem value="not_interested">Not Interested</SelectItem>
-                    <SelectItem value="no_answer">No Answer</SelectItem>
-                  </SelectContent>
-                </Select>
-                <div className="relative">
-                  <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-                  <Input
-                    placeholder="Search..."
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    className="pl-9 h-9 w-[200px] bg-white"
-                  />
-                </div>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent className="p-0">
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-y bg-[#f9fafb] text-xs uppercase text-muted-foreground">
-                    <th className="text-left font-medium px-4 py-3 w-12">#</th>
-                    <th className="text-left font-medium px-4 py-3">Customer</th>
-                    <th className="text-left font-medium px-4 py-3">Outcome</th>
-                    <th className="text-left font-medium px-4 py-3">Product</th>
-                    <th className="text-left font-medium px-4 py-3">Duration</th>
-                    <th className="text-left font-medium px-4 py-3">Amount</th>
-                    <th className="text-left font-medium px-4 py-3">Date</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {loading ? (
-                    <tr>
-                      <td colSpan={7} className="px-4 py-8 text-center text-muted-foreground">
-                        Loading…
-                      </td>
-                    </tr>
-                  ) : filteredLogs.length === 0 ? (
-                    <tr>
-                      <td colSpan={7} className="px-4 py-8 text-center text-muted-foreground">
-                        No calls logged in this range.
-                      </td>
-                    </tr>
-                  ) : (
-                    filteredLogs.map((s, idx) => (
-                      <tr key={s.id} className="border-b last:border-0 hover:bg-[#f9fafb]">
-                        <td className="px-4 py-3 text-muted-foreground">{idx + 1}</td>
-                        <td className="px-4 py-3 font-medium">
-                          {s.customer_first_name} {s.customer_last_name ?? ""}
-                        </td>
-                        <td className="px-4 py-3">
-                          <Badge
-                            variant="outline"
-                            className={
-                              dispositionStyles[s.disposition] ||
-                              "bg-slate-100 text-slate-700"
-                            }
-                          >
-                            {dispositionLabel(s.disposition)}
-                          </Badge>
-                        </td>
-                        <td className="px-4 py-3 text-muted-foreground">{s.product_service}</td>
-                        <td className="px-4 py-3 text-muted-foreground">
-                          {s.call_duration_minutes ? `${s.call_duration_minutes}m` : "—"}
-                        </td>
-                        <td className="px-4 py-3 font-medium">
-                          {s.sale_amount ? `$${Number(s.sale_amount).toLocaleString()}` : "—"}
-                        </td>
-                        <td className="px-4 py-3 text-muted-foreground">
-                          {new Date(s.created_at).toLocaleDateString()}
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </CardContent>
-        </Card>
-
         {/* Leads Table */}
         <LeadsManager />
       </main>
 
     </div>
   );
-}
-
-function exportCsv(rows: Sale[]) {
-  const headers = ["Customer", "Outcome", "Product", "Duration", "Amount", "Date"];
-  const lines = rows.map((s) => [
-    `${s.customer_first_name} ${s.customer_last_name ?? ""}`.trim(),
-    s.disposition,
-    s.product_service,
-    s.call_duration_minutes ?? "",
-    s.sale_amount ?? "",
-    new Date(s.created_at).toISOString(),
-  ]);
-  const csv = [headers, ...lines]
-    .map((row) => row.map((v) => `"${String(v).replace(/"/g, '""')}"`).join(","))
-    .join("\n");
-  const blob = new Blob([csv], { type: "text/csv" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `call-logs-${new Date().toISOString().slice(0, 10)}.csv`;
-  a.click();
-  URL.revokeObjectURL(url);
 }
 
 

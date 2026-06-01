@@ -470,7 +470,7 @@ export default function Dashboard() {
         </Card>
 
         {/* Leads Table */}
-        <LeadsTable />
+        <LeadsManager />
       </main>
 
     </div>

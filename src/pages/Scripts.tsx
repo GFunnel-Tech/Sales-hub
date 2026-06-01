@@ -216,7 +216,7 @@ export default function Scripts() {
                 <Link
                   key={script.id}
                   to="/sales-process"
-                  className="group relative flex flex-col rounded-2xl border bg-card p-7 transition-all hover:shadow-lg hover:-translate-y-0.5 hover:border-foreground/20"
+                  className="group relative flex flex-col rounded-2xl border bg-card p-7 transition-all hover:shadow-lg hover:-translate-y-0.5 hover:border-foreground/20 overflow-hidden"
                 >
                   <div className={`absolute top-0 left-7 right-7 h-[3px] rounded-b-full ${accent.dot} opacity-80`} />
                   <div className="flex items-center justify-between mb-6">

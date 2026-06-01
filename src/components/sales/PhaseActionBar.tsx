@@ -42,7 +42,12 @@ interface PhaseActionBarProps {
   phaseNumber: number;
   totalPhases: number;
   accentDot: string;
+  phases: { id: string; title: string }[];
+  currentPhaseIndex: number;
+  completedPhases: number[];
+  onSelectPhase: (index: number) => void;
 }
+
 
 const STATUS_BUTTONS = [
   { value: "success",   label: "Success",   description: "Phase completed successfully — prospect met the objective and is advancing.", icon: CheckCircle2,  active: "bg-emerald-500 text-white border-emerald-500", idle: "text-emerald-700 dark:text-emerald-300 border-border hover:border-emerald-400" },

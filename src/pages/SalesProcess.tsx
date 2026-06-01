@@ -189,7 +189,7 @@ export default function SalesProcess() {
   return (
     <div className="min-h-screen bg-background">
       <SalesHubNavigation />
-      <main className="container py-8 md:py-10 max-w-7xl mx-auto px-4 md:px-6">
+      <main className="container py-8 md:py-10 max-w-7xl mx-auto px-4 md:px-6 pb-32">
         {/* Editorial header */}
         <div className="mb-8 md:mb-10">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">

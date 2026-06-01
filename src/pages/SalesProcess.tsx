@@ -259,7 +259,15 @@ export default function SalesProcess() {
         phaseNumber={state.currentPhase + 1}
         totalPhases={totalPhases}
         accentDot={currentAccent.dot}
+        phases={phases.map((p) => ({ id: p.id, title: p.title }))}
+        currentPhaseIndex={state.currentPhase}
+        completedPhases={state.completedPhases}
+        onSelectPhase={(idx) => {
+          setState((prev) => ({ ...prev, currentPhase: idx }));
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }}
       />
+
     </div>
   );
 }

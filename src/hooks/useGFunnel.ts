@@ -96,6 +96,12 @@ export function useGFunnel(moduleSlug: string) {
           setSyncError(vErr.message);
           return;
         }
+        const { data: { session: refreshedSession } } = await supabase.auth.getSession();
+        if (!refreshedSession?.user) {
+          console.warn("[GFunnel] verifyOtp succeeded but no session was available yet");
+          setSyncError("Connected to GFunnel, but sign-in did not finish. Please retry.");
+          return;
+        }
         console.info("[GFunnel] signed in as", context.user_email);
         syncedFor.current = context.user_profile_id;
       } finally {

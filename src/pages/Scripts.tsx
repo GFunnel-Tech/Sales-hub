@@ -19,6 +19,7 @@ import {
   Send,
   CheckCircle
 } from "lucide-react";
+import { getPhaseAccent } from "@/lib/phaseAccents";
 
 interface Script {
   id: string;

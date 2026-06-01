@@ -4,7 +4,6 @@ import { SalesHubNavigation as SalesNavigation } from "@/components/SalesHubNavi
 import { LeadsManager } from "@/components/LeadsManager";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import {
   Select,
@@ -27,13 +26,11 @@ import {
 import {
   Phone,
   PlusCircle,
-  Search,
   TrendingUp,
   Calendar,
   Clock,
   DollarSign,
   RefreshCw,
-  Download,
   FileText,
   Users,
 } from "lucide-react";
@@ -89,8 +86,6 @@ export default function Dashboard() {
   const [sales, setSales] = useState<Sale[]>([]);
   const [loading, setLoading] = useState(true);
   const [range, setRange] = useState("7");
-  const [filter, setFilter] = useState<string>("all");
-  const [search, setSearch] = useState("");
 
   useEffect(() => {
     if (member) fetchData();
@@ -154,18 +149,6 @@ export default function Dashboard() {
     return counts;
   }, [scopedSales]);
 
-  const filteredLogs = useMemo(() => {
-    return scopedSales.filter((s) => {
-      if (filter !== "all" && s.disposition !== filter) return false;
-      if (search) {
-        const q = search.toLowerCase();
-        const name = `${s.customer_first_name} ${s.customer_last_name ?? ""}`.toLowerCase();
-        if (!name.includes(q) && !s.product_service.toLowerCase().includes(q)) return false;
-      }
-      return true;
-    });
-  }, [scopedSales, filter, search]);
-
   const statCards = [
     {
       label: "Total Calls",
@@ -199,7 +182,6 @@ export default function Dashboard() {
 
   const quickActions = [
     { label: "Refresh data", icon: RefreshCw, onClick: fetchData },
-    { label: "Export logs", icon: Download, onClick: () => exportCsv(filteredLogs) },
     { label: "View all sales", icon: FileText, href: "/my-sales" },
     { label: "Log new call", icon: PlusCircle, href: "/log-sale" },
   ];

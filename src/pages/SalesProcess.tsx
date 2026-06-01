@@ -10,6 +10,7 @@ import { ScriptDisplay } from "@/components/sales/ScriptDisplay";
 import { ObjectionTracker, type Objection } from "@/components/sales/ObjectionTracker";
 import { EnhancedHintsTips } from "@/components/sales/EnhancedHintsTips";
 import { PhaseDisposition, type DispositionData } from "@/components/sales/PhaseDisposition";
+import { PhaseActionBar } from "@/components/sales/PhaseActionBar";
 import { LeadLookup } from "@/components/sales/LeadLookup";
 import { useSalesPhases } from "@/hooks/useSalesPhases";
 import { 

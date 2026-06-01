@@ -398,6 +398,98 @@ export type Database = {
         }
         Relationships: []
       }
+      lead_edits: {
+        Row: {
+          edited_at: string
+          edited_by_label: string | null
+          edited_by_profile_id: string | null
+          field: string
+          id: string
+          lead_id: string
+          new_value: string | null
+          old_value: string | null
+        }
+        Insert: {
+          edited_at?: string
+          edited_by_label?: string | null
+          edited_by_profile_id?: string | null
+          field: string
+          id?: string
+          lead_id: string
+          new_value?: string | null
+          old_value?: string | null
+        }
+        Update: {
+          edited_at?: string
+          edited_by_label?: string | null
+          edited_by_profile_id?: string | null
+          field?: string
+          id?: string
+          lead_id?: string
+          new_value?: string | null
+          old_value?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lead_edits_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      leads: {
+        Row: {
+          agent: string | null
+          appointment_booked: boolean | null
+          created_at: string
+          date_contacted: string | null
+          ghl_link: string | null
+          id: string
+          interested: string | null
+          last_point_of_contact: string | null
+          lead_name: string | null
+          notes: string | null
+          org_id: string | null
+          outcome: string | null
+          time_zone: string | null
+          updated_at: string
+        }
+        Insert: {
+          agent?: string | null
+          appointment_booked?: boolean | null
+          created_at?: string
+          date_contacted?: string | null
+          ghl_link?: string | null
+          id?: string
+          interested?: string | null
+          last_point_of_contact?: string | null
+          lead_name?: string | null
+          notes?: string | null
+          org_id?: string | null
+          outcome?: string | null
+          time_zone?: string | null
+          updated_at?: string
+        }
+        Update: {
+          agent?: string | null
+          appointment_booked?: boolean | null
+          created_at?: string
+          date_contacted?: string | null
+          ghl_link?: string | null
+          id?: string
+          interested?: string | null
+          last_point_of_contact?: string | null
+          lead_name?: string | null
+          notes?: string | null
+          org_id?: string | null
+          outcome?: string | null
+          time_zone?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       organizations: {
         Row: {
           auth_mode: string

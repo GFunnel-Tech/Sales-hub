@@ -14,13 +14,45 @@ export interface GFunnelContext {
 
 type ContextListener = (ctx: GFunnelContext) => void;
 
-const GFUNNEL_ORIGIN = "https://www.gfunnel.com";
+const GFUNNEL_ALLOWED_ORIGINS = new Set([
+  "https://gfunnel.com",
+  "https://www.gfunnel.com",
+]);
 
 let _context: GFunnelContext | null = null;
 const _listeners: Set<ContextListener> = new Set();
 
+function isTrustedGFunnelOrigin(origin: string): boolean {
+  if (GFUNNEL_ALLOWED_ORIGINS.has(origin)) return true;
+
+  try {
+    const url = new URL(origin);
+    return url.protocol === "https:" && (url.hostname === "gfunnel.com" || url.hostname.endsWith(".gfunnel.com"));
+  } catch {
+    return false;
+  }
+}
+
+function getTargetOrigins(): string[] {
+  const origins = new Set<string>(GFUNNEL_ALLOWED_ORIGINS);
+
+  if (document.referrer) {
+    try {
+      const referrerOrigin = new URL(document.referrer).origin;
+      if (isTrustedGFunnelOrigin(referrerOrigin)) {
+        origins.add(referrerOrigin);
+      }
+    } catch {
+      // Ignore malformed referrers.
+    }
+  }
+
+  return [...origins];
+}
+
 export function initGFunnelBridge(moduleSlug: string) {
-  console.info("[GFunnel] bridge init", { moduleSlug, expectedOrigin: GFUNNEL_ORIGIN });
+  const targetOrigins = getTargetOrigins();
+  console.info("[GFunnel] bridge init", { moduleSlug, targetOrigins });
 
   window.addEventListener("message", (event: MessageEvent) => {
     // Log every message we receive so we can debug origin mismatches
@@ -28,12 +60,12 @@ export function initGFunnelBridge(moduleSlug: string) {
       console.info("[GFunnel] message received", {
         origin: event.origin,
         type: event.data?.type,
-        accepted: event.origin === GFUNNEL_ORIGIN,
+        accepted: isTrustedGFunnelOrigin(event.origin),
       });
     }
 
     // SECURITY BOUNDARY: only trust messages from the GFunnel shell origin.
-    if (event.origin !== GFUNNEL_ORIGIN) return;
+    if (!isTrustedGFunnelOrigin(event.origin)) return;
 
     const data = event.data;
     if (!data?.type) return;
@@ -54,11 +86,13 @@ export function initGFunnelBridge(moduleSlug: string) {
 
   // Announce readiness to the parent shell.
   try {
-    window.parent.postMessage(
-      { type: "module:ready", payload: { module_slug: moduleSlug } },
-      GFUNNEL_ORIGIN,
-    );
-    console.info("[GFunnel] module:ready posted to parent");
+    targetOrigins.forEach((origin) => {
+      window.parent.postMessage(
+        { type: "module:ready", payload: { module_slug: moduleSlug } },
+        origin,
+      );
+    });
+    console.info("[GFunnel] module:ready posted to parent", { targetOrigins });
   } catch (e) {
     console.warn("[GFunnel] could not post module:ready", e);
   }

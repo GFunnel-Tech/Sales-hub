@@ -10,6 +10,7 @@ import { ScriptDisplay } from "@/components/sales/ScriptDisplay";
 import { ObjectionTracker, type Objection } from "@/components/sales/ObjectionTracker";
 import { EnhancedHintsTips } from "@/components/sales/EnhancedHintsTips";
 import { PhaseDisposition, type DispositionData } from "@/components/sales/PhaseDisposition";
+import { PhaseActionBar } from "@/components/sales/PhaseActionBar";
 import { LeadLookup } from "@/components/sales/LeadLookup";
 import { useSalesPhases } from "@/hooks/useSalesPhases";
 import { 
@@ -326,19 +327,20 @@ export default function SalesProcess() {
               onFieldChange={handleFieldChange}
             />
 
-            <PhaseDisposition value={getCurrentDisposition()} onChange={handleDispositionChange} />
-
-            <div className="flex items-center justify-between pt-4 border-t">
-              <Button variant="ghost" onClick={handlePrevious} disabled={state.currentPhase === 0} className="rounded-full">
-                <ArrowLeft className="h-4 w-4 mr-2" />Previous
-              </Button>
-              <Button onClick={handleMarkComplete} variant="outline" className="rounded-full">
-                <CheckCircle2 className="h-4 w-4 mr-2" />Mark Complete
-              </Button>
-              <Button onClick={handleNext} disabled={state.currentPhase === totalPhases - 1} className="rounded-full px-6">
-                Next<ArrowRight className="h-4 w-4 ml-2" />
-              </Button>
-            </div>
+            <PhaseActionBar
+              disposition={getCurrentDisposition()}
+              onDispositionChange={(d) => {
+                handleDispositionChange(d);
+                if (d.status === "success") handleMarkComplete();
+              }}
+              onPrevious={handlePrevious}
+              onNext={handleNext}
+              canPrev={state.currentPhase > 0}
+              canNext={state.currentPhase < totalPhases - 1}
+              phaseNumber={state.currentPhase + 1}
+              totalPhases={totalPhases}
+              accentDot={currentAccent.dot}
+            />
           </div>
 
           <aside className="lg:sticky lg:top-4 lg:max-h-[calc(100vh-2rem)] lg:overflow-y-auto space-y-4 pr-1 -mr-1 [scrollbar-width:thin]">

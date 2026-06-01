@@ -3,6 +3,12 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
   Select,
   SelectContent,
   SelectGroup,
@@ -25,6 +31,7 @@ import {
 import type { DispositionData } from "./PhaseDisposition";
 import { DISPOSITION_GROUPS, DISPOSITION_LOOKUP } from "@/lib/callDispositions";
 
+
 interface PhaseActionBarProps {
   disposition: DispositionData;
   onDispositionChange: (value: DispositionData) => void;
@@ -38,9 +45,9 @@ interface PhaseActionBarProps {
 }
 
 const STATUS_BUTTONS = [
-  { value: "success",   label: "Success",   icon: CheckCircle2,  active: "bg-emerald-500 text-white border-emerald-500", idle: "text-emerald-700 dark:text-emerald-300 border-border hover:border-emerald-400" },
-  { value: "follow_up", label: "Follow-up", icon: Clock,         active: "bg-amber-500 text-white border-amber-500",     idle: "text-amber-700 dark:text-amber-300 border-border hover:border-amber-400" },
-  { value: "blocker",   label: "Blocker",   icon: AlertOctagon,  active: "bg-rose-500 text-white border-rose-500",       idle: "text-rose-700 dark:text-rose-300 border-border hover:border-rose-400" },
+  { value: "success",   label: "Success",   description: "Phase completed successfully — prospect met the objective and is advancing.", icon: CheckCircle2,  active: "bg-emerald-500 text-white border-emerald-500", idle: "text-emerald-700 dark:text-emerald-300 border-border hover:border-emerald-400" },
+  { value: "follow_up", label: "Follow-up", description: "Needs a follow-up action — scheduling, sending info, or re-engagement later.", icon: Clock,         active: "bg-amber-500 text-white border-amber-500",     idle: "text-amber-700 dark:text-amber-300 border-border hover:border-amber-400" },
+  { value: "blocker",   label: "Blocker",   description: "A blocker or objection is preventing progress — needs resolution to continue.", icon: AlertOctagon,  active: "bg-rose-500 text-white border-rose-500",       idle: "text-rose-700 dark:text-rose-300 border-border hover:border-rose-400" },
 ] as const;
 
 export function PhaseActionBar({
@@ -120,29 +127,37 @@ export function PhaseActionBar({
 
         {/* Status pills */}
         <div className="hidden lg:flex items-center gap-1.5 shrink-0">
-          {STATUS_BUTTONS.map((opt) => {
-            const Icon = opt.icon;
-            const isActive = disposition.status === opt.value;
-            return (
-              <button
-                key={opt.value}
-                onClick={() =>
-                  onDispositionChange({
-                    ...disposition,
-                    status: isActive ? "" : (opt.value as DispositionData["status"]),
-                  })
-                }
-                className={cn(
-                  "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-all",
-                  isActive ? opt.active : cn("bg-card", opt.idle),
-                )}
-                aria-pressed={isActive}
-              >
-                <Icon className="h-3.5 w-3.5" />
-                <span className="hidden xl:inline">{opt.label}</span>
-              </button>
-            );
-          })}
+          <TooltipProvider delayDuration={200}>
+            {STATUS_BUTTONS.map((opt) => {
+              const Icon = opt.icon;
+              const isActive = disposition.status === opt.value;
+              return (
+                <Tooltip key={opt.value}>
+                  <TooltipTrigger asChild>
+                    <button
+                      onClick={() =>
+                        onDispositionChange({
+                          ...disposition,
+                          status: isActive ? "" : (opt.value as DispositionData["status"]),
+                        })
+                      }
+                      className={cn(
+                        "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-all",
+                        isActive ? opt.active : cn("bg-card", opt.idle),
+                      )}
+                      aria-pressed={isActive}
+                    >
+                      <Icon className="h-3.5 w-3.5" />
+                      <span className="hidden xl:inline">{opt.label}</span>
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent side="top" className="max-w-[220px] text-xs leading-relaxed">
+                    {opt.description}
+                  </TooltipContent>
+                </Tooltip>
+              );
+            })}
+          </TooltipProvider>
         </div>
 
         <div className="hidden xl:block h-6 w-px bg-border" />

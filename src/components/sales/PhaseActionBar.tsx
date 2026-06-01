@@ -127,29 +127,37 @@ export function PhaseActionBar({
 
         {/* Status pills */}
         <div className="hidden lg:flex items-center gap-1.5 shrink-0">
-          {STATUS_BUTTONS.map((opt) => {
-            const Icon = opt.icon;
-            const isActive = disposition.status === opt.value;
-            return (
-              <button
-                key={opt.value}
-                onClick={() =>
-                  onDispositionChange({
-                    ...disposition,
-                    status: isActive ? "" : (opt.value as DispositionData["status"]),
-                  })
-                }
-                className={cn(
-                  "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-all",
-                  isActive ? opt.active : cn("bg-card", opt.idle),
-                )}
-                aria-pressed={isActive}
-              >
-                <Icon className="h-3.5 w-3.5" />
-                <span className="hidden xl:inline">{opt.label}</span>
-              </button>
-            );
-          })}
+          <TooltipProvider delayDuration={200}>
+            {STATUS_BUTTONS.map((opt) => {
+              const Icon = opt.icon;
+              const isActive = disposition.status === opt.value;
+              return (
+                <Tooltip key={opt.value}>
+                  <TooltipTrigger asChild>
+                    <button
+                      onClick={() =>
+                        onDispositionChange({
+                          ...disposition,
+                          status: isActive ? "" : (opt.value as DispositionData["status"]),
+                        })
+                      }
+                      className={cn(
+                        "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-all",
+                        isActive ? opt.active : cn("bg-card", opt.idle),
+                      )}
+                      aria-pressed={isActive}
+                    >
+                      <Icon className="h-3.5 w-3.5" />
+                      <span className="hidden xl:inline">{opt.label}</span>
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent side="top" className="max-w-[220px] text-xs leading-relaxed">
+                    {opt.description}
+                  </TooltipContent>
+                </Tooltip>
+              );
+            })}
+          </TooltipProvider>
         </div>
 
         <div className="hidden xl:block h-6 w-px bg-border" />

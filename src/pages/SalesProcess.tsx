@@ -296,7 +296,7 @@ export default function SalesProcess() {
           onClear={handleClearLead} 
         />
 
-        <div className="grid lg:grid-cols-[1fr,380px] gap-6">
+        <div className="grid lg:grid-cols-[1fr,360px] gap-6 items-start">
           <div className="space-y-6">
             <div className={`relative rounded-2xl border bg-card overflow-hidden`}>
               <div className={`absolute top-0 left-0 right-0 h-1 ${currentAccent.dot}`} />
@@ -341,7 +341,7 @@ export default function SalesProcess() {
             </div>
           </div>
 
-          <div className="space-y-4">
+          <aside className="lg:sticky lg:top-4 lg:max-h-[calc(100vh-2rem)] lg:overflow-y-auto space-y-4 pr-1 -mr-1 [scrollbar-width:thin]">
             <Card><CardContent className="pt-4"><EnhancedHintsTips hints={currentPhaseConfig.hints} /></CardContent></Card>
             <ObjectionTracker phaseId={PHASE_ORDER[state.currentPhase]} objections={state.objections} onObjectionsChange={handleObjectionsChange} />
             <Card>
@@ -353,7 +353,7 @@ export default function SalesProcess() {
                 <Button variant="outline" className="w-full justify-start gap-2" onClick={() => navigate("/blueprint/handshake")}><Sparkles className="h-4 w-4" />Start Blueprint Session</Button>
               </CardContent>
             </Card>
-          </div>
+          </aside>
         </div>
       </main>
     </div>

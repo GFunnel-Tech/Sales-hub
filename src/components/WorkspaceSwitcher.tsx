@@ -10,6 +10,7 @@ import {
   Building2,
   Users,
   Eye,
+  ChevronDown,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -115,11 +116,24 @@ export const WorkspaceSwitcher = ({ workspaceLabel = "Sales Hub" }: WorkspaceSwi
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
-          size="icon"
-          className="h-10 w-10 rounded-full border border-border/80 bg-background text-muted-foreground shadow-sm hover:bg-muted hover:text-foreground"
-          aria-label="Workspace settings"
+          className="h-11 rounded-full border border-border/80 bg-background px-2.5 shadow-sm hover:bg-muted"
+          aria-label="Open account menu"
         >
-          <Settings className="w-5 h-5 text-muted-foreground" />
+          <Avatar className="h-7 w-7">
+            <AvatarImage src={avatarUrl} alt={displayName} />
+            <AvatarFallback className="bg-primary text-primary-foreground text-[10px] font-semibold">
+              {initials}
+            </AvatarFallback>
+          </Avatar>
+          <div className="hidden min-w-0 text-left md:flex md:flex-col md:items-start md:gap-0.5">
+            <span className="max-w-[120px] truncate text-sm font-medium text-foreground">
+              {displayName}
+            </span>
+            <span className="max-w-[120px] truncate text-[11px] text-muted-foreground">
+              {workspaceLabel}
+            </span>
+          </div>
+          <ChevronDown className="hidden h-4 w-4 text-muted-foreground md:block" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-72 bg-popover">

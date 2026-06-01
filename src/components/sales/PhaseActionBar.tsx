@@ -2,6 +2,15 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { StarRating } from "./StarRating";
 import { cn } from "@/lib/utils";
 import {
@@ -11,8 +20,10 @@ import {
   Clock,
   AlertOctagon,
   StickyNote,
+  PhoneCall,
 } from "lucide-react";
 import type { DispositionData } from "./PhaseDisposition";
+import { DISPOSITION_GROUPS, DISPOSITION_LOOKUP } from "@/lib/callDispositions";
 
 interface PhaseActionBarProps {
   disposition: DispositionData;
@@ -45,12 +56,15 @@ export function PhaseActionBar({
 }: PhaseActionBarProps) {
   const [notesOpen, setNotesOpen] = useState(false);
   const hasNotes = disposition.notes.trim().length > 0;
+  const currentDispo = disposition.callDisposition
+    ? DISPOSITION_LOOKUP[disposition.callDisposition]
+    : undefined;
 
   return (
-    <div className="sticky bottom-4 z-30">
-      <div className="rounded-2xl border bg-background/95 backdrop-blur-xl shadow-lg shadow-foreground/5 px-3 py-2.5 flex items-center gap-2 flex-wrap md:flex-nowrap">
+    <div className="fixed bottom-0 left-0 right-0 z-40 border-t bg-background/95 backdrop-blur-xl shadow-[0_-4px_24px_-12px_hsl(var(--foreground)/0.15)]">
+      <div className="mx-auto w-full px-4 md:px-6 py-2.5 flex items-center gap-2 flex-wrap md:flex-nowrap">
         {/* Phase indicator */}
-        <div className="hidden md:flex items-center gap-2 px-2 shrink-0">
+        <div className="hidden md:flex items-center gap-2 px-1 shrink-0">
           <span className={cn("h-2 w-2 rounded-full", accentDot)} />
           <span className="text-xs font-semibold tabular-nums text-foreground">
             {phaseNumber}<span className="text-muted-foreground">/{totalPhases}</span>
@@ -59,8 +73,53 @@ export function PhaseActionBar({
 
         <div className="hidden md:block h-6 w-px bg-border" />
 
+        {/* Call Disposition Dropdown */}
+        <div className="flex items-center gap-2 min-w-0 flex-1 md:flex-none md:w-72">
+          <PhoneCall className="h-4 w-4 text-muted-foreground shrink-0 hidden md:block" />
+          <Select
+            value={disposition.callDisposition || ""}
+            onValueChange={(value) =>
+              onDispositionChange({ ...disposition, callDisposition: value })
+            }
+          >
+            <SelectTrigger className="h-9 rounded-full text-xs w-full">
+              <SelectValue placeholder="Set call disposition…">
+                {currentDispo && (
+                  <span className="flex items-center gap-2 truncate">
+                    <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                      {currentDispo.groupLabel}
+                    </span>
+                    <span className="truncate">{currentDispo.label}</span>
+                  </span>
+                )}
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent className="max-h-[60vh]">
+              {DISPOSITION_GROUPS.map((group) => (
+                <SelectGroup key={group.key}>
+                  <SelectLabel className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                    {group.label}
+                  </SelectLabel>
+                  {group.options.map((opt) => (
+                    <SelectItem key={opt.value} value={opt.value} className="text-xs">
+                      <div className="flex items-center gap-2">
+                        <span>{opt.label}</span>
+                        {opt.terminal && (
+                          <span className="text-[9px] uppercase tracking-wider text-muted-foreground">terminal</span>
+                        )}
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="hidden lg:block h-6 w-px bg-border" />
+
         {/* Status pills */}
-        <div className="flex items-center gap-1.5 shrink-0">
+        <div className="hidden lg:flex items-center gap-1.5 shrink-0">
           {STATUS_BUTTONS.map((opt) => {
             const Icon = opt.icon;
             const isActive = disposition.status === opt.value;
@@ -80,16 +139,16 @@ export function PhaseActionBar({
                 aria-pressed={isActive}
               >
                 <Icon className="h-3.5 w-3.5" />
-                <span className="hidden sm:inline">{opt.label}</span>
+                <span className="hidden xl:inline">{opt.label}</span>
               </button>
             );
           })}
         </div>
 
-        <div className="hidden md:block h-6 w-px bg-border" />
+        <div className="hidden xl:block h-6 w-px bg-border" />
 
         {/* Confidence stars */}
-        <div className="hidden lg:flex items-center gap-2 px-1">
+        <div className="hidden xl:flex items-center gap-2 px-1">
           <span className="text-[10px] font-semibold tracking-wider uppercase text-muted-foreground">
             Confidence
           </span>
@@ -137,7 +196,6 @@ export function PhaseActionBar({
           </PopoverContent>
         </Popover>
 
-        {/* Spacer */}
         <div className="flex-1 hidden md:block" />
 
         {/* Navigation */}

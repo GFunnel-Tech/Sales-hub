@@ -189,7 +189,7 @@ export default function SalesProcess() {
   return (
     <div className="min-h-screen bg-background">
       <SalesHubNavigation />
-      <main className="container py-8 md:py-10 max-w-7xl mx-auto px-4 md:px-6">
+      <main className="container py-8 md:py-10 max-w-7xl mx-auto px-4 md:px-6 pb-32">
         {/* Editorial header */}
         <div className="mb-8 md:mb-10">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
@@ -327,20 +327,6 @@ export default function SalesProcess() {
               onFieldChange={handleFieldChange}
             />
 
-            <PhaseActionBar
-              disposition={getCurrentDisposition()}
-              onDispositionChange={(d) => {
-                handleDispositionChange(d);
-                if (d.status === "success") handleMarkComplete();
-              }}
-              onPrevious={handlePrevious}
-              onNext={handleNext}
-              canPrev={state.currentPhase > 0}
-              canNext={state.currentPhase < totalPhases - 1}
-              phaseNumber={state.currentPhase + 1}
-              totalPhases={totalPhases}
-              accentDot={currentAccent.dot}
-            />
           </div>
 
           <aside className="lg:sticky lg:top-4 lg:max-h-[calc(100vh-2rem)] lg:overflow-y-auto space-y-4 pr-1 -mr-1 [scrollbar-width:thin]">
@@ -358,6 +344,22 @@ export default function SalesProcess() {
           </aside>
         </div>
       </main>
+
+      {/* Full-width sticky action bar */}
+      <PhaseActionBar
+        disposition={getCurrentDisposition()}
+        onDispositionChange={(d) => {
+          handleDispositionChange(d);
+          if (d.status === "success") handleMarkComplete();
+        }}
+        onPrevious={handlePrevious}
+        onNext={handleNext}
+        canPrev={state.currentPhase > 0}
+        canNext={state.currentPhase < totalPhases - 1}
+        phaseNumber={state.currentPhase + 1}
+        totalPhases={totalPhases}
+        accentDot={currentAccent.dot}
+      />
     </div>
   );
 }

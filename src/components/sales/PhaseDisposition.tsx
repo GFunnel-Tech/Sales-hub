@@ -8,6 +8,7 @@ export interface DispositionData {
   confidenceLevel: number;
   status: 'success' | 'follow_up' | 'blocker' | '';
   notes: string;
+  callDisposition?: string;
 }
 
 interface PhaseDispositionProps {

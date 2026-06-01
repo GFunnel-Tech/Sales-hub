@@ -190,112 +190,12 @@ export default function SalesProcess() {
     <div className="min-h-screen bg-background">
       <SalesHubNavigation />
       <main className="container py-8 md:py-10 max-w-7xl mx-auto px-4 md:px-6 pb-32">
-        {/* Editorial header */}
-        <div className="mb-8 md:mb-10">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
-            <div>
-              <p className="text-[11px] font-semibold tracking-[0.22em] uppercase text-muted-foreground mb-2">
-                Live Sales Call
-              </p>
-              <h1 className="font-serif text-3xl md:text-4xl tracking-tight text-foreground">
-                {state.prospectName || "New Prospect"}
-                {state.companyName && (
-                  <span className="text-muted-foreground font-normal italic"> · {state.companyName}</span>
-                )}
-              </h1>
-            </div>
-            <div className="flex items-center gap-2">
-              <Button variant="ghost" size="sm" onClick={handleReset}>Reset</Button>
-              <Button variant="outline" size="sm" onClick={handleSave} disabled={isSaving} className="rounded-full">
-                <Save className="h-4 w-4 mr-2" />{isSaving ? "Saving..." : "Save"}
-              </Button>
-            </div>
-          </div>
-
-          {/* Progress meta */}
-          <div className="flex items-center justify-between text-xs text-muted-foreground mb-3">
-            <span className="font-semibold tracking-wider uppercase">
-              Step {state.currentPhase + 1} <span className="text-foreground/40">/</span> {totalPhases}
-            </span>
-            <span>{state.completedPhases.length} completed</span>
-          </div>
-
-          {/* Segmented phase rail */}
-          <div className="flex items-center gap-1.5 mb-5">
-            {PHASE_ORDER.map((_, idx) => {
-              const acc = getPhaseAccent(idx);
-              const isCurrent = idx === state.currentPhase;
-              const isCompleted = state.completedPhases.includes(idx);
-              return (
-                <button
-                  key={idx}
-                  onClick={() => setState((prev) => ({ ...prev, currentPhase: idx }))}
-                  aria-label={`Go to step ${idx + 1}`}
-                  className={`flex-1 h-1.5 rounded-full transition-all ${
-                    isCurrent ? `${acc.dot} ring-2 ring-offset-2 ring-offset-background ${acc.ring}`
-                    : isCompleted ? acc.dot + " opacity-80"
-                    : "bg-muted hover:bg-muted-foreground/30"
-                  }`}
-                />
-              );
-            })}
-          </div>
-
-          {/* Phase chips */}
-          <div className="flex items-center gap-2 flex-wrap">
-            {PHASE_ORDER.map((phaseId, idx) => {
-              const phase = getPhaseByIndex(idx);
-              const acc = getPhaseAccent(idx);
-              const isCurrent = idx === state.currentPhase;
-              const isCompleted = state.completedPhases.includes(idx);
-              return (
-                <HoverCard key={phaseId} openDelay={120} closeDelay={80}>
-                  <HoverCardTrigger asChild>
-                    <button
-                      onClick={() => setState((prev) => ({ ...prev, currentPhase: idx }))}
-                      className={`group inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-medium transition-all focus:outline-none focus:ring-2 focus:ring-primary/40 ${
-                        isCurrent
-                          ? `border-foreground bg-foreground text-background shadow-sm`
-                          : isCompleted
-                          ? `border-transparent ${acc.surface} ${acc.text}`
-                          : "border-border bg-card text-muted-foreground hover:text-foreground hover:border-foreground/30"
-                      }`}
-                    >
-                      <span className={`h-1.5 w-1.5 rounded-full ${isCurrent ? "bg-background" : acc.dot}`} />
-                      <span className="tabular-nums opacity-70">{idx + 1}</span>
-                      <span className="hidden sm:inline">{phase.title}</span>
-                      {isCompleted && !isCurrent && <CheckCircle2 className="h-3 w-3" />}
-                    </button>
-                  </HoverCardTrigger>
-                  <HoverCardContent className="w-72" side="bottom" align="start">
-                    <div className="space-y-1.5">
-                      <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
-                          Step {idx + 1} of {totalPhases}
-                        </span>
-                        {isCompleted && (
-                          <Badge variant="outline" className="text-[10px] h-4 px-1.5 border-green-500/40 text-green-600">
-                            Completed
-                          </Badge>
-                        )}
-                      </div>
-                      <h4 className="text-sm font-semibold">{phase.title}</h4>
-                      {phase.subtitle && (
-                        <p className="text-xs text-muted-foreground leading-relaxed">{phase.subtitle}</p>
-                      )}
-                    </div>
-                  </HoverCardContent>
-                </HoverCard>
-              );
-            })}
-          </div>
-        </div>
-
         {/* Lead Lookup */}
         <LeadLookup 
           onSelectLead={handleSelectLead} 
           onClear={handleClearLead} 
         />
+
 
         <div className="grid lg:grid-cols-[1fr,360px] gap-6 items-start">
           <div className="space-y-6">
@@ -359,7 +259,15 @@ export default function SalesProcess() {
         phaseNumber={state.currentPhase + 1}
         totalPhases={totalPhases}
         accentDot={currentAccent.dot}
+        phases={phases.map((p) => ({ id: p.id, title: p.title }))}
+        currentPhaseIndex={state.currentPhase}
+        completedPhases={state.completedPhases}
+        onSelectPhase={(idx) => {
+          setState((prev) => ({ ...prev, currentPhase: idx }));
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }}
       />
+
     </div>
   );
 }

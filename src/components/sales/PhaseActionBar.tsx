@@ -3,6 +3,12 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
   Select,
   SelectContent,
   SelectGroup,
@@ -24,6 +30,7 @@ import {
 } from "lucide-react";
 import type { DispositionData } from "./PhaseDisposition";
 import { DISPOSITION_GROUPS, DISPOSITION_LOOKUP } from "@/lib/callDispositions";
+
 
 interface PhaseActionBarProps {
   disposition: DispositionData;

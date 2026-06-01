@@ -22,6 +22,7 @@ import {
   Sparkles
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { getPhaseAccent } from "@/lib/phaseAccents";
 
 const STORAGE_KEY = "sales_process_data";
 

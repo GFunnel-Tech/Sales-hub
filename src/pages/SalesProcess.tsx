@@ -296,7 +296,7 @@ export default function SalesProcess() {
           onClear={handleClearLead} 
         />
 
-        <div className="grid lg:grid-cols-[1fr,380px] gap-6">
+        <div className="grid lg:grid-cols-[1fr,360px] gap-6 items-start">
           <div className="space-y-6">
             <div className={`relative rounded-2xl border bg-card overflow-hidden`}>
               <div className={`absolute top-0 left-0 right-0 h-1 ${currentAccent.dot}`} />

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { SalesNavigation } from "@/components/SalesNavigation";
+import { SalesHubNavigation } from "@/components/SalesHubNavigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -99,7 +99,7 @@ export default function Payouts() {
 
   return (
     <div className="min-h-screen bg-[#f3f4f6]">
-      <SalesNavigation />
+      <SalesHubNavigation />
       <main className="container mx-auto px-6 md:px-12 lg:px-16 py-8">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
           <div>

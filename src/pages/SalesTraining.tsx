@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { SalesNavigation } from "@/components/SalesNavigation";
+import { SalesHubNavigation } from "@/components/SalesHubNavigation";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -126,7 +126,7 @@ const keyPrinciples = [
 export default function SalesTraining() {
   return (
     <div className="min-h-screen bg-muted/30">
-      <SalesNavigation />
+      <SalesHubNavigation />
       
       <main className="container mx-auto px-6 md:px-12 lg:px-16 py-8">
         {/* Header */}

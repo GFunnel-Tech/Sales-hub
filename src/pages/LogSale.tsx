@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { SalesNavigation } from "@/components/SalesNavigation";
+import { SalesHubNavigation } from "@/components/SalesHubNavigation";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -142,7 +142,7 @@ export default function LogSale() {
 
   return (
     <div className="min-h-screen bg-[#f3f4f6]">
-      <SalesNavigation />
+      <SalesHubNavigation />
       
       <main className="container mx-auto px-6 md:px-12 lg:px-16 py-8">
         <div className="max-w-4xl mx-auto">

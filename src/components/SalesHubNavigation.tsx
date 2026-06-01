@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, Target, PhoneCall, ClipboardList, FileText, BarChart3, Shield, Mic2, FolderOpen, MoreHorizontal } from "lucide-react";
+import { Menu, Target, FileText, BarChart3, Shield, Mic2, FolderOpen, MoreHorizontal } from "lucide-react";
 import { Button } from "./ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {

@@ -205,21 +205,24 @@ export default function Dashboard() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#f3f4f6]">
+    <div className="min-h-screen bg-background">
       <SalesNavigation />
 
-      <main className="container mx-auto px-6 md:px-12 lg:px-16 py-8">
+      <main className="container mx-auto px-4 py-6 md:px-8 lg:px-12">
         {/* Header */}
-        <div className="flex items-start justify-between gap-4 mb-6">
-          <div>
-            <h1 className="text-3xl font-bold text-foreground mb-1">Overview</h1>
-            <p className="text-muted-foreground">
+        <div className="mb-6 flex flex-col gap-4 rounded-2xl border border-border/80 bg-card px-5 py-5 shadow-sm md:flex-row md:items-center md:justify-between md:px-6">
+          <div className="space-y-1.5">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+              Dashboard
+            </p>
+            <h1 className="text-3xl font-semibold tracking-tight text-foreground">Overview</h1>
+            <p className="max-w-2xl text-sm text-muted-foreground">
               What's happening across your call activity
               {member?.full_name ? `, ${member.full_name.split(" ")[0]}` : ""}.
             </p>
           </div>
           <Select value={range} onValueChange={setRange}>
-            <SelectTrigger className="w-[160px] bg-white">
+            <SelectTrigger className="h-11 w-full bg-background shadow-sm md:w-[180px]">
               <Calendar className="w-4 h-4 mr-2" />
               <SelectValue />
             </SelectTrigger>

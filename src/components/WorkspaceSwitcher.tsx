@@ -116,7 +116,7 @@ export const WorkspaceSwitcher = ({ workspaceLabel = "Sales Hub" }: WorkspaceSwi
         <Button
           variant="ghost"
           size="icon"
-          className="rounded-full hover:bg-muted"
+          className="h-10 w-10 rounded-full border border-border/80 bg-background text-muted-foreground shadow-sm hover:bg-muted hover:text-foreground"
           aria-label="Workspace settings"
         >
           <Settings className="w-5 h-5 text-muted-foreground" />

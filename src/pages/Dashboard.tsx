@@ -363,26 +363,4 @@ export default function Dashboard() {
   );
 }
 
-function exportCsv(rows: Sale[]) {
-  const headers = ["Customer", "Outcome", "Product", "Duration", "Amount", "Date"];
-  const lines = rows.map((s) => [
-    `${s.customer_first_name} ${s.customer_last_name ?? ""}`.trim(),
-    s.disposition,
-    s.product_service,
-    s.call_duration_minutes ?? "",
-    s.sale_amount ?? "",
-    new Date(s.created_at).toISOString(),
-  ]);
-  const csv = [headers, ...lines]
-    .map((row) => row.map((v) => `"${String(v).replace(/"/g, '""')}"`).join(","))
-    .join("\n");
-  const blob = new Blob([csv], { type: "text/csv" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `call-logs-${new Date().toISOString().slice(0, 10)}.csv`;
-  a.click();
-  URL.revokeObjectURL(url);
-}
-
 

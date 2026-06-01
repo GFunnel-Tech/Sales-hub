@@ -35,57 +35,59 @@ export const SalesHubNavigation = () => {
   const isActive = (href: string) => location.pathname === href;
 
   return (
-    <nav className="sticky top-0 z-50 bg-card/95 backdrop-blur-sm border-b border-border">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center h-16 gap-4">
-          {/* Centered nav */}
-          <div className="hidden lg:flex flex-1 items-center justify-start gap-1">
-            {primaryNav.map((item) => (
-              <Link
-                key={item.href}
-                to={item.href}
-                className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  isActive(item.href)
-                    ? "bg-primary text-primary-foreground"
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
-                }`}
-              >
-                <item.icon className="w-4 h-4" />
-                {item.name}
-              </Link>
-            ))}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  className={`h-auto gap-1.5 px-3 py-2 text-sm font-medium ${
-                    moreNav.some((i) => isActive(i.href))
-                      ? "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground"
-                      : "text-muted-foreground hover:text-foreground hover:bg-muted"
+    <nav className="sticky top-0 z-50 border-b border-border/80 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/90">
+      <div className="container mx-auto px-4 md:px-6">
+        <div className="flex h-16 items-center gap-3 lg:grid lg:grid-cols-[48px_minmax(0,1fr)_48px]">
+          <div className="hidden lg:block" />
+
+          <div className="hidden lg:flex flex-1 items-center justify-center">
+            <div className="inline-flex items-center gap-1 rounded-full border border-border/80 bg-muted/40 p-1 shadow-sm">
+              {primaryNav.map((item) => (
+                <Link
+                  key={item.href}
+                  to={item.href}
+                  className={`flex h-10 items-center gap-2 rounded-full px-4 text-sm font-medium transition-all ${
+                    isActive(item.href)
+                      ? "bg-primary text-primary-foreground shadow-sm"
+                      : "text-muted-foreground hover:bg-background hover:text-foreground"
                   }`}
                 >
-                  <MoreHorizontal className="w-4 h-4" />
-                  More
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48 bg-popover">
-                {moreNav.map((item) => (
-                  <DropdownMenuItem key={item.href} asChild>
-                    <Link
-                      to={item.href}
-                      className={`cursor-pointer ${isActive(item.href) ? "bg-muted" : ""}`}
-                    >
-                      <item.icon className="w-4 h-4 mr-2" />
-                      {item.name}
-                    </Link>
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
+                  <item.icon className="h-4 w-4" />
+                  <span>{item.name}</span>
+                </Link>
+              ))}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    className={`h-10 rounded-full px-4 text-sm font-medium ${
+                      moreNav.some((i) => isActive(i.href))
+                        ? "bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 hover:text-primary-foreground"
+                        : "text-muted-foreground hover:bg-background hover:text-foreground"
+                    }`}
+                  >
+                    <MoreHorizontal className="h-4 w-4" />
+                    More
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48 bg-popover">
+                  {moreNav.map((item) => (
+                    <DropdownMenuItem key={item.href} asChild>
+                      <Link
+                        to={item.href}
+                        className={`cursor-pointer ${isActive(item.href) ? "bg-muted" : ""}`}
+                      >
+                        <item.icon className="mr-2 h-4 w-4" />
+                        {item.name}
+                      </Link>
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           </div>
 
-          {/* Right-side workspace/settings */}
-          <div className="hidden md:flex items-center ml-auto">
+          <div className="hidden md:flex items-center justify-end">
             <WorkspaceSwitcher workspaceLabel="Sales Hub" />
           </div>
 

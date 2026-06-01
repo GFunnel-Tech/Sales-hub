@@ -52,4 +52,14 @@ export const memberApi = {
       { method: "PATCH", body: JSON.stringify(body) }),
   searchBlueprintLeads: (q: string) =>
     call("member-blueprint", `?action=search-leads&q=${encodeURIComponent(q)}`),
+
+  // Leads
+  listLeads: () => call("member-leads", "?action=list"),
+  updateLead: (id: string, body: Record<string, unknown>) =>
+    call("member-leads", `?action=update&id=${encodeURIComponent(id)}`,
+      { method: "PATCH", body: JSON.stringify(body) }),
+  getLeadHistory: (leadId: string) =>
+    call("member-leads", `?action=history&lead_id=${encodeURIComponent(leadId)}`),
+  createLead: (body: Record<string, unknown>) =>
+    call("member-leads", "?action=create", { method: "POST", body: JSON.stringify(body) }),
 };

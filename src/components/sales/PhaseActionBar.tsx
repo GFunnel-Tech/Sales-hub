@@ -65,8 +65,13 @@ export function PhaseActionBar({
   phaseNumber,
   totalPhases,
   accentDot,
+  phases,
+  currentPhaseIndex,
+  completedPhases,
+  onSelectPhase,
 }: PhaseActionBarProps) {
   const [notesOpen, setNotesOpen] = useState(false);
+  const [phasesOpen, setPhasesOpen] = useState(false);
   const hasNotes = disposition.notes.trim().length > 0;
   const currentDispo = disposition.callDisposition
     ? DISPOSITION_LOOKUP[disposition.callDisposition]
@@ -75,15 +80,64 @@ export function PhaseActionBar({
   return (
     <div className="fixed bottom-0 left-0 right-0 z-40 border-t bg-background/95 backdrop-blur-xl shadow-[0_-4px_24px_-12px_hsl(var(--foreground)/0.15)]">
       <div className="mx-auto w-full px-4 md:px-6 py-2.5 flex items-center gap-2 flex-wrap md:flex-nowrap">
-        {/* Phase indicator */}
-        <div className="hidden md:flex items-center gap-2 px-1 shrink-0">
-          <span className={cn("h-2 w-2 rounded-full", accentDot)} />
-          <span className="text-xs font-semibold tabular-nums text-foreground">
-            {phaseNumber}<span className="text-muted-foreground">/{totalPhases}</span>
-          </span>
-        </div>
+        {/* Phase indicator with pull-up stages list */}
+        <Popover open={phasesOpen} onOpenChange={setPhasesOpen}>
+          <PopoverTrigger asChild>
+            <button
+              className="hidden md:inline-flex items-center gap-2 px-2.5 h-9 rounded-full border border-border bg-card hover:border-foreground/30 transition-colors shrink-0"
+              aria-label="Show all phases"
+            >
+              <span className={cn("h-2 w-2 rounded-full", accentDot)} />
+              <span className="text-xs font-semibold tabular-nums text-foreground">
+                {phaseNumber}<span className="text-muted-foreground">/{totalPhases}</span>
+              </span>
+              <ChevronUp className="h-3.5 w-3.5 text-muted-foreground" />
+            </button>
+          </PopoverTrigger>
+          <PopoverContent side="top" align="start" className="w-80 p-2">
+            <div className="px-2 pt-1 pb-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+              Sales Phases
+            </div>
+            <div className="max-h-[60vh] overflow-y-auto space-y-0.5">
+              {phases.map((p, idx) => {
+                const isCurrent = idx === currentPhaseIndex;
+                const isCompleted = completedPhases.includes(idx);
+                return (
+                  <button
+                    key={p.id}
+                    onClick={() => {
+                      onSelectPhase(idx);
+                      setPhasesOpen(false);
+                    }}
+                    className={cn(
+                      "w-full flex items-center gap-3 rounded-md px-2 py-2 text-left transition-colors",
+                      isCurrent
+                        ? "bg-foreground text-background"
+                        : "hover:bg-muted text-foreground",
+                    )}
+                  >
+                    <span
+                      className={cn(
+                        "h-5 w-5 shrink-0 rounded-full text-[10px] font-semibold inline-flex items-center justify-center tabular-nums",
+                        isCurrent
+                          ? "bg-background/20 text-background"
+                          : isCompleted
+                          ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300"
+                          : "bg-muted text-muted-foreground",
+                      )}
+                    >
+                      {isCompleted && !isCurrent ? <CheckCircle2 className="h-3 w-3" /> : idx + 1}
+                    </span>
+                    <span className="text-sm font-medium truncate flex-1">{p.title}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </PopoverContent>
+        </Popover>
 
         <div className="hidden md:block h-6 w-px bg-border" />
+
 
         {/* Call Disposition Dropdown */}
         <div className="flex items-center gap-2 min-w-0 flex-1 md:flex-none md:w-72">

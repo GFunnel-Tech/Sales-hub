@@ -327,21 +327,40 @@ export default function SalesProcess() {
               onFieldChange={handleFieldChange}
             />
 
-            <PhaseActionBar
-              disposition={getCurrentDisposition()}
-              onDispositionChange={(d) => {
-                handleDispositionChange(d);
-                if (d.status === "success") handleMarkComplete();
-              }}
-              onPrevious={handlePrevious}
-              onNext={handleNext}
-              canPrev={state.currentPhase > 0}
-              canNext={state.currentPhase < totalPhases - 1}
-              phaseNumber={state.currentPhase + 1}
-              totalPhases={totalPhases}
-              accentDot={currentAccent.dot}
-            />
           </div>
+
+          <aside className="lg:sticky lg:top-4 lg:max-h-[calc(100vh-2rem)] lg:overflow-y-auto space-y-4 pr-1 -mr-1 [scrollbar-width:thin]">
+            <Card><CardContent className="pt-4"><EnhancedHintsTips hints={currentPhaseConfig.hints} /></CardContent></Card>
+            <ObjectionTracker phaseId={PHASE_ORDER[state.currentPhase]} objections={state.objections} onObjectionsChange={handleObjectionsChange} />
+            <Card>
+              <CardHeader className="pb-2"><CardTitle className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Quick Actions</CardTitle></CardHeader>
+              <CardContent className="space-y-2">
+                <Button variant="outline" className="w-full justify-start gap-2" asChild><a href="https://meet.google.com" target="_blank" rel="noopener noreferrer"><Video className="h-4 w-4" />Start Video Call</a></Button>
+                <Button variant="outline" className="w-full justify-start gap-2" onClick={() => navigate("/log-sale")}><FileText className="h-4 w-4" />Log Sale / Intake</Button>
+                <Button variant="outline" className="w-full justify-start gap-2" onClick={() => navigate("/documents")}><FileText className="h-4 w-4" />Agreement & Disclosure</Button>
+                <Button variant="outline" className="w-full justify-start gap-2" onClick={() => navigate("/blueprint/handshake")}><Sparkles className="h-4 w-4" />Start Blueprint Session</Button>
+              </CardContent>
+            </Card>
+          </aside>
+        </div>
+      </main>
+
+      {/* Full-width sticky action bar */}
+      <PhaseActionBar
+        disposition={getCurrentDisposition()}
+        onDispositionChange={(d) => {
+          handleDispositionChange(d);
+          if (d.status === "success") handleMarkComplete();
+        }}
+        onPrevious={handlePrevious}
+        onNext={handleNext}
+        canPrev={state.currentPhase > 0}
+        canNext={state.currentPhase < totalPhases - 1}
+        phaseNumber={state.currentPhase + 1}
+        totalPhases={totalPhases}
+        accentDot={currentAccent.dot}
+      />
+
 
           <aside className="lg:sticky lg:top-4 lg:max-h-[calc(100vh-2rem)] lg:overflow-y-auto space-y-4 pr-1 -mr-1 [scrollbar-width:thin]">
             <Card><CardContent className="pt-4"><EnhancedHintsTips hints={currentPhaseConfig.hints} /></CardContent></Card>

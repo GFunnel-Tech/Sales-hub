@@ -19,6 +19,7 @@ import {
   Send,
   CheckCircle
 } from "lucide-react";
+import { getPhaseAccent } from "@/lib/phaseAccents";
 
 interface Script {
   id: string;
@@ -135,19 +136,26 @@ export default function Scripts() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f3f4f6]">
+    <div className="min-h-screen bg-background">
       <SalesHubNavigation />
-      
-      <main className="container mx-auto px-6 md:px-12 lg:px-16 py-8">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-          <div>
-            <h1 className="text-2xl font-bold text-foreground mb-1">Script Library</h1>
-            <p className="text-muted-foreground">Browse sales scripts or request a custom one</p>
+
+      <main className="mx-auto max-w-6xl px-6 md:px-10 py-14 md:py-20">
+        {/* Editorial header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14 md:mb-20">
+          <div className="max-w-2xl">
+            <p className="text-xs font-semibold tracking-[0.22em] uppercase text-muted-foreground mb-4">
+              Script Library
+            </p>
+            <h1 className="font-serif text-4xl md:text-6xl leading-[1.05] tracking-tight text-foreground">
+              Scripts that <span className="italic text-primary">close</span>.
+            </h1>
+            <p className="mt-5 text-base md:text-lg text-muted-foreground leading-relaxed">
+              Browse battle-tested sales scripts or request a custom one tailored to your offer.
+            </p>
           </div>
           <Dialog open={requestDialogOpen} onOpenChange={setRequestDialogOpen}>
             <DialogTrigger asChild>
-              <Button>
+              <Button size="lg" className="rounded-full px-6">
                 <PlusCircle className="w-4 h-4 mr-2" />
                 Request Custom Script
               </Button>
@@ -159,63 +167,28 @@ export default function Scripts() {
               <form onSubmit={handleRequestSubmit} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="product_name">Product/Service Name *</Label>
-                  <Input
-                    id="product_name"
-                    value={requestForm.product_name}
-                    onChange={(e) => setRequestForm(prev => ({ ...prev, product_name: e.target.value }))}
-                    placeholder="e.g., Home Security Systems"
-                    required
-                  />
+                  <Input id="product_name" value={requestForm.product_name} onChange={(e) => setRequestForm(prev => ({ ...prev, product_name: e.target.value }))} placeholder="e.g., Home Security Systems" required />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="product_description">Description</Label>
-                  <Textarea
-                    id="product_description"
-                    value={requestForm.product_description}
-                    onChange={(e) => setRequestForm(prev => ({ ...prev, product_description: e.target.value }))}
-                    placeholder="Describe your product/service..."
-                    rows={3}
-                  />
+                  <Textarea id="product_description" value={requestForm.product_description} onChange={(e) => setRequestForm(prev => ({ ...prev, product_description: e.target.value }))} placeholder="Describe your product/service..." rows={3} />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="target_audience">Target Audience</Label>
-                  <Input
-                    id="target_audience"
-                    value={requestForm.target_audience}
-                    onChange={(e) => setRequestForm(prev => ({ ...prev, target_audience: e.target.value }))}
-                    placeholder="e.g., Homeowners aged 35-55"
-                  />
+                  <Input id="target_audience" value={requestForm.target_audience} onChange={(e) => setRequestForm(prev => ({ ...prev, target_audience: e.target.value }))} placeholder="e.g., Homeowners aged 35-55" />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="key_benefits">Key Benefits</Label>
-                  <Textarea
-                    id="key_benefits"
-                    value={requestForm.key_benefits}
-                    onChange={(e) => setRequestForm(prev => ({ ...prev, key_benefits: e.target.value }))}
-                    placeholder="What are the main selling points?"
-                    rows={2}
-                  />
+                  <Textarea id="key_benefits" value={requestForm.key_benefits} onChange={(e) => setRequestForm(prev => ({ ...prev, key_benefits: e.target.value }))} placeholder="What are the main selling points?" rows={2} />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="common_objections">Common Objections</Label>
-                  <Textarea
-                    id="common_objections"
-                    value={requestForm.common_objections}
-                    onChange={(e) => setRequestForm(prev => ({ ...prev, common_objections: e.target.value }))}
-                    placeholder="What objections do you typically encounter?"
-                    rows={2}
-                  />
+                  <Textarea id="common_objections" value={requestForm.common_objections} onChange={(e) => setRequestForm(prev => ({ ...prev, common_objections: e.target.value }))} placeholder="What objections do you typically encounter?" rows={2} />
                 </div>
                 <div className="flex justify-end gap-3">
-                  <Button type="button" variant="outline" onClick={() => setRequestDialogOpen(false)}>
-                    Cancel
-                  </Button>
+                  <Button type="button" variant="outline" onClick={() => setRequestDialogOpen(false)}>Cancel</Button>
                   <Button type="submit" disabled={submitting}>
-                    {submitting ? (
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    ) : (
-                      <Send className="w-4 h-4 mr-2" />
-                    )}
+                    {submitting ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Send className="w-4 h-4 mr-2" />}
                     Submit Request
                   </Button>
                 </div>
@@ -224,75 +197,73 @@ export default function Scripts() {
           </Dialog>
         </div>
 
-        {/* Scripts Grid */}
+        {/* Scripts list — editorial cards */}
         {loading ? (
-          <Card>
-            <CardContent className="p-8 text-center">
-              <p className="text-muted-foreground">Loading scripts...</p>
-            </CardContent>
-          </Card>
+          <div className="py-20 text-center text-muted-foreground">Loading scripts…</div>
         ) : scripts.length === 0 ? (
-          <Card>
-            <CardContent className="p-8 text-center">
-              <BookOpen className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
-              <p className="text-muted-foreground mb-4">No scripts available yet.</p>
-              <Button onClick={() => setRequestDialogOpen(true)}>
-                Request a Custom Script
-              </Button>
-            </CardContent>
-          </Card>
+          <div className="border border-dashed rounded-3xl py-20 text-center">
+            <BookOpen className="w-10 h-10 mx-auto mb-4 text-muted-foreground" />
+            <p className="text-muted-foreground mb-6">No scripts available yet.</p>
+            <Button onClick={() => setRequestDialogOpen(true)} className="rounded-full">
+              Request a Custom Script
+            </Button>
+          </div>
         ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {scripts.map((script) => (
-              <Card key={script.id} className="hover:shadow-md transition-shadow">
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div className="p-2 rounded-lg bg-primary/10">
-                      <FileText className="w-5 h-5 text-primary" />
-                    </div>
-                    {script.category && (
-                      <Badge variant="outline">{script.category}</Badge>
-                    )}
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {scripts.map((script, idx) => {
+              const accent = getPhaseAccent(idx);
+              return (
+                <Link
+                  key={script.id}
+                  to="/sales-process"
+                  className="group relative flex flex-col rounded-2xl border bg-card p-7 transition-all hover:shadow-lg hover:-translate-y-0.5 hover:border-foreground/20 overflow-hidden"
+                >
+                  <div className={`absolute top-0 left-0 right-0 h-1 ${accent.dot}`} />
+                  <div className="flex items-center justify-between mb-6">
+                    <span className={`inline-flex items-center gap-2 text-[11px] font-semibold tracking-[0.18em] uppercase ${accent.text}`}>
+                      <span className={`h-1.5 w-1.5 rounded-full ${accent.dot}`} />
+                      {script.category || "Sales"}
+                    </span>
+                    <span className="text-xs text-muted-foreground tabular-nums">
+                      {script.content?.length || 0} stages
+                    </span>
                   </div>
-                  <CardTitle className="text-lg mt-3">{script.title}</CardTitle>
+                  <h3 className="font-serif text-2xl leading-tight tracking-tight text-foreground mb-3">
+                    {script.title}
+                  </h3>
                   {script.description && (
-                    <CardDescription>{script.description}</CardDescription>
+                    <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3 mb-8">
+                      {script.description}
+                    </p>
                   )}
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
-                    <CheckCircle className="w-4 h-4 text-green-600" />
-                    <span>{script.content?.length || 0} stages</span>
+                  <div className="mt-auto flex items-center justify-between pt-2 border-t">
+                    <span className="text-xs text-muted-foreground flex items-center gap-1.5">
+                      <CheckCircle className="w-3.5 h-3.5 text-emerald-600" />
+                      Ready to use
+                    </span>
+                    <span className="text-sm font-medium text-foreground inline-flex items-center gap-1 group-hover:gap-2 transition-all">
+                      Open
+                      <span aria-hidden>→</span>
+                    </span>
                   </div>
-                  <Button className="w-full" asChild>
-                    <Link to="/sales-process">Use This Script</Link>
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
+                </Link>
+              );
+            })}
           </div>
         )}
 
-        {/* Info Card */}
-        <Card className="mt-8 bg-blue-50 border-blue-200">
-          <CardContent className="p-6">
-            <div className="flex items-start gap-4">
-              <div className="p-3 rounded-lg bg-blue-100">
-                <BookOpen className="w-6 h-6 text-blue-600" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-blue-900 mb-1">Need a Custom Script?</h3>
-                <p className="text-blue-800 text-sm mb-3">
-                  Our team can create a tailored sales script for your specific product or service. 
-                  Click "Request Custom Script" above and provide details about your offering.
-                </p>
-                <p className="text-blue-700 text-xs">
-                  Custom scripts typically include all 7 sales stages with industry-specific language and objection handling.
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        {/* Footer note */}
+        <div className="mt-20 border-t pt-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <p className="text-sm font-semibold text-foreground">Need something specific?</p>
+            <p className="text-sm text-muted-foreground mt-1">
+              Custom scripts cover all 7 sales stages with industry-specific language and objection handling.
+            </p>
+          </div>
+          <Button variant="outline" className="rounded-full" onClick={() => setRequestDialogOpen(true)}>
+            Request a script
+          </Button>
+        </div>
       </main>
     </div>
   );

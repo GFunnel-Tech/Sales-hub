@@ -23,11 +23,13 @@ import {
   ArrowLeft,
   ArrowRight,
   CheckCircle2,
+  ChevronUp,
   Clock,
   AlertOctagon,
   StickyNote,
   PhoneCall,
 } from "lucide-react";
+
 import type { DispositionData } from "./PhaseDisposition";
 import { DISPOSITION_GROUPS, DISPOSITION_LOOKUP } from "@/lib/callDispositions";
 

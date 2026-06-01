@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
-import { SalesNavigation } from "@/components/SalesNavigation";
+import { SalesHubNavigation } from "@/components/SalesHubNavigation";
 import { ScriptDisplay } from "@/components/sales/ScriptDisplay";
 import { ObjectionTracker, type Objection } from "@/components/sales/ObjectionTracker";
 import { EnhancedHintsTips } from "@/components/sales/EnhancedHintsTips";
@@ -172,7 +172,7 @@ export default function SalesProcess() {
   if (!currentPhaseConfig) {
     return (
       <div className="min-h-screen bg-background">
-        <SalesNavigation />
+        <SalesHubNavigation />
         <div className="container py-12 text-center text-muted-foreground">Loading sales phases…</div>
       </div>
     );
@@ -184,7 +184,7 @@ export default function SalesProcess() {
 
   return (
     <div className="min-h-screen bg-background">
-      <SalesNavigation />
+      <SalesHubNavigation />
       <main className="container py-6 max-w-7xl mx-auto px-4">
         <div className="mb-6">
           <div className="flex items-center justify-between mb-4">

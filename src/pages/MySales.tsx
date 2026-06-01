@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { SalesNavigation } from "@/components/SalesNavigation";
+import { SalesHubNavigation } from "@/components/SalesHubNavigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -100,7 +100,7 @@ export default function MySales() {
 
   return (
     <div className="min-h-screen bg-[#f3f4f6]">
-      <SalesNavigation />
+      <SalesHubNavigation />
       
       <main className="container mx-auto px-6 md:px-12 lg:px-16 py-8">
         {/* Header */}

@@ -26,6 +26,8 @@ const ROLE_MAP: Record<string, "admin" | "manager" | "salesperson"> = {
   admin: "admin",
   owner: "admin",
   superadmin: "admin",
+  "super admin": "admin",
+  super_admin: "admin",
   manager: "manager",
   lead: "manager",
   member: "salesperson",

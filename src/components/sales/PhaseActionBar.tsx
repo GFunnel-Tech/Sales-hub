@@ -45,9 +45,9 @@ interface PhaseActionBarProps {
 }
 
 const STATUS_BUTTONS = [
-  { value: "success",   label: "Success",   icon: CheckCircle2,  active: "bg-emerald-500 text-white border-emerald-500", idle: "text-emerald-700 dark:text-emerald-300 border-border hover:border-emerald-400" },
-  { value: "follow_up", label: "Follow-up", icon: Clock,         active: "bg-amber-500 text-white border-amber-500",     idle: "text-amber-700 dark:text-amber-300 border-border hover:border-amber-400" },
-  { value: "blocker",   label: "Blocker",   icon: AlertOctagon,  active: "bg-rose-500 text-white border-rose-500",       idle: "text-rose-700 dark:text-rose-300 border-border hover:border-rose-400" },
+  { value: "success",   label: "Success",   description: "Phase completed successfully — prospect met the objective and is advancing.", icon: CheckCircle2,  active: "bg-emerald-500 text-white border-emerald-500", idle: "text-emerald-700 dark:text-emerald-300 border-border hover:border-emerald-400" },
+  { value: "follow_up", label: "Follow-up", description: "Needs a follow-up action — scheduling, sending info, or re-engagement later.", icon: Clock,         active: "bg-amber-500 text-white border-amber-500",     idle: "text-amber-700 dark:text-amber-300 border-border hover:border-amber-400" },
+  { value: "blocker",   label: "Blocker",   description: "A blocker or objection is preventing progress — needs resolution to continue.", icon: AlertOctagon,  active: "bg-rose-500 text-white border-rose-500",       idle: "text-rose-700 dark:text-rose-300 border-border hover:border-rose-400" },
 ] as const;
 
 export function PhaseActionBar({

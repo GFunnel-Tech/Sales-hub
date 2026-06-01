@@ -218,7 +218,7 @@ export default function Scripts() {
                   to="/sales-process"
                   className="group relative flex flex-col rounded-2xl border bg-card p-7 transition-all hover:shadow-lg hover:-translate-y-0.5 hover:border-foreground/20 overflow-hidden"
                 >
-                  <div className={`absolute top-0 left-7 right-7 h-[3px] rounded-b-full ${accent.dot} opacity-80`} />
+                  <div className={`absolute top-0 left-0 right-0 h-1 ${accent.dot}`} />
                   <div className="flex items-center justify-between mb-6">
                     <span className={`inline-flex items-center gap-2 text-[11px] font-semibold tracking-[0.18em] uppercase ${accent.text}`}>
                       <span className={`h-1.5 w-1.5 rounded-full ${accent.dot}`} />

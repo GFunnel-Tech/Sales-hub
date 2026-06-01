@@ -12,11 +12,11 @@ import {
 import { WorkspaceSwitcher } from "./WorkspaceSwitcher";
 
 const primaryNav = [
+  { name: "Dashboard", href: "/dashboard", icon: BarChart3 },
   { name: "Process", href: "/sales-process", icon: Target },
   { name: "Log Sale", href: "/log-sale", icon: PhoneCall },
   { name: "My Sales", href: "/my-sales", icon: ClipboardList },
   { name: "Scripts", href: "/scripts", icon: FileText },
-  { name: "Dashboard", href: "/dashboard", icon: BarChart3 },
 ];
 
 const moreNav = [

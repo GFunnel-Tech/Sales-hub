@@ -467,7 +467,11 @@ export default function Dashboard() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Leads Table */}
+        <LeadsTable />
       </main>
+
     </div>
   );
 }
@@ -493,3 +497,169 @@ function exportCsv(rows: Sale[]) {
   a.click();
   URL.revokeObjectURL(url);
 }
+
+interface Lead {
+  agent: string;
+  dateContacted: string;
+  outcome: string;
+  notes: string;
+  leadName: string;
+  lastContact: string;
+  interested: "Yes" | "No" | "Unknown";
+  appointmentBooked: boolean;
+  timeZone: string;
+  ghlLink: string;
+}
+
+const sampleLeads: Lead[] = [
+  {
+    agent: "Daniella",
+    dateContacted: "3/23/2026",
+    outcome: "No answer",
+    notes: "I called the lead 2 times, no answer. I was unable to leave a VM",
+    leadName: "Alice Talley",
+    lastContact: "Mar 23, contacted by AI",
+    interested: "No",
+    appointmentBooked: false,
+    timeZone: "ET",
+    ghlLink:
+      "https://app.gohighlevel.com/v2/location/uKr8OjIAI9BNZXgaZl5b/contacts/detail/kaH5l58IseLAkKjvv8qs?view",
+  },
+  {
+    agent: "Daniella",
+    dateContacted: "3/23/2026",
+    outcome: "No answer",
+    notes: "I called the lead 2 times, no answer. I was unable to leave a VM",
+    leadName: "Michael Deluca",
+    lastContact: "Mar 06, contacted by AI",
+    interested: "No",
+    appointmentBooked: false,
+    timeZone: "ET",
+    ghlLink:
+      "https://app.gohighlevel.com/v2/location/uKr8OjIAI9BNZXgaZl5b/contacts/detail/H7SXyuhCmc68ZvNiknuu?view",
+  },
+];
+
+function LeadsTable() {
+  const [search, setSearch] = useState("");
+  const [interestFilter, setInterestFilter] = useState("all");
+
+  const rows = sampleLeads.filter((l) => {
+    if (interestFilter !== "all" && l.interested.toLowerCase() !== interestFilter) return false;
+    if (!search) return true;
+    const q = search.toLowerCase();
+    return (
+      l.leadName.toLowerCase().includes(q) ||
+      l.agent.toLowerCase().includes(q) ||
+      l.notes.toLowerCase().includes(q)
+    );
+  });
+
+  const interestStyle = (v: Lead["interested"]) =>
+    v === "Yes"
+      ? "bg-emerald-100 text-emerald-700 border-emerald-200"
+      : v === "No"
+      ? "bg-rose-100 text-rose-700 border-rose-200"
+      : "bg-slate-100 text-slate-700 border-slate-200";
+
+  return (
+    <Card className="border-0 shadow-sm mt-6">
+      <CardHeader className="pb-3">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <CardTitle className="text-base">Leads</CardTitle>
+            <Badge variant="secondary">{rows.length}</Badge>
+          </div>
+          <div className="flex items-center gap-2">
+            <Select value={interestFilter} onValueChange={setInterestFilter}>
+              <SelectTrigger className="w-[160px] h-9 bg-white">
+                <SelectValue placeholder="All leads" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All leads</SelectItem>
+                <SelectItem value="yes">Interested</SelectItem>
+                <SelectItem value="no">Not interested</SelectItem>
+                <SelectItem value="unknown">Unknown</SelectItem>
+              </SelectContent>
+            </Select>
+            <div className="relative">
+              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                placeholder="Search leads..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="pl-9 h-9 w-[200px] bg-white"
+              />
+            </div>
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent className="p-0">
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-y bg-[#f9fafb] text-xs uppercase text-muted-foreground">
+                <th className="text-left font-medium px-4 py-3">Agent</th>
+                <th className="text-left font-medium px-4 py-3">Date Contacted</th>
+                <th className="text-left font-medium px-4 py-3">Outcome</th>
+                <th className="text-left font-medium px-4 py-3">Lead Name</th>
+                <th className="text-left font-medium px-4 py-3">Last Contact</th>
+                <th className="text-left font-medium px-4 py-3">Interested?</th>
+                <th className="text-left font-medium px-4 py-3">Appt Booked?</th>
+                <th className="text-left font-medium px-4 py-3">TZ</th>
+                <th className="text-left font-medium px-4 py-3">Notes</th>
+                <th className="text-left font-medium px-4 py-3">GHL</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.length === 0 ? (
+                <tr>
+                  <td colSpan={10} className="px-4 py-8 text-center text-muted-foreground">
+                    No leads match your filters.
+                  </td>
+                </tr>
+              ) : (
+                rows.map((l, i) => (
+                  <tr key={i} className="border-b last:border-0 hover:bg-[#f9fafb] align-top">
+                    <td className="px-4 py-3 font-medium">{l.agent}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{l.dateContacted}</td>
+                    <td className="px-4 py-3">
+                      <Badge variant="outline" className="bg-slate-100 text-slate-700">
+                        {l.outcome}
+                      </Badge>
+                    </td>
+                    <td className="px-4 py-3 font-medium">{l.leadName}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{l.lastContact}</td>
+                    <td className="px-4 py-3">
+                      <Badge variant="outline" className={interestStyle(l.interested)}>
+                        {l.interested}
+                      </Badge>
+                    </td>
+                    <td className="px-4 py-3 text-muted-foreground">
+                      {l.appointmentBooked ? "Yes" : "No"}
+                    </td>
+                    <td className="px-4 py-3 text-muted-foreground">{l.timeZone}</td>
+                    <td className="px-4 py-3 text-muted-foreground max-w-[260px]">
+                      <span className="line-clamp-2">{l.notes}</span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <a
+                        href={l.ghlLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:underline text-xs font-medium"
+                      >
+                        Open
+                      </a>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+

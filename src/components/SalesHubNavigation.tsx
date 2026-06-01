@@ -14,8 +14,6 @@ import { WorkspaceSwitcher } from "./WorkspaceSwitcher";
 const primaryNav = [
   { name: "Dashboard", href: "/dashboard", icon: BarChart3 },
   { name: "Process", href: "/sales-process", icon: Target },
-  { name: "Log Sale", href: "/log-sale", icon: PhoneCall },
-  { name: "My Sales", href: "/my-sales", icon: ClipboardList },
   { name: "Scripts", href: "/scripts", icon: FileText },
 ];
 
@@ -37,7 +35,7 @@ export const SalesHubNavigation = () => {
   return (
     <nav className="sticky top-0 z-50 border-b border-border/80 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/90">
       <div className="container mx-auto px-4 md:px-6">
-        <div className="flex h-16 items-center gap-3 lg:grid lg:grid-cols-[48px_minmax(0,1fr)_48px]">
+        <div className="flex h-16 items-center gap-3 lg:grid lg:grid-cols-[1fr_auto_1fr]">
           <div className="hidden lg:block" />
 
           <div className="hidden lg:flex flex-1 items-center justify-center">
@@ -87,7 +85,7 @@ export const SalesHubNavigation = () => {
             </div>
           </div>
 
-          <div className="hidden md:flex items-center justify-end">
+          <div className="hidden md:flex items-center justify-end lg:justify-self-end">
             <WorkspaceSwitcher workspaceLabel="Sales Hub" />
           </div>
 

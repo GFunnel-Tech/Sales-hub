@@ -298,16 +298,26 @@ export default function SalesProcess() {
 
         <div className="grid lg:grid-cols-[1fr,380px] gap-6">
           <div className="space-y-6">
-            <Card>
-              <CardHeader className="pb-3">
-                <div className="flex items-center gap-3">
-                  <Badge variant="outline">Phase {state.currentPhase + 1}</Badge>
-                  {state.completedPhases.includes(state.currentPhase) && <Badge className="bg-green-500/10 text-green-600 border-green-500/30"><CheckCircle2 className="h-3 w-3 mr-1" />Completed</Badge>}
+            <div className={`relative rounded-2xl border bg-card overflow-hidden`}>
+              <div className={`absolute top-0 left-0 right-0 h-1 ${currentAccent.dot}`} />
+              <div className="px-6 py-6">
+                <div className="flex items-center gap-2 mb-3">
+                  <span className={`inline-flex items-center gap-1.5 text-[11px] font-semibold tracking-[0.2em] uppercase ${currentAccent.text}`}>
+                    <span className={`h-1.5 w-1.5 rounded-full ${currentAccent.dot}`} />
+                    Phase {state.currentPhase + 1}
+                  </span>
+                  {state.completedPhases.includes(state.currentPhase) && (
+                    <Badge className="bg-emerald-500/10 text-emerald-700 border-emerald-500/30 dark:text-emerald-300">
+                      <CheckCircle2 className="h-3 w-3 mr-1" />Completed
+                    </Badge>
+                  )}
                 </div>
-                <CardTitle className="text-xl">{currentPhaseConfig.title}</CardTitle>
-                <p className="text-muted-foreground text-sm">{currentPhaseConfig.subtitle}</p>
-              </CardHeader>
-            </Card>
+                <h2 className="font-serif text-2xl md:text-3xl tracking-tight text-foreground">{currentPhaseConfig.title}</h2>
+                {currentPhaseConfig.subtitle && (
+                  <p className="text-muted-foreground text-sm md:text-base mt-2 leading-relaxed max-w-2xl">{currentPhaseConfig.subtitle}</p>
+                )}
+              </div>
+            </div>
 
             <ScriptDisplay 
               blocks={currentPhaseConfig.scriptBlocks} 
@@ -316,13 +326,18 @@ export default function SalesProcess() {
               onFieldChange={handleFieldChange}
             />
 
-
             <PhaseDisposition value={getCurrentDisposition()} onChange={handleDispositionChange} />
 
-            <div className="flex items-center justify-between pt-4">
-              <Button variant="outline" onClick={handlePrevious} disabled={state.currentPhase === 0}><ArrowLeft className="h-4 w-4 mr-2" />Previous</Button>
-              <Button onClick={handleMarkComplete} variant="secondary"><CheckCircle2 className="h-4 w-4 mr-2" />Mark Complete</Button>
-              <Button onClick={handleNext} disabled={state.currentPhase === totalPhases - 1}>Next<ArrowRight className="h-4 w-4 ml-2" /></Button>
+            <div className="flex items-center justify-between pt-4 border-t">
+              <Button variant="ghost" onClick={handlePrevious} disabled={state.currentPhase === 0} className="rounded-full">
+                <ArrowLeft className="h-4 w-4 mr-2" />Previous
+              </Button>
+              <Button onClick={handleMarkComplete} variant="outline" className="rounded-full">
+                <CheckCircle2 className="h-4 w-4 mr-2" />Mark Complete
+              </Button>
+              <Button onClick={handleNext} disabled={state.currentPhase === totalPhases - 1} className="rounded-full px-6">
+                Next<ArrowRight className="h-4 w-4 ml-2" />
+              </Button>
             </div>
           </div>
 

@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, ExternalLink, Home, FileText, PlusCircle, List, BookOpen, Video, RefreshCw, User, Shield, Mic2 } from "lucide-react";
+import { Menu, ExternalLink, Home, LayoutDashboard, FileText, PlusCircle, List, BookOpen, Video, RefreshCw, User, Shield, Mic2 } from "lucide-react";
 import { Button } from "./ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useMember } from "@/hooks/useMember";
 import { WorkspaceSwitcher } from "./WorkspaceSwitcher";
 
 const navItems = [
+  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { name: "Hub", href: "/", icon: Home },
   { name: "Process", href: "/sales-process", icon: FileText },
   { name: "Log Sale", href: "/log-sale", icon: PlusCircle },
@@ -17,6 +18,7 @@ const navItems = [
   { name: "Competitors", href: "/competitor-lookup", icon: Shield },
   { name: "Call Analysis", href: "/call-analyzer", icon: Mic2 },
 ];
+
 
 export const SalesNavigation = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);

@@ -8,3 +8,10 @@ verify_jwt = false
 
 [functions.member-blueprint]
 verify_jwt = false
+
+# Reporting pipeline — auth handled in-function (admin JWT or x-sync-secret)
+[functions.ingest-call-export]
+verify_jwt = false
+
+[functions.ghl-sync]
+verify_jwt = false

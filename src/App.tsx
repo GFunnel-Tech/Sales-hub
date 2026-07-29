@@ -16,6 +16,7 @@ import ResetPassword from "./pages/ResetPassword";
 
 import AdminPanel from "./pages/AdminPanel";
 import Dashboard from "./pages/Dashboard";
+import Reporting from "./pages/Reporting";
 import SalesProcess from "./pages/SalesProcess";
 import LogSale from "./pages/LogSale";
 import MySales from "./pages/MySales";
@@ -128,6 +129,7 @@ function AppRoutes() {
       <Route path="/my-sales" element={<MemberRoute><MySales /></MemberRoute>} />
       <Route path="/scripts" element={<MemberRoute><Scripts /></MemberRoute>} />
       <Route path="/dashboard" element={<MemberRoute><Dashboard /></MemberRoute>} />
+      <Route path="/reporting" element={<MemberRoute><Reporting /></MemberRoute>} />
       <Route path="/objection-playbook" element={<MemberRoute><ObjectionPlaybook /></MemberRoute>} />
       <Route path="/sales-training" element={<MemberRoute><SalesTraining /></MemberRoute>} />
       <Route path="/payouts" element={<MemberRoute><Payouts /></MemberRoute>} />

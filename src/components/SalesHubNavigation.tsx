@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, Target, FileText, BarChart3, Shield, Mic2, FolderOpen, MoreHorizontal } from "lucide-react";
+import { Menu, Target, FileText, BarChart3, Shield, Mic2, FolderOpen, MoreHorizontal, Activity } from "lucide-react";
 import { Button } from "./ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
@@ -13,6 +13,7 @@ import { WorkspaceSwitcher } from "./WorkspaceSwitcher";
 
 const primaryNav = [
   { name: "Dashboard", href: "/dashboard", icon: BarChart3 },
+  { name: "Reporting", href: "/reporting", icon: Activity },
   { name: "Process", href: "/sales-process", icon: Target },
   { name: "Scripts", href: "/scripts", icon: FileText },
 ];
